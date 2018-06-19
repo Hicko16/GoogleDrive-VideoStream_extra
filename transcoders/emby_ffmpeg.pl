@@ -120,6 +120,7 @@ if ($isSRT){
 			}else{#($arglist =~ m%\,1080\)%
 				$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 			}
+
 			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
 		}else{
 			$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
@@ -132,6 +133,8 @@ if ($isSRT){
 
 		}
 
+		# fix for AVI file transcoding
+		$arglist =~ s%\-f avi %-f mp4 %;
 
 		$arglist =~ s%\-f matroska,webm %\-f mp4 %;
 
