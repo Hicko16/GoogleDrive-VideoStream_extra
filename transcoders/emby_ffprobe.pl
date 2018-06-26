@@ -17,7 +17,7 @@ $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 use constant LOGFILE => '/tmp/transcode.log';
 
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
-#my $FFPROBE_OEM = 'ffprobe ';
+my $FFPROBE_OEM = 'ffprobe ';
 
 
 
@@ -32,39 +32,6 @@ sub createArglist(){
 
 }
 
-my $start = time;
-my $duration = 0;
-my $duration_ptr = -1;
-my $arglist = '';
-my $filename_ptr = 0;
-my $count = 1;
-my $renameFileName = '';
-my $isSRT = 0;
-my $url = '';
-foreach my $current (0 .. $#ARGV) {
-	# fetch how long to encode
-	if ($ARGV[$current] =~ m%\d\d:\d\d:\d\d%){
-		my ($hour,$min,$sec) = $ARGV[$current] =~ m%0?(\d+):0?(\d+):0?(\d+)%;
-		$duration = $hour*60*60 + $min*60 + $sec;
-		$duration_ptr = $current;
-	}elsif ($ARGV[$current] =~ m%^htt.*\:9988%){
-		$url = $ARGV[$current];
-	}elsif (0 and $ARGV[$current] =~ m%\-user_agent%){
-		$ARGV[$current++] = '';
-		$ARGV[$current] = '';
-	}elsif (0 and $ARGV[$current] =~ m%\-fflags%){
-		$ARGV[$current++] = '';
-		$ARGV[$current] = '';
-	}elsif (0 and $ARGV[$current] =~ m%\-f%){
-		$ARGV[$current++] = '';
-		$ARGV[$current] = '';
-	}elsif ($ARGV[$current] =~ m%\.ts%){
-		$filename_ptr = $current;
-		#$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
-	}elsif ($ARGV[$current] =~ m%\.srt%){
-		$isSRT = 1;
-	}
-}
 $arglist = createArglist();
 
 open (LOG, '>>' . LOGFILE) or die $!;
@@ -78,6 +45,7 @@ close LS;
 
 my $line= '';
 my $skip = 0;
+print $output;
 while(($line) = $output =~ m%^(.*?)\n%){
 	$output =~ s%^.*?\n%%;
 	if (FILTER_PGS and $line =~ m%hdmv_pgs_subtitle%){
@@ -88,6 +56,8 @@ while(($line) = $output =~ m%^(.*?)\n%){
 	if (!($skip)){
 		print STDERR $line . "\n";
 		print LOG $line  . "\n";
+	}else{
+		print LOG "SKIP -> " . $line  . "\n";
 	}
 
 }
