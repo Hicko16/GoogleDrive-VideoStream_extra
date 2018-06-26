@@ -14,6 +14,8 @@ $SIG{ABRT} = sub {  kill 'KILL', $pid;die "Caught a abrt $pid $!"; };
 $SIG{TRAP} = sub {  kill 'KILL', $pid;die "Caught a trap $pid $!"; };
 $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 
+use constant LOGFILE => '/tmp/transcode.log';
+
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
 #my $FFPROBE_OEM = 'ffprobe ';
 
@@ -65,12 +67,15 @@ foreach my $current (0 .. $#ARGV) {
 }
 $arglist = createArglist();
 
+open (LOG, '>>' . LOGFILE) or die $!;
+print LOG "passed in $arglist\n";
+
+print LOG "running " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
+
 $pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist . ' 2>&1');
 my $output = do{ local $/; <LS> };
 close LS;
 
-#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
-print $FFPROBE_OEM . ' ' . $arglist ;
 my $line= '';
 my $skip = 0;
 while(($line) = $output =~ m%^(.*?)\n%){
@@ -81,10 +86,12 @@ while(($line) = $output =~ m%^(.*?)\n%){
 		$skip = 0;
 	}
 	if (!($skip)){
-		print $line . "\n";
+		print STDERR $line . "\n";
+		print LOG $line  . "\n";
 	}
 
 }
 
+close(LOG);
 #print $output;
 
