@@ -15,7 +15,7 @@ $SIG{TRAP} = sub {  kill 'KILL', $pid;die "Caught a trap $pid $!"; };
 $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
-my $FFPROBE_OEM = 'ffprobe ';
+#my $FFPROBE_OEM = 'ffprobe ';
 
 
 
