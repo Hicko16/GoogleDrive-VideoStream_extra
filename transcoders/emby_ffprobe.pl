@@ -46,16 +46,38 @@ close LS;
 my $line= '';
 my $skip = 0;
 print $output;
+my $index = 0;
+my @index;
+my $current=0;
 while(($line) = $output =~ m%^(.*?)\n%){
 	$output =~ s%^.*?\n%%;
-	if (FILTER_PGS and $line =~ m%hdmv_pgs_subtitle%){
+	if (FILTER_PGS and $line =~ m%hdmv_pgs_subtitle% and $line =~ m%Stream \#%){
 		$skip = 1;
-	}elsif(FILTER_PGS and $line =~ m%Stream \#%){
+		$index[$index] = 1
+	}elsif(FILTER_PGS and ($line =~ m%Stream \#%)){
 		$skip = 0;
 	}
-	if (!($skip)){
+	if ($line =~ m%Stream \#%){
+		$index++;
+	}
+
+	if ($line =~ m%^        {%){
+		if ($index[$current] == 1){
+			$skip = 1;
+		}
+		$current++;
+	}elsif ($skip == 1 and $line =~ m%^        }%){
+		$skip = 2;
+	}elsif ($line =~ m%^{%){
+		$skip = 0;
+	}
+
+
+	if ($skip == 0){
 		print STDERR $line . "\n";
 		print LOG $line  . "\n";
+	}elsif ($skip == 2){
+		$skip =0;
 	}else{
 		print LOG "SKIP -> " . $line  . "\n";
 	}
