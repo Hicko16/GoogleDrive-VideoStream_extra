@@ -141,6 +141,18 @@ if ($isSRT){
 
 		}
 
+		if ($arglist =~ m%\-map 0\:3 %){
+			$arglist =~ s%\-map 0\:3 %\-map 1\:3 %;
+			my $audioURL = '\-i "'.$url.'"';
+			if ($seek ne ''){
+				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
+			}
+			$arglist =~ s%\-i "([^\"]+)" %\-i "$1" $audioURL %;
+			$arglist =~ s%\-codec\:a\:0 copy \-copypriorss\:a\:0 0 %\-codec\:a\:1 copy \-copypriorss\:a\:1 0  %;
+
+		}
+
+
 		# fix for AVI file transcoding
 		$arglist =~ s%\-f avi %-f mp4 %;
 
