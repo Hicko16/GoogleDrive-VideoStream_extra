@@ -39,7 +39,7 @@ print LOG "passed in $arglist\n";
 
 print LOG "running " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
 
-$pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist . ' 2>&1');
+$pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist );#. ' 2>&1');
 my $output = do{ local $/; <LS> };
 close LS;
 
