@@ -17,7 +17,7 @@ $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 use constant LOGFILE => '/tmp/transcode.log';
 
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
-#my $FFPROBE_OEM = 'ffprobe ';
+my $FFPROBE_OEM = 'ffprobe ';
 
 
 
@@ -39,16 +39,17 @@ print LOG "passed in $arglist\n";
 
 print LOG "running " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
 
-$pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist );#. ' 2>&1');
+$pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist . ' 2>&1');
 my $output = do{ local $/; <LS> };
 close LS;
 
 my $line= '';
 my $skip = 0;
-print $output;
+
 my $index = 0;
 my @index;
 my $current=0;
+my $printOutput=0;
 while(($line) = $output =~ m%^(.*?)\n%){
 	$output =~ s%^.*?\n%%;
 	if (FILTER_PGS and $line =~ m%hdmv_pgs_subtitle% and $line =~ m%Stream \#%){
@@ -69,12 +70,13 @@ while(($line) = $output =~ m%^(.*?)\n%){
 	}elsif ($skip == 1 and $line =~ m%^        \}%){
 		$skip = 2;
 	}elsif ($line =~ m%^\{%){
+		$printOutput = 1;
 		$skip = 0;
 	}
 
 
 	if ($skip == 0){
-		print STDERR $line . "\n";
+		print STDERR $line . "\n" if $printOutput;
 		print LOG $line  . "\n";
 	}elsif ($skip == 2){
 		$skip =0;
