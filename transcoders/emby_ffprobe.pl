@@ -17,7 +17,7 @@ $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 use constant LOGFILE => '/tmp/transcode.log';
 
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
-my $FFPROBE_OEM = 'ffprobe ';
+#my $FFPROBE_OEM = 'ffprobe ';
 
 
 
