@@ -133,6 +133,7 @@ if ($isSRT){
 		my $audioSelection = 0;
 		($audioSelection) = $arglist =~ m%\-map 0\:(\d+) %;
 
+		print LOG "AUDIO SELECTION $audioSelection\n";
 		#if ($arglist =~ m%\-map 0\:2 %){
 		if ($audioSelection > 1){
 			$arglist =~ s%\-map 0\:$audioSelection %\-map 1\:$audioSelection %;
