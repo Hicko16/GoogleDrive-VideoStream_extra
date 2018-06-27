@@ -1,0 +1,2 @@
+- implement: ffprobe - override ffprobe to block PGS from being read by Emby #1
+
