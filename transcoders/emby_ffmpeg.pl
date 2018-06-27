@@ -130,19 +130,12 @@ if ($isSRT){
 			$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 		}
 
-		if ($arglist =~ m%\-map 0\:2 %){
-			$arglist =~ s%\-map 0\:2 %\-map 1\:2 %;
-			my $audioURL = '\-i "'.$url.'"';
-			if ($seek ne ''){
-				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
-			}
-			$arglist =~ s%\-i "([^\"]+)" %\-i "$1" $audioURL %;
-			$arglist =~ s%\-codec\:a\:0 copy \-copypriorss\:a\:0 0 %\-codec\:a\:1 copy \-copypriorss\:a\:1 0  %;
+		my $audioSelection = 0;
+		($audioSelection) = $arglist =~ m%\-map 0\:(\d+) %;
 
-		}
-
-		if ($arglist =~ m%\-map 0\:3 %){
-			$arglist =~ s%\-map 0\:3 %\-map 1\:3 %;
+		#if ($arglist =~ m%\-map 0\:2 %){
+		if ($audioSelection > 1){
+			$arglist =~ s%\-map 0\:$audioSelection %\-map 1\:$audioSelection %;
 			my $audioURL = '\-i "'.$url.'"';
 			if ($seek ne ''){
 				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
