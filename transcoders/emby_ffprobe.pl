@@ -61,14 +61,14 @@ while(($line) = $output =~ m%^(.*?)\n%){
 		$index++;
 	}
 
-	if ($line =~ m%^        {%){
+	if ($line =~ m%^        \{%){
 		if ($index[$current] == 1){
 			$skip = 1;
 		}
 		$current++;
-	}elsif ($skip == 1 and $line =~ m%^        }%){
+	}elsif ($skip == 1 and $line =~ m%^        \}%){
 		$skip = 2;
-	}elsif ($line =~ m%^{%){
+	}elsif ($line =~ m%^\{%){
 		$skip = 0;
 	}
 
