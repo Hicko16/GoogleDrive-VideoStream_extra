@@ -59,6 +59,7 @@ my $count = 1;
 my $renameFileName = '';
 my $isSRT = 0;
 my $url = '';
+my $seek = '';
 foreach my $current (0 .. $#ARGV) {
 	# fetch how long to encode
 	if ($ARGV[$current] =~ m%\d\d:\d\d:\d\d%){
@@ -70,6 +71,9 @@ foreach my $current (0 .. $#ARGV) {
 	}elsif (0 and $ARGV[$current] =~ m%\-user_agent%){
 		$ARGV[$current++] = '';
 		$ARGV[$current] = '';
+	}elsif ($ARGV[$current] =~ m%\-ss%){
+		$ARGV[$current++] = '-ss';
+		$seek = $ARGV[$current];
 	}elsif (0 and $ARGV[$current] =~ m%\-fflags%){
 		$ARGV[$current++] = '';
 		$ARGV[$current] = '';
@@ -128,7 +132,11 @@ if ($isSRT){
 
 		if ($arglist =~ m%\-map 0\:2 %){
 			$arglist =~ s%\-map 0\:2 %\-map 1\:2 %;
-			$arglist =~ s%\-i "([^\"]+)" %\-i "$1" \-i "$url" %;
+			my $audioURL = '\-i "'.$url.'"';
+			if ($seek ne ''){
+				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
+			}
+			$arglist =~ s%\-i "([^\"]+)" %\-i "$1" $audioURL %;
 			$arglist =~ s%\-codec\:a\:0 copy \-copypriorss\:a\:0 0 %\-codec\:a\:1 copy \-copypriorss\:a\:1 0  %;
 
 		}

@@ -1,2 +1,3 @@
+- working on: Remux audio midtrack doesn't playback #2
 - implement: ffprobe - override ffprobe to block PGS from being read by Emby #1
 
