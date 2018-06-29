@@ -142,7 +142,7 @@ if ($isSRT){
 				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
 			}
 			$arglist =~ s%\-i "([^\"]+)" %\-i "$1" $audioURL %;
-			$arglist =~ s%\-codec\:a\:0 copy \-copypriorss\:a\:0 0 %\-codec\:a\:1 mp3 \-copypriorss\:a\:1 0  %;
+			$arglist =~ s%\-codec\:a\:0 copy \-copypriorss\:a\:0 0 %\-codec\:a aac \-copypriorss\:a 0  %;
 
 		}
 
