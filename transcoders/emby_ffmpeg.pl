@@ -137,7 +137,7 @@ if ($isSRT){
 		#if ($arglist =~ m%\-map 0\:2 %){
 		if ($audioSelection > 1){
 			$arglist =~ s%\-map 0\:$audioSelection %\-map 1\:$audioSelection %;
-			my $audioURL = '\-i "'.$url.'"';
+			my $audioURL = '-i "'.$url.'"';
 			if ($seek ne ''){
 				$audioURL = '-ss ' . $seek . ' ' . $audioURL;
 			}
