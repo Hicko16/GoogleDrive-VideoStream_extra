@@ -75,11 +75,11 @@ while ($current < $#srtFiles+1){
 		($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.\S\S\S\.srt%i;
 
 		if ($srtFilename eq ''){
-			($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.srt%i;
-			if ($srtFilename eq ''){
+			#($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.srt%i;
+			#if ($srtFilename eq ''){
 				$current++;
 				next;
-			}
+			#}
 		}
 	}else{
 		$is2Letter = 1;
