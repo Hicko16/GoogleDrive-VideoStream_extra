@@ -17,6 +17,9 @@ use constant GOOGLE_TRANSCODE => 1;
 # prefer to direct stream requests with Google Transcode feeds (will reduce CPU load)
 use constant PREFER_GOOGLE_TRANSCODE => 1;
 
+# force remux of all audio?  disable for all tracks except first audio track selected
+use constant FORCE_REMUX_AUDIO => 1;
+
 use constant PATH_TO_EMBY_FFMPEG => '/opt/emby-server/bin/';
 use constant PATH_TO_FFMPEG => '/u01/ffmpeg-git-20171123-64bit-static/';
 
@@ -135,7 +138,7 @@ if ($isSRT){
 
 		print LOG "AUDIO SELECTION $audioSelection\n";
 		#if ($arglist =~ m%\-map 0\:2 %){
-		if ($audioSelection > 1){
+		if ((FORCE_REMUX_AUDIO and $audioSelection == 1) or $audioSelection > 1){
 			$arglist =~ s%\-map 0\:$audioSelection %\-map 1\:$audioSelection %;
 			my $audioURL = '-i "'.$url.'"';
 			if ($seek ne ''){
