@@ -68,15 +68,28 @@ if ($current < $#srtFiles + 1){
 }
 
 while ($current < $#srtFiles+1){
-	my ($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.\S\S\.srt%i;
-	if ($srtFilename eq ''){
-		($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.srt%i;
-	}
-	if ($srtFilename eq ''){
-		$current++;
-		next;
-	}
 	my $renameTo = $srtFiles[$current];
+	my ($srtFilename, $srtCode2) = $srtFiles[$current] =~ m%^(.*?)\.(\S\S)\.srt%i;
+	my $is2Letter = 0;
+	if ($srtFilename eq ''){
+		($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.\S\S\S\.srt%i;
+
+		if ($srtFilename eq ''){
+			($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.srt%i;
+			if ($srtFilename eq ''){
+				$current++;
+				next;
+			}
+		}
+	}else{
+		$is2Letter = 1;
+		my $srtCode3 = '';
+		if ($srtCode2 eq 'en'){
+			$srtCode3 = 'eng';
+			$renameTo =~ s%\.$srtCode2\.%\.$srtCode3\.%i;
+		}
+
+	}
 	$renameTo =~ s%$srtFilename%$filename%i;
 	print "RENAME $srtFiles[$current] to $renameTo\n";
 	rename $directory . '/'. $srtFiles[$current],$directory . '/'. $renameTo ;
