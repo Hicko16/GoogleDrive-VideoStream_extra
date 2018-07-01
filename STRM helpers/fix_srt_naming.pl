@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+###
+##
+## The purpose of this script is two-fold:
+## 1) remove extra qualty STRM files when there is multiple in the same movie / tv folder (keep the highest quality)
+## 2) rename the SRT files to match the name of the STRM file
+##
+###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 50;
 
