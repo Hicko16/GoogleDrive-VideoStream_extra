@@ -45,6 +45,10 @@ while (my $file = readdir($dir)) {
 			}
 			$currentDirectory_strm_resolution = $resolution;
 			$currentDirectory_strm = $file;
+		}elsif ($resolution <  $currentDirectory_strm_resolution){
+			print "DELETING $file\n";
+			unlink $directory . '/'. $file;
+
 		}
 	# is srt file
 	}elsif ($file =~ m%\.srt%i){
