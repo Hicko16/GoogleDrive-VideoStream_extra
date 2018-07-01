@@ -6,12 +6,8 @@ require 'crawler.pm';
 use constant RETRY => 50;
 
 
-use constant PATH_TO_FFMPEG => '/u01/ffmpeg-git-20171123-64bit-static/';
-
 
 use Getopt::Std;		# and the getopt module
-
-my $FFPROBE = PATH_TO_FFMPEG .'/ffprobe ';
 
 
 my %opt;
