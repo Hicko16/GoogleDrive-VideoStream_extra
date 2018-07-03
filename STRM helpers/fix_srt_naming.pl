@@ -107,7 +107,7 @@ foreach my $key (keys %currentDirectory_strm){
 
 		}
 		$renameTo =~ s%$srtFilename%$filename%i;
-		print "RENAME  ${$srtFiles{$key}}[$current] to $renameTo\n";
+		print "RENAME $srtFilename ${$srtFiles{$key}}[$current] to $renameTo\n";
 		rename $directory . '/'.  ${$srtFiles{$key}}[$current],$directory . '/'. $renameTo;
 
 		$current++;
