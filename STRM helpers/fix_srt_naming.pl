@@ -6,6 +6,11 @@
 ## 1) remove extra qualty STRM files when there is multiple in the same movie / tv folder (keep the highest quality)
 ## 2) rename the SRT files to match the name of the STRM file
 ##
+## This script takes a -d directory, where this is the directory to scan
+## This script takes a -t type, where type is either tv or movie.  The script behaviour is different based on if
+##  the folder is a movie or tv folder.  Movie folders there will be only 1 title per folder whereas with tv folders
+##  you have multiple episodes in each folder, so care needs to be taken to remove extra qualities by episode only,
+##  and to map the SRT files to the correct episode.
 ###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 50;
@@ -14,10 +19,16 @@ use Getopt::Std;		# and the getopt module
 
 
 my %opt;
-die (USAGE) unless (getopts ('d:',\%opt));
+die (USAGE) unless (getopts ('d:t:',\%opt));
 
+# directory to scan
 my $directory = $opt{'d'};
+my $type = $opt{'t'};
 
+if ($type ne 'tv' or $type ne 'movie'){
+	print STDERR "type needs to be either tv or movie.";
+	exit(0);
+}
 
 
 readDIR($directory);
