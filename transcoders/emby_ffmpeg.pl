@@ -23,6 +23,9 @@ use constant FORCE_REMUX_AUDIO => 1;
 use constant PATH_TO_EMBY_FFMPEG => '/opt/emby-server/bin/';
 use constant PATH_TO_FFMPEG => '/u01/ffmpeg-git-20171123-64bit-static/';
 
+use constant PROXY_DETERMINATOR => 'sofasttv';
+use constant PROXY => 'http:// :8888';
+
 use constant LOGFILE => '/tmp/transcode.log';
 
 
@@ -40,7 +43,8 @@ my $FFMPEG_OEM = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
 my $FFPROBE = PATH_TO_EMBY_FFMPEG .'/ffprobe ';
-
+my $PROXY = PROXY;
+my $PROXY_DETERMINATOR = PROXY_DETERMINATOR;
 
 sub createArglist(){
 	my $arglist = '';
@@ -217,7 +221,14 @@ if ($isSRT){
 		#my $output = do{ local $/; <LS> };
 		#close LS;
 		#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
-		`$FFMPEG_TEST $arglist -v error`;
+
+
+		if ($arglist =~ m%$PROXY_DETERMINATOR%){
+			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
+		}else{
+			`$FFMPEG_TEST $arglist -v error`;
+		}
+
 		#retry if contains error 403
 		$retry++;
 		next;
