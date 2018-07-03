@@ -86,9 +86,10 @@ foreach my $key (keys %currentDirectory_strm){
 	while ($current < $#{$srtFiles{$key}}+1){
 		my $renameTo = ${$srtFiles{$key}}[$current];
 		my ($srtFilename, $srtCode2) =  ${$srtFiles{$key}}[$current] =~ m%^(.*?)\.(\S\S)\.srt%i;
+		my $srtCode3 = '';
 		my $is2Letter = 0;
 		if ($srtFilename eq ''){
-			($srtFilename) =  ${$srtFiles{$key}}[$current] =~ m%^(.*?)\.\S\S\S\.srt%i;
+			($srtFilename, $srtCode3) =  ${$srtFiles{$key}}[$current] =~ m%^(.*?)\.(\S\S\S)\.srt%i;
 
 			if ($srtFilename eq ''){
 				#($srtFilename) = $srtFiles[$current] =~ m%^(.*?)\.srt%i;
@@ -99,7 +100,6 @@ foreach my $key (keys %currentDirectory_strm){
 			}
 		}else{
 			$is2Letter = 1;
-			my $srtCode3 = '';
 			if ($srtCode2 eq 'en'){
 				$srtCode3 = 'eng';
 				$renameTo =~ s%\.$srtCode2\.%\.$srtCode3\.%i;
@@ -108,7 +108,7 @@ foreach my $key (keys %currentDirectory_strm){
 		}
 		$renameTo =~ s%$srtFilename%$filename%i;
 		print "RENAME $srtFilename ${$srtFiles{$key}}[$current] to $renameTo\n";
-		rename $directory . '/'.  ${$srtFiles{$key}}[$current],$directory . '/'. $renameTo;
+		rename $directory . '/'.  ${$srtFiles{$key}}[$current],$directory . '/'. $srtFilename . '.'. $srtCode3 . '.srt';
 
 		$current++;
 
