@@ -1,3 +1,4 @@
+- testing proxy for live tv recording
 - testing proxy for live tv
 - add tv support for fix_srt_naming
 - emby: force audio remux parameter added

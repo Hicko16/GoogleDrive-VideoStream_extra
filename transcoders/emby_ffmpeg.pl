@@ -267,8 +267,16 @@ if ($isSRT){
 	my $failures=0;
 	while ($now > 59 and $failures < 100){
 	  	$arglist = createArglist();
-		print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
-		`$FFMPEG_OEM $arglist -v error`;
+
+		if ($arglist =~ m%$PROXY_DETERMINATOR%){
+			print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
+			`$FFMPEG_OEM $PROXY $arglist -v error`;
+		}else{
+			print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
+			`$FFMPEG_OEM $arglist -v error`;
+
+		}
+
 		#$pid = open ( LS, '-|', '/u01/ffmpeg-git-20171123-64bit-static/ffmpeg  -v error ' . $arglist . ' 2>&1');
 		#my $output = do{ local $/; <LS> };
 		#close LS;
