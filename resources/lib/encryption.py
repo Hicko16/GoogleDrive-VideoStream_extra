@@ -8,19 +8,6 @@ if constants.CONST.DEBUG:
     #debugging
     import hashlib
 
-KODI = True
-if re.search(re.compile('.py', re.IGNORECASE), sys.argv[0]) is not None:
-    KODI = False
-
-
-if KODI:
-
-    # cloudservice - standard XBMC modules
-    import xbmc
-
-else:
-    from resources.libgui import xbmc
-
 
 try:
     import Crypto.Random
