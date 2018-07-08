@@ -7,10 +7,11 @@ use File::Copy;
 use constant LOGFILE => '/tmp/recordings.log';
 use constant ROOT_RECORDING => '/u01/recordings/';
 use constant ROOT_UPLOADING => '/u01/upload.gd/media/recordings/';
-
+use constant FFMPEG => '/var/lib/emby-server/ffmpeg/20170308/ffmpeg.oem';
 
 
 my $ROOT_RECORDING = ROOT_RECORDING;
+my $FFMPEG = FFMPEG;
 
 # get total arg passed to this script
 my $total = $#ARGV + 1;
@@ -26,7 +27,7 @@ open (LOG, '>>' . LOGFILE) or die $!;
 my $recordingFile = $ARGV[0];
 
 my ($path, $filename) = $recordingFile =~ m%^$ROOT_RECORDING(.*?)/([^/]+).ts$%;
-
+`$FFMPEG -i "$ROOT_RECORDING/$path/$filename.ts" -c copy "$ROOT_RECORDING/$path/$filename.mp4"`;
 print LOG "path = $path, file = $filename\n";
 
 
