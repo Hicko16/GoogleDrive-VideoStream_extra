@@ -34,7 +34,7 @@ print LOG "path = $path, file = $filename\n";
 make_path(ROOT_UPLOADING . "/$path/");
 
 my @oldFiles = glob $ROOT_RECORDING . '/'. $filename . '*';
-print LOG "searching " .  $ROOT_RECORDING . '/'. $filename . '*' . "\n";
+print LOG "searching " .  $ROOT_RECORDING . '/'. $path . '/' .$filename . '*' . "\n";
 foreach my $oldFile (@oldFiles){
 	my ($shortFilename) = $oldFile =~ m%\/([^\/]+)$%;
 	my $newFile = ROOT_UPLOADING . "/$path/" . $shortFilename;
