@@ -33,14 +33,14 @@ print LOG "path = $path, file = $filename\n";
 #make the path
 make_path(ROOT_UPLOADING . "/$path/");
 
-my @oldFiles = glob $ROOT_RECORDING . '/'. $filename . '*';
-print LOG "searching " .  $ROOT_RECORDING . '/'. $path . '/' .$filename . '*' . "\n";
-foreach my $oldFile (@oldFiles){
-	my ($shortFilename) = $oldFile =~ m%\/([^\/]+)$%;
-	my $newFile = ROOT_UPLOADING . "/$path/" . $shortFilename;
-	move($oldFile, $newFile)
-}
+opendir (my $dh, ROOT_RECORDING . '/'. $path . '/') or die $!;
+print LOG "searching " .  ROOT_RECORDING . '/'. $path .  "\n";
 
+while (my $file = readdir($dh)){
+    next if $file =~ /^\./;
+	move(ROOT_RECORDING . '/'. $path . '/' . $file, ROOT_UPLOADING . '/'. $path . '/' .$file);
+}
+closedir($dh);
 
 
 close(LOG);
