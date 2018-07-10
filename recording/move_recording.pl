@@ -7,7 +7,7 @@ use File::Copy;
 use constant LOGFILE => '/tmp/recordings.log';
 use constant ROOT_RECORDING => '/u01/recordings/';
 use constant ROOT_UPLOADING => '/u01/upload.gd/media/recordings/';
-use constant FFMPEG => '/var/lib/emby-server/ffmpeg/20170308/ffmpeg.oem';
+use constant FFMPEG => 'ffmpeg';
 
 
 my $ROOT_RECORDING = ROOT_RECORDING;
