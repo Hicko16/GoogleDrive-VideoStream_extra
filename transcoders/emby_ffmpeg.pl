@@ -231,10 +231,9 @@ if ($isSRT){
 			`$FFMPEG_TEST $arglist -v error`;
 		}
 
-		#retry if contains error 403
-		$retry++;
-		next;
-		if($output =~ m%403% or $output =~ m%Connection timed out%){
+		if ( $arglist =~ m%\/stream\/channelid%){
+			last;
+		}elsif($output =~ m%403% or $output =~ m%Connection timed out%){
 			print STDERR "ERROR:";
 			print STDERR $output;
 			print STDERR 'retry ffmpeg ' . $arglist . "\n";
