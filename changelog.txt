@@ -1,3 +1,4 @@
+- add a script to fix tv STRM files by injecting the show name into the filename
 - push "update_strm" script
 - testing proxy for live tv recording
 - testing proxy for live tv
