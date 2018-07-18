@@ -37,7 +37,7 @@ if (-e $targetDirectory . '/userdata/' . $userTarget . '/'){
 mkdir $targetDirectory . '/userdata/' . $userTargert . '/';
 mkdir $targetDirectory . '/users/' . $userTargert . '/';
 
-copy("$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json") or die ("cannot copy displayprefs.json" . $sourceDirectory . '/userdata/' . $userSource . '/displayprefs.json ' . $targetDirectory . '/userdata/' . $userTarget . '/displayprefs.json');
+copy("$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json") or die ("cannot copy displayprefs.json " . "$sourceDirectory/userdata/$userSource/displayprefs.json ". "$targetDirectory/userdata/$userTarget/displayprefs.json");
 copy($sourceDirectory . '/userdata/' . $userSource . '/userdata.json', $targetDirectory . '/userdata/' . $userTarget . '/userdata.json') or die ("cannot copy userdata.json");
 copy($sourceDirectory . '/users/' . $userSource . '/sec.txt', $targetDirectory . '/users/' . $userTarget . '/sec.txt')  or die ("cannot copy sec.txt");
 copy($sourceDirectory . '/users/' . $userSource . '/config.xml', $targetDirectory . '/users/' . $userTarget . '/config.xml') or die ("cannot copy config.xml");
