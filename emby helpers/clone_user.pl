@@ -29,19 +29,19 @@ if (!(-e $targetDirectory)){
 if (!(-e $sourceDirectory . '/userdata/' . $userSource . '/')){
 	die ("source user does not exist " . $userSource);
 }
-if (-e $targetDirectory . '/userdata/' . $userTargert . '/'){
-	die ("target user already exists " . $userTargert);
+if (-e $targetDirectory . '/userdata/' . $userTarget . '/'){
+	die ("target user already exists " . $userTarget);
 }
 
 # make user
 mkdir $targetDirectory . '/userdata/' . $userTargert . '/';
 mkdir $targetDirectory . '/users/' . $userTargert . '/';
 
-copy($sourceDirectory . '/userdata/' . $userSource . '/displayprefs.json', $targetDirectory . '/userdata/' . $userTargert . '/displayprefs.json');
-copy($sourceDirectory . '/userdata/' . $userSource . '/userdata.json', $targetDirectory . '/userdata/' . $userTargert . '/userdata.json');
-copy($sourceDirectory . '/users/' . $userSource . '/sec.txt', $targetDirectory . '/users/' . $userTargert . '/sec.txt');
-copy($sourceDirectory . '/users/' . $userSource . '/config.xml', $targetDirectory . '/users/' . $userTargert . '/config.xml');
-copy($sourceDirectory . '/users/' . $userSource . '/policy.xml', $targetDirectory . '/users/' . $userTargert . '/policy.xml');
+copy($sourceDirectory . '/userdata/' . $userSource . '/displayprefs.json', $targetDirectory . '/userdata/' . $userTarget . '/displayprefs.json');
+copy($sourceDirectory . '/userdata/' . $userSource . '/userdata.json', $targetDirectory . '/userdata/' . $userTarget . '/userdata.json');
+copy($sourceDirectory . '/users/' . $userSource . '/sec.txt', $targetDirectory . '/users/' . $userTarget . '/sec.txt');
+copy($sourceDirectory . '/users/' . $userSource . '/config.xml', $targetDirectory . '/users/' . $userTarget . '/config.xml');
+copy($sourceDirectory . '/users/' . $userSource . '/policy.xml', $targetDirectory . '/users/' . $userTarget . '/policy.xml');
 
 print "created " . $userTarget . "\n";
 
