@@ -34,8 +34,8 @@ if (-e $targetDirectory . '/userdata/' . $userTarget . '/'){
 }
 
 # make user
-mkdir "$targetDirectory/userdata/$userTargert/" or die("cannot create ". "$targetDirectory/userdata/$userTargert/");
-mkdir "$targetDirectory/users/$userTargert/" or die("cannot create ".  "$targetDirectory/users/$userTargert/");
+mkdir "$targetDirectory/userdata/$userTarget/" or die("cannot create ". "$targetDirectory/userdata/$userTarget/");
+mkdir "$targetDirectory/users/$userTarget/" or die("cannot create ".  "$targetDirectory/users/$userTarget/");
 
 copy("$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json") or die ("cannot copy displayprefs.json " . "$sourceDirectory/userdata/$userSource/displayprefs.json ". "$targetDirectory/userdata/$userTarget/displayprefs.json");
 copy($sourceDirectory . '/userdata/' . $userSource . '/userdata.json', $targetDirectory . '/userdata/' . $userTarget . '/userdata.json') or die ("cannot copy userdata.json");
