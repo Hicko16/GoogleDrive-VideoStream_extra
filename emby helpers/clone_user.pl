@@ -12,11 +12,12 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:u:y:',\%opt));
+die (USAGE) unless (getopts ('d:s:t:u:y:',\%opt));
 
 # directory for backups
-my $sourceDirectory = $opt{'s'};
-my $targetDirectory = $opt{'t'};
+my $directory  = $opt{'d'};
+my $sourceDirectory = $directory . '/'. $opt{'s'};
+my $targetDirectory = $directory . '/'. $opt{'t'};
 
 my $userSource =  $opt{'u'};
 my $userTarget =  $opt{'y'};
