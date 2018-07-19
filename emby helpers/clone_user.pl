@@ -40,11 +40,11 @@ foreach my $directoryToMake (@directoriesToMake){
     mkdir $directoryToMake or die("cannot create " . $directoryToMake . " " . $!);
 }
 
-my @filesToMake = (("$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json"),
-("$sourceDirectory/userdata/$userSource/userdata.json","$targetDirectory/userdata/$userTarget/userdata.json" ),
-("$sourceDirectory/users/$userSource/sec.txt", "$targetDirectory/users/$userTarget/sec.txt"),
-("$sourceDirectory/users/$userSource/config.xml", "$targetDirectory/users/$userTarget/config.xml"),
-("$sourceDirectory/users/$userSource/policy.xml", "$targetDirectory/users/$userTarget/policy.xml"));
+my @filesToMake = (["$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json"],
+["$sourceDirectory/userdata/$userSource/userdata.json","$targetDirectory/userdata/$userTarget/userdata.json"],
+["$sourceDirectory/users/$userSource/sec.txt", "$targetDirectory/users/$userTarget/sec.txt"],
+["$sourceDirectory/users/$userSource/config.xml", "$targetDirectory/users/$userTarget/config.xml"],
+["$sourceDirectory/users/$userSource/policy.xml", "$targetDirectory/users/$userTarget/policy.xml"]);
 
 foreach my $fileToCopy (@filesToMake){
 	copy($fileToCopy[0], $fileToCopy[1]) or die ("cannot copy file ". $fileToCopy[0] . " " . $!);
