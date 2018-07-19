@@ -33,15 +33,22 @@ if (-e $targetDirectory . '/userdata/' . $userTarget . '/'){
 	die ("target user already exists " . $userTarget);
 }
 
-# make user
-mkdir "\"$targetDirectory/userdata/$userTarget/\"" or die("cannot create ". "$targetDirectory/userdata/$userTarget/");
-mkdir "\"$targetDirectory/users/$userTarget/\"" or die("cannot create ".  "$targetDirectory/users/$userTarget/");
 
-copy("\"$sourceDirectory/userdata/$userSource/displayprefs.json\"", "\"$targetDirectory/userdata/$userTarget/displayprefs.json\"") or die ("cannot copy displayprefs.json " . "$sourceDirectory/userdata/$userSource/displayprefs.json ". "$targetDirectory/userdata/$userTarget/displayprefs.json");
-copy("\"$sourceDirectory/userdata/$userSource/userdata.json\"", "\"$targetDirectory/userdata/$userTarget/userdata.json\"") or die ("cannot copy userdata.json");
-copy("\"$sourceDirectory/users/$userSource/sec.txt\"", "\"$targetDirectory/users/$userTarget/sec.txt\"")  or die ("cannot copy sec.txt");
-copy("\"$sourceDirectory/users/$userSource/config.xml\"", "\"$targetDirectory/users/$userTarget/config.xml\"") or die ("cannot copy config.xml");
-copy("\"$sourceDirectory/users/$userSource/policy.xml\"", "\"$targetDirectory/users/$userTarget/policy.xml\"") or die ("cannot copy policy.xml");
+# make user
+my @directoriesToMake = ("$targetDirectory/userdata/$userTarget", "$targetDirectory/users/$userTarget");
+foreach my $directoryToMake (@directoriesToMake){
+    mkdir $directoryToMake or die("cannot create " . $directoryToMake . " " . $!);
+}
+
+my @filesToMake = (("$sourceDirectory/userdata/$userSource/displayprefs.json", "$targetDirectory/userdata/$userTarget/displayprefs.json"),
+("$sourceDirectory/userdata/$userSource/userdata.json","$targetDirectory/userdata/$userTarget/userdata.json" ),
+("$sourceDirectory/users/$userSource/sec.txt", "$targetDirectory/users/$userTarget/sec.txt"),
+("$sourceDirectory/users/$userSource/config.xml", "$targetDirectory/users/$userTarget/config.xml"),
+("$sourceDirectory/users/$userSource/policy.xml", "$targetDirectory/users/$userTarget/policy.xml"));
+
+foreach my $fileToCopy (@filesToMake){
+	copy($fileToCopy[0], $fileToCopy[1]) or die ("cannot copy file ". $fileToCopy[0] . " " . $!);
+}
 
 print "created " . $userTarget . "\n";
 
