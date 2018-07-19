@@ -36,7 +36,7 @@ while(my $line =<INPUT>){
 	my $source = "$sourceDirectory/$title($year)";
 	my $target = "$targetDirectory/$title($year)";
 	if (-e $source and !(-e $target)){
-		symlink ($sourceDirectory, $target);
+		symlink ($source, $target);
 		print "create symlink for $target\n";
 	}
 
