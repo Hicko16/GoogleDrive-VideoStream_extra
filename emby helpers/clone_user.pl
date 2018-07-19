@@ -46,7 +46,7 @@ my @filesToMake = (["$sourceDirectory/userdata/$userSource/displayprefs.json", "
 ["$sourceDirectory/users/$userSource/config.xml", "$targetDirectory/users/$userTarget/config.xml"],
 ["$sourceDirectory/users/$userSource/policy.xml", "$targetDirectory/users/$userTarget/policy.xml"]);
 
-for (my $i=0; $i < $#filesToMake; $i++){
+for (my $i=0; $i <= $#filesToMake; $i++){
 #foreach my $fileToCopy (@filesToMake){
 	copy($filesToMake[$i][0], $filesToMake[$i][1]) or die ("cannot copy file ". $filesToMake[$i][0] . " " . $!);
 }
