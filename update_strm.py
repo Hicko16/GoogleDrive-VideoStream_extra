@@ -30,7 +30,7 @@ import getopt, sys
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "s:p:d:x:z:v", ["help", "directory=", "salt=", "password=", "search=", "replace="])
+        opts, args = getopt.getopt(sys.argv[1:], "s:p:d:x:z:va", ["help", "directory=", "salt=", "password=", "search=", "replace="])
     except getopt.GetoptError as err:
         # print help information and exit:
         print str(err)  # will print something like "option -a not recognized"
@@ -42,9 +42,12 @@ def main():
     search = None
     replace = None
     verbose = False
+    decryptOnly = False
     for o, a in opts:
         if o in ('-v'):
             verbose = True
+        elif o in ('-a'):
+            decryptOnly = True
         elif  o in ("-p", "--password"):
             password = a
         elif o in ("-s", "--salt"):
@@ -105,7 +108,9 @@ def main():
                     if verbose:
                         print "kv (with replacements) = " + str(kv) + "\n"
                 file = open(str(root) + '/' + str(filename), "w")
-                file.write(str(baseurl) + '?kv=' + str(encrypt.encryptString(kv)) + "\n")
+                if not decryptOnly:
+                    kv = encrypt.encryptString(kv)
+                file.write(str(baseurl) + '?kv=' + str(kv) + "\n")
                 file.close()
 
                 #print "encrypted = " + encrypt.encryptString(kv) + "\n"
