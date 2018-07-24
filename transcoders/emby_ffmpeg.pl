@@ -123,6 +123,7 @@ if ($isSRT){
 	# the remuxing will be spreadout over the entire playback session as Google will limit the transfer rate
 	if (PREFER_GOOGLE_TRANSCODE){
 
+		# request to transcode?
 		if ($arglist =~ m%\-pix_fmt yuv420p% or $arglist =~ m%\-bsf\:v h264_mp4toannexb% or $arglist =~ m%\-codec\:v\:0 libx264%){
 			if ($arglist =~ m%\,426\)% or $arglist =~ m%\,640\)% ){
 				$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=2\&override\=true\"%;
@@ -133,8 +134,11 @@ if ($isSRT){
 			}
 
 			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+
+		# direct stream only?
 		}else{
-			$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
+			#$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
+			#$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 		}
 
 		my $audioSelection = 0;
