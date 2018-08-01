@@ -83,7 +83,8 @@ def main():
         for filename in files:
             if filename.endswith(".strm"):
 
-                print "reading " + str(filename) + "\n"
+                if verbose:
+                    print "reading " + str(filename) + "\n"
                 file = open(str(root) + '/' + str(filename), "r")
                 url = file.read()
                 file.close()
@@ -104,6 +105,9 @@ def main():
                     baseurl = m.group(1)
                     if verbose:
                         print "base url = " + str(baseurl) + "\n"
+                else:
+                    print "issue with file " + str(root) + '/' + str(filename)
+
                 if verbose:
                     print "kv = " + str(kv) + "\n"
                 if (search is not None and replace is not None):
