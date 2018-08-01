@@ -78,10 +78,11 @@ def main():
     if (salt is not None and password is not None):
         encrypt = encryption.encryption(salt,password)
 
-    skip = False
     for root,dirs,files in os.walk(directory):
         for filename in files:
             if filename.endswith(".strm"):
+
+                skip = False
 
                 if verbose:
                     print "reading " + str(filename) + "\n"
@@ -122,6 +123,7 @@ def main():
                         kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
                     file.write(str(kv) + "\n")
                     file.close()
+
 
                 #print "encrypted = " + encrypt.encryptString(kv) + "\n"
 
