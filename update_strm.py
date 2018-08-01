@@ -78,7 +78,7 @@ def main():
     if (salt is not None and password is not None):
         encrypt = encryption.encryption(salt,password)
 
-
+    skip = False
     for root,dirs,files in os.walk(directory):
         for filename in files:
             if filename.endswith(".strm"):
@@ -107,19 +107,21 @@ def main():
                         print "base url = " + str(baseurl) + "\n"
                 else:
                     print "issue with file " + str(root) + '/' + str(filename)
+                    skip = True
 
-                if verbose:
-                    print "kv = " + str(kv) + "\n"
-                if (search is not None and replace is not None):
-                    kv = kv.replace(search,replace, 5)
-                    baseurl = baseurl.replace(search,replace, 5)
+                if not skip:
                     if verbose:
-                        print "kv (with replacements) = " + str(kv) + "\n"
-                file = open(str(root) + '/' + str(filename), "w")
-                if not decryptOnly:
-                    kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
-                file.write(str(kv) + "\n")
-                file.close()
+                        print "kv = " + str(kv) + "\n"
+                    if (search is not None and replace is not None):
+                        kv = kv.replace(search,replace, 5)
+                        baseurl = baseurl.replace(search,replace, 5)
+                        if verbose:
+                            print "kv (with replacements) = " + str(kv) + "\n"
+                    file = open(str(root) + '/' + str(filename), "w")
+                    if not decryptOnly:
+                        kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
+                    file.write(str(kv) + "\n")
+                    file.close()
 
                 #print "encrypted = " + encrypt.encryptString(kv) + "\n"
 
