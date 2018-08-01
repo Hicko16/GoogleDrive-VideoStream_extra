@@ -96,7 +96,11 @@ def main():
                 kv = None
                 if m:
                     kv = m.group(1)
-                    kv = encrypt.decryptString(kv)
+                    try:
+                        kv = encrypt.decryptString(kv)
+                    except:
+                        wasEncrypted = False
+                        skip = True
                     wasEncrypted = True
                 else:
                     kv = url
