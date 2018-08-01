@@ -107,7 +107,7 @@ def main():
                 if verbose:
                     print "kv = " + str(kv) + "\n"
                 if (search is not None and replace is not None):
-                    kv = kv.replace(search,replace)
+                    kv = kv.replace(search,replace, 100)
                     if verbose:
                         print "kv (with replacements) = " + str(kv) + "\n"
                 file = open(str(root) + '/' + str(filename), "w")
