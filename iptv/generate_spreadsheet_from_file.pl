@@ -13,9 +13,6 @@ use Getopt::Std;		# and the getopt module
 use constant USAGE => $0 . ' -s source.m3u8 -t spreadsheet.tab';
 
 
-
-use LWP::UserAgent;
-use LWP;
 use IO::Handle;
 
 my %opt;
