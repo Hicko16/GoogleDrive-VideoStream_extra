@@ -214,7 +214,7 @@ if ($isSRT){
 }elsif ($duration_ptr == -1){
 
 	# emby 3.5.2 remove -individual_header_trailer0
-	$arglist =~ s%\-individual_header_trailer0%%;
+	$arglist =~ s%\-individual_header_trailer 0%%;
 
 	my $retry=1;
 	while ($retry< RETRY and $retry > 0){
