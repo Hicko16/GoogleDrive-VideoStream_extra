@@ -99,8 +99,6 @@ $arglist = createArglist();
 open (LOG, '>>' . LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
-# emby 3.5.2 remove -individual_header_trailer0
-$arglist =~ s%\-individual_header_trailer0%%;
 
 # request is for subtitle remuxing
 if ($isSRT){
@@ -214,6 +212,10 @@ if ($isSRT){
 #### LIVE TV REQUEST
 # request with no duration, so not a DVR request, cycle over network errors
 }elsif ($duration_ptr == -1){
+
+	# emby 3.5.2 remove -individual_header_trailer0
+	$arglist =~ s%\-individual_header_trailer0%%;
+
 	my $retry=1;
 	while ($retry< RETRY and $retry > 0){
 
