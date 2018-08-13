@@ -99,6 +99,8 @@ $arglist = createArglist();
 open (LOG, '>>' . LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
+# emby 3.5.2 remove -individual_header_trailer0
+$arglist =~ s%-individual_header_trailer0%%;
 
 # request is for subtitle remuxing
 if ($isSRT){
