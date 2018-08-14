@@ -216,6 +216,9 @@ if ($isSRT){
 	# emby 3.5.2 remove -individual_header_trailer0
 	$arglist =~ s%\-individual_header_trailer 0%%;
 
+	`$FFMPEG_TEST $arglist -v error`;
+	return
+
 	my $retry=1;
 	while ($retry< RETRY and $retry > 0){
 
