@@ -41,7 +41,7 @@ $SIG{STOP} = sub {  kill 'KILL', $pid;die "Caught a stop $pid $!"; };
 
 my $FFMPEG_OEM = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
-my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
+my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem.332 -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
 my $FFPROBE = PATH_TO_EMBY_FFMPEG .'/ffprobe ';
 my $PROXY = PROXY;
 my $PROXY_DETERMINATOR = PROXY_DETERMINATOR;
