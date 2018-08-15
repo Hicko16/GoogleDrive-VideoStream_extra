@@ -17,6 +17,10 @@ use constant GOOGLE_TRANSCODE => 1;
 # prefer to direct stream requests with Google Transcode feeds (will reduce CPU load)
 use constant PREFER_GOOGLE_TRANSCODE => 1;
 
+# when transcoding is enforced but no transcoding is actually performed, do we want to force the google transcode copy?
+use constant FORCE_GOOGLE_TRANSCODE_FOR_REMUX => 0;
+
+
 # force remux of all audio?  disable for all tracks except first audio track selected
 # ** FOR EMBY 3.5.2+, there seems to be an issue with the playback of DTS/DD 5.1/7.1 (2 channels is fine) to AAC using this method,
 #    so set to 0 to use Google Drive transcode audio by default
@@ -139,7 +143,11 @@ if ($isSRT){
 
 		# direct stream only?
 		}else{
-			#$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
+			#you've made it here because transcode was requested but the resolution is likely not provided
+			# force Google transcode stream stream?
+			if (FORCE_GOOGLE_TRANSCODE_FOR_REMUX){
+				$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
+			}
 			#$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 		}
 
