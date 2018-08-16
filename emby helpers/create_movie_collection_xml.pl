@@ -134,7 +134,7 @@ close(XML);
 		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
-    		#print "file $file\n";
+    		print "file $file\n";
 			my ($q) = $file =~ m% (\d+)p%;
 			next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
