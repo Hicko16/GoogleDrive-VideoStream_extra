@@ -69,13 +69,25 @@ open(XML,">" . $targetDirectoryBoxSet . '/collection.xml') or die ("Cannot save 
 print XML <<EOF;
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Item>
-  <ContentRating>PG</ContentRating>
-  <Added>$datestring</Added>
+  <ContentRating>CA-PG</ContentRating>
+  <Added>8/16/18 12:33:19 PM</Added>
   <LockData>false</LockData>
-  <Overview></Overview>
-  <PremiereDate>1998-07-16</PremiereDate>
+  <Overview>$collectionName</Overview>
+  <LocalTitle>$collectionName</LocalTitle>
+  <PremiereDate>2000-07-13</PremiereDate>
   <DisplayOrder>PremiereDate</DisplayOrder>
-  <ProductionYear>1998</ProductionYear>
+  <ProductionYear>2000</ProductionYear>
+  <TmdbId>748</TmdbId>
+  <Genres>
+    <Genre>Action</Genre>
+    <Genre>Adventure</Genre>
+    <Genre>Science Fiction</Genre>
+    <Genre>Fantasy</Genre>
+    <Genre>Thriller</Genre>
+  </Genres>
+  <Studios>
+    <Studio>The Donners' Company</Studio>
+  </Studios>
   <CollectionItems>
 EOF
 
