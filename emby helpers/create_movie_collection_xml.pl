@@ -70,7 +70,7 @@ print XML <<EOF;
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Item>
   <ContentRating>PG</ContentRating>
-  <Added>8/16/18 2:05:44 AM</Added>
+  <Added>$datestring</Added>
   <LockData>false</LockData>
   <Overview></Overview>
   <PremiereDate>1998-07-16</PremiereDate>
