@@ -117,7 +117,6 @@ while(my $line =<INPUT>){
 }
 
 print XML <<EOF;
-s
   </CollectionItems>
 </Item>
 EOF
@@ -148,12 +147,12 @@ close(XML);
 			next unless ($file =~ m%\.strm$%);
 			$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
-			print XML <<EOF
+			print XML <<EOF;
     <CollectionItem>
       <Path>$sourceDirectory/$folder/$file</Path>
     </CollectionItem>
 EOF
-			last if $isFolder;
+			last if (!$isFolder);
 		}
 		if ($isFolder){
 			closedir $dh2;
