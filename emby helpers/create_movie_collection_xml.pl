@@ -88,7 +88,6 @@ print XML <<EOF;
     <Studio>Columbia Pictures</Studio>
   </Studios>
   <CollectionItems>
-
 EOF
 
 if ($inputSpreadsheet ne ''){
@@ -142,9 +141,9 @@ close(XML);
 			next unless ($file =~ m%\.strm$%);
 			print "matched $file \n";
 			print XML <<EOF
-	    <CollectionItem>
-	      <Path>$sourceDirectory/$folder/$file</Path>
-	    </CollectionItem>
+    <CollectionItem>
+      <Path>$sourceDirectory/$folder/$file</Path>
+    </CollectionItem>
 EOF
 		}
 		closedir $dh2;
