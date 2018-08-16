@@ -129,7 +129,7 @@ close(XML);
 
 	while (my $folder = readdir $dh) {
 		next if $folder eq '.' or $folder eq '..';
-    	#print "folder $folder\n";
+    	print "folder $folder\n";
     	next unless -d "$sourceDirectory/$folder";
 		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
 		while (my $file = readdir $dh2) {
