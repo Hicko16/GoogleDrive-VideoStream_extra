@@ -72,21 +72,10 @@ print XML <<EOF;
   <ContentRating>PG</ContentRating>
   <Added>8/16/18 2:05:44 AM</Added>
   <LockData>false</LockData>
-  <Overview>When a power-crazed despot schemes to buy California from Mexico, it takes two Zorros--the legendary Don Diego de la Vega (Anthony Hopkins) and his chosen successor Alejandro Murrieta (Antonio Banderas), a dashing bandit-turned-hero--to defeat the tyrant's unscrupulous plans. The original caped crusader is back! Antonio Banderas and Catherine Zeta-Jones return for more swashbuckling action, adventure and excitement in THE LEGEND OF ZORRO!</Overview>
-  <LocalTitle>Zorro Collection</LocalTitle>
+  <Overview></Overview>
   <PremiereDate>1998-07-16</PremiereDate>
   <DisplayOrder>PremiereDate</DisplayOrder>
   <ProductionYear>1998</ProductionYear>
-  <TmdbId>1657</TmdbId>
-  <Genres>
-    <Genre>Action</Genre>
-    <Genre>Adventure</Genre>
-  </Genres>
-  <Studios>
-    <Studio>TriStar Pictures</Studio>
-    <Studio>Amblin Entertainment</Studio>
-    <Studio>Columbia Pictures</Studio>
-  </Studios>
   <CollectionItems>
 EOF
 
