@@ -29,6 +29,7 @@ my $collectionName =  $opt{'c'};
 
 my $minQuality = 0;
 my $maxQuality = 9999;
+my $isByQuality = 1;
 if ($quality == 2160){
 	$minQuality = 1081;
 }elsif ($quality == 1080){
@@ -40,7 +41,7 @@ if ($quality == 2160){
 }elsif ($quality == 480){
 	$maxQuality = 480;
 }else{
-	die("invalid quality: $quality");
+	$isByQuality = 0;
 }
 
 # some checks
@@ -93,44 +94,36 @@ EOF
 
 if ($inputSpreadsheet ne ''){
 
-open(INPUT,$inputSpreadsheet) or die ("Cannot open $inputSpreadsheet ".$!);
+	open(INPUT,$inputSpreadsheet) or die ("Cannot open $inputSpreadsheet ".$!);
 
 
+	while(my $line =<INPUT>){
 
-while(my $line =<INPUT>){
-
-#    <CollectionItem>
-#      <Path>/u01/STRM/movies/the mask of zorro(1998)/the mask of zorro(1998) - original 1080p.strm</Path>
-#    </CollectionItem>
-	my ($title, $year) = $line =~ m%([^\t]+)\t([^\t]+)\n%;
-	my $source = "$sourceDirectory/$title($year)";
-	opendir my $dh, $source or next;
-
-
-	closedir $dh;
-
-	my $target = "$targetDirectory/$title($year)";
-	if (-e $source and !(-e $target)){
-		symlink ($source, $target);
-		print "create symlink for $target\n";
-	}
-
-}
-
-print XML <<EOF;
-s
-  </CollectionItems>
-</Item>
+	#    <CollectionItem>
+	#      <Path>/u01/STRM/movies/the mask of zorro(1998)/the mask of zorro(1998) - original 1080p.strm</Path>
+	#    </CollectionItem>
+		my ($title, $year) = $line =~ m%([^\t]+)\t([^\t]+)\n%;
+		my $source = "$sourceDirectory/$title($year)";
+		opendir my $dh, $source or next;
+    	print "folder $folder\n";
+    	next unless -d "$sourceDirectory/$folder";
+		my $cleanPath = "$sourceDirectory/$folder";
+		print "matched $cleanPath \n";
+		$cleanPath =~  s%\&%\&amp;%g;
+		print XML <<EOF
+    <CollectionItem>
+      <Path>$cleanPath</Path>
+    </CollectionItem>
 EOF
 
-close(INPUT);
-close(XML);
+	}
+
+	close(INPUT);
 }else{
 	opendir my $dh, $sourceDirectory or die("cannot open $sourceDirectory");
 
 	while (my $folder = readdir $dh) {
 		next if $folder eq '.' or $folder eq '..';
-
 
     	print "folder $folder\n";
     	next unless -d "$sourceDirectory/$folder";
@@ -157,11 +150,11 @@ EOF
 	}
 	closedir $dh;
 
-	print XML <<EOF;
+
+}
+print XML <<EOF;
   </CollectionItems>
 </Item>
 EOF
 
 	close(XML);
-}
-
