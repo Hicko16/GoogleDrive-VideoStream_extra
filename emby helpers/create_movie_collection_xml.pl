@@ -104,10 +104,8 @@ if ($inputSpreadsheet ne ''){
 	#    </CollectionItem>
 		my ($title, $year) = $line =~ m%([^\t]+)\t([^\t]+)\n%;
 		my $source = "$sourceDirectory/$title($year)";
-		opendir my $dh, $source or next;
-    	print "folder $folder\n";
-    	next unless -d "$sourceDirectory/$folder";
-		my $cleanPath = "$sourceDirectory/$folder";
+    	next unless -d "$source";
+		my $cleanPath = "$source";
 		print "matched $cleanPath \n";
 		$cleanPath =~  s%\&%\&amp;%g;
 		print XML <<EOF
