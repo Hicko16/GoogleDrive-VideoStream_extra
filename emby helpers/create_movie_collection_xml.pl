@@ -138,7 +138,7 @@ close(XML);
 		}else{
 			$file = $folder;
 		}
-		while ( ( (!$isFolder) and $file ne '') or $file = readdir $dh2) {
+		while ( $file ne '' and ($isFolder and $file = readdir $dh2) ) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n";
 			my ($q) = $file =~ m% (\d+)p%;
