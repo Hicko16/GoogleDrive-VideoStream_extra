@@ -139,6 +139,7 @@ close(XML);
 			next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
 			next unless ($file =~ m%\.strm$%);
+			$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
 			print XML <<EOF
     <CollectionItem>
