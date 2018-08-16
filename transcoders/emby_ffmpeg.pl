@@ -229,7 +229,7 @@ if ($isSRT){
 	# emby 3.5.2 remove -individual_header_trailer0
 	#$arglist =~ s%\-individual_header_trailer 0%%;
 
-    print LOG "running LIVETV " . $FFMPEG_OEM . ' ' . $arglist . "\n\n";
+    print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
 	`$FFMPEG_TEST $arglist -v error`;
 	return
