@@ -141,11 +141,13 @@ close(XML);
 			next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
 			next unless ($file =~ m%\.strm$%);
-			$file =~ s%\&%\&amp;%g;
+			#$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
+			my $cleanPath = "$sourceDirectory/$folder/$file";
+			$cleanPath =~  s%\&%\&amp;%g;
 			print XML <<EOF
     <CollectionItem>
-      <Path>$sourceDirectory/$folder/$file</Path>
+      <Path>$cleanPath</Path>
     </CollectionItem>
 EOF
 		}
