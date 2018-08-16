@@ -139,7 +139,7 @@ close(XML);
 		}else{
 			$file = $folder;
 		}
-		while ($file ne '' or $file = readdir $dh2) {
+		while ( ( (!$isFolder) and $file ne '') or $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n";
 			my ($q) = $file =~ m% (\d+)p%;
@@ -153,6 +153,7 @@ close(XML);
       <Path>$sourceDirectory/$folder/$file</Path>
     </CollectionItem>
 EOF
+			last if $isFolder;
 		}
 		if ($isFolder){
 			closedir $dh2;
