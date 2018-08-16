@@ -105,14 +105,24 @@ if ($inputSpreadsheet ne ''){
 		my ($title, $year) = $line =~ m%([^\t]+)\t([^\t]+)\n%;
 		my $source = "$sourceDirectory/$title($year)";
     	next unless -d "$source";
-		my $cleanPath = "$source";
-		print "matched $cleanPath \n";
-		$cleanPath =~  s%\&%\&amp;%g;
-		print XML <<EOF
+		opendir my $dh2, "$source" or die("cannot open $source");
+		while (my $file = readdir $dh2) {
+			next if $file eq '.' or $file eq '..';
+    		print "file $file\n";
+			next unless ($file =~ m%\.strm$%);
+			#$file =~ s%\&%\&amp;%g;
+			print "matched $file \n";
+			my $cleanPath = "$source/$file";
+			$cleanPath =~  s%\&%\&amp;%g;
+			print XML <<EOF;
     <CollectionItem>
       <Path>$cleanPath</Path>
     </CollectionItem>
 EOF
+			last;
+		}
+		closedir $dh2;
+
 
 	}
 
