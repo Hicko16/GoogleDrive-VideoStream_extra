@@ -117,6 +117,7 @@ while(my $line =<INPUT>){
 }
 
 print XML <<EOF;
+s
   </CollectionItems>
 </Item>
 EOF
@@ -129,16 +130,11 @@ close(XML);
 	while (my $folder = readdir $dh) {
 		next if $folder eq '.' or $folder eq '..';
 
-		my $isFolder=0;
-		my $file = '';
-		if (-d "$sourceDirectory/$folder"){
-	    	print "folder $folder\n";
-	    	$isFolder=1;
-			opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
-		}else{
-			$file = $folder;
-		}
-		while ( $file ne '' and ($isFolder and $file = readdir $dh2) ) {
+
+    	print "folder $folder\n";
+    	next unless -d "$sourceDirectory/$folder";
+		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
+		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n";
 			my ($q) = $file =~ m% (\d+)p%;
@@ -147,18 +143,13 @@ close(XML);
 			next unless ($file =~ m%\.strm$%);
 			$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
-			print XML <<EOF;
+			print XML <<EOF
     <CollectionItem>
       <Path>$sourceDirectory/$folder/$file</Path>
     </CollectionItem>
 EOF
-			last if (!$isFolder);
 		}
-		if ($isFolder){
-			closedir $dh2;
-		}
-
-
+		closedir $dh2;
 
 	}
 	closedir $dh;
