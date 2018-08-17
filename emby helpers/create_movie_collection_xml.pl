@@ -14,7 +14,7 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:q:s:c:t:',\%opt));
+die (USAGE) unless (getopts ('i:q:s:c:t:n:',\%opt));
 
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
@@ -26,6 +26,7 @@ if ($quality eq '' and $inputSpreadsheet eq ''){
 my $sourceDirectory =  $opt{'s'};
 my $targetDirectory =  $opt{'t'};
 my $collectionName =  $opt{'c'};
+my $nfoCriteria = $opt{'n'};
 
 my $minQuality = 0;
 my $maxQuality = 9999;
@@ -109,7 +110,23 @@ if ($inputSpreadsheet ne ''){
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n";
-			next unless ($file =~ m%\.strm$%);
+    		if ($nfoCriteria ne ''){
+				next unless $file =~ m%\.nfo%;
+				open (NFO, "$source/$file") or next;
+				while (my $line = <NFO>){
+					if ($line =~ m%$nfoCriteria%){
+						$file  =~ s%\.nfo%\.strm%;
+    					print "match $file\n";
+						last;
+					}
+
+				}
+
+				close (NFO);
+
+    		}else{
+				next unless ($file =~ m%\.strm$%);
+    		}
 			#$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
 			my $cleanPath = "$source/$file";
