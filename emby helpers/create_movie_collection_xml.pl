@@ -114,6 +114,7 @@ if ($inputSpreadsheet ne ''){
 				next unless $file =~ m%\.nfo%;
 				open (NFO, "$source/$file") or next;
 				my $match=0;
+
 				while (my $line = <NFO>){
 					if ($line =~ m%$nfoCriteria%){
 						$file  =~ s%\.nfo%\.strm%;
