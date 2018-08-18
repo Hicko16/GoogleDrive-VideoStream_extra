@@ -19,8 +19,8 @@ die (USAGE) unless (getopts ('i:q:s:c:t:n:',\%opt));
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
-if ($quality eq '' and $inputSpreadsheet eq ''){
-	die("either quality or a spreadsheet for input is required");
+if ($quality eq '' and $inputSpreadsheet eq '' and $nfoCriteria eq ''){
+	die("either quality, nfo criteria or a spreadsheet for input is required");
 }
 
 my $sourceDirectory =  $opt{'s'};
