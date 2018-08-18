@@ -19,6 +19,7 @@ die (USAGE) unless (getopts ('i:q:s:c:t:n:',\%opt));
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
+my $nfoCriteria = $opt{'n'};
 if ($quality eq '' and $inputSpreadsheet eq '' and $nfoCriteria eq ''){
 	die("either quality, nfo criteria or a spreadsheet for input is required");
 }
@@ -26,7 +27,6 @@ if ($quality eq '' and $inputSpreadsheet eq '' and $nfoCriteria eq ''){
 my $sourceDirectory =  $opt{'s'};
 my $targetDirectory =  $opt{'t'};
 my $collectionName =  $opt{'c'};
-my $nfoCriteria = $opt{'n'};
 
 my $minQuality = 0;
 my $maxQuality = 9999;
