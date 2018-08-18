@@ -113,17 +113,18 @@ if ($inputSpreadsheet ne ''){
     		if ($nfoCriteria ne ''){
 				next unless $file =~ m%\.nfo%;
 				open (NFO, "$source/$file") or next;
+				my $match=0;
 				while (my $line = <NFO>){
 					if ($line =~ m%$nfoCriteria%){
 						$file  =~ s%\.nfo%\.strm%;
     					print "match $file\n";
+						$match = 1;
 						last;
 					}
 
 				}
-
 				close (NFO);
-
+				next unless $match;
     		}else{
 				next unless ($file =~ m%\.strm$%);
     		}
