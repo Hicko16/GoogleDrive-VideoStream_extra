@@ -232,7 +232,7 @@ if ($isSRT){
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
 	`$FFMPEG_TEST $arglist -v error`;
-	return
+	return;
 
 	my $retry=1;
 	while ($retry< RETRY and $retry > 0){
@@ -248,8 +248,8 @@ if ($isSRT){
 
 
 		if ($arglist =~ m%$PROXY_DETERMINATOR%){
-			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
-	        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
+			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
+	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
 			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
 		}else{
 			print STDERR "running LIVETV " . $FFMPEG_OEM . ' ' . $arglist . "\n";

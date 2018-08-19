@@ -4,6 +4,10 @@ use constant PATH_TO_EMBY_FFMPEG => '/opt/emby-server/bin/';
 
 use constant FILTER_PGS => 1;
 
+use constant PROXY_DETERMINATOR => 'sofasttv';
+use constant PROXY => 'http:// :8888';
+
+
 my $pidi=0;
 
 $SIG{QUIT} = sub {  kill 'KILL', $pid;die "Caught a quit $pid $!"; };
@@ -19,6 +23,8 @@ use constant LOGFILE => '/tmp/transcode.log';
 my $FFPROBE_OEM = PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
 #my $FFPROBE_OEM = 'ffprobe ';
 
+my $PROXY = PROXY;
+my $PROXY_DETERMINATOR = PROXY_DETERMINATOR;
 
 
 sub createArglist(){
@@ -37,7 +43,12 @@ $arglist = createArglist();
 open (LOG, '>>' . LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
-print LOG "running " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
+if ($arglist =~ m%$PROXY_DETERMINATOR%){
+	print LOG "running PROXY " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
+	$FFPROBE_OEM .= " -http_proxy $PROXY "
+}else{
+	print LOG "running " . $FFPROBE_OEM . ' ' . $arglist  . "\n";
+}
 
 $pid = open ( LS, '-|', $FFPROBE_OEM . ' ' . $arglist . ' 2>&1');
 my $output = do{ local $/; <LS> };
