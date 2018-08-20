@@ -231,11 +231,8 @@ if ($isSRT){
 
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
-	`$FFMPEG_TEST $arglist -v error`;
-	return;
-
 	my $retry=1;
-	while ($retry< RETRY and $retry > 0){
+#	while ($retry< RETRY and $retry > 0){
 
 		if ($arglist =~ m%\-pix_fmt yuv420p%){
 			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
@@ -270,7 +267,7 @@ if ($isSRT){
 			print STDERR "\n\n\nDONE\n\n";
 			$retry++;
 		}
-	}
+	#}
 
 #### LIVE TV DVR REQUEST
 # request with duration indicates timed recording
