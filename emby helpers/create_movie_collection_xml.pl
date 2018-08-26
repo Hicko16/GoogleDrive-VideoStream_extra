@@ -67,6 +67,7 @@ mkdir "$targetDirectoryBoxSet";
 
 open(XML,">" . $targetDirectoryBoxSet . '/collection.xml') or die ("Cannot save to $targetDirectoryBoxSet ".$!);
 #  <Added>$datestring</Added>
+#  <TmdbId>748</TmdbId>
 
 print XML <<EOF;
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
@@ -79,7 +80,6 @@ print XML <<EOF;
   <PremiereDate>2000-07-13</PremiereDate>
   <DisplayOrder>PremiereDate</DisplayOrder>
   <ProductionYear>2000</ProductionYear>
-  <TmdbId>748</TmdbId>
   <Genres>
     <Genre>Action</Genre>
     <Genre>Adventure</Genre>
