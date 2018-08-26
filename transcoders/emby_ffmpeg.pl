@@ -24,7 +24,7 @@ use constant FORCE_GOOGLE_TRANSCODE_FOR_REMUX => 0;
 # force remux of all audio?  disable for all tracks except first audio track selected
 # ** FOR EMBY 3.5.2+, there seems to be an issue with the playback of DTS/DD 5.1/7.1 (2 channels is fine) to AAC using this method,
 #    so set to 0 to use Google Drive transcode audio by default
-use constant FORCE_REMUX_AUDIO => 0;
+use constant FORCE_REMUX_AUDIO => 1;
 
 use constant PATH_TO_EMBY_FFMPEG => '/opt/emby-server/bin/';
 use constant PATH_TO_FFMPEG => '/u01/ffmpeg-git-20171123-64bit-static/';
