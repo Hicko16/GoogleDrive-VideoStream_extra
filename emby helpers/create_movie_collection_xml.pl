@@ -161,7 +161,25 @@ EOF
 			my ($q) = $file =~ m% (\d+)p%;
 			next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
-			next unless ($file =~ m%\.strm$%);
+    		if ($nfoCriteria ne ''){
+				next unless $file =~ m%\.nfo%;
+				open (NFO, "$sourceDirectory/$folder/$file") or next;
+				my $match=0;
+
+				while (my $line = <NFO>){
+					if ($line =~ m%$nfoCriteria%){
+						$file  =~ s%\.nfo%\.strm%;
+    					print "match $file\n";
+						$match = 1;
+						last;
+					}
+
+				}
+				close (NFO);
+				next unless $match;
+    		}else{
+				next unless ($file =~ m%\.strm$%);
+			}
 			#$file =~ s%\&%\&amp;%g;
 			print "matched $file \n";
 			my $cleanPath = "$sourceDirectory/$folder/$file";
