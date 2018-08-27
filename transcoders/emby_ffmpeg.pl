@@ -29,6 +29,7 @@ use constant FORCE_REMUX_AUDIO => 1;
 use constant PATH_TO_EMBY_FFMPEG => '/opt/emby-server/bin/';
 use constant PATH_TO_FFMPEG => '/u01/ffmpeg-git-20171123-64bit-static/';
 
+#used for IPTV proxy
 use constant PROXY_DETERMINATOR => 'sofasttv';
 use constant PROXY => 'http:// :8888';
 
