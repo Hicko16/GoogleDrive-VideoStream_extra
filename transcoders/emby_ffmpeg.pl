@@ -35,6 +35,7 @@ use constant PROXY => 'http:// :8888';
 
 use constant LOGFILE => '/tmp/transcode.log';
 
+use constant RECORDING_SERVER => '';
 
 my $pidi=0;
 
@@ -277,90 +278,99 @@ if ($isSRT){
 # * in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
 }elsif ($duration != 0){
 
-	my @moveList;
-	my $current=0;
-	my $finalFilename = $ARGV[$filename_ptr];
-	$finalFilename  =~ s%\.ts%\.mp4%;
-	$ARGV[$filename_ptr] =~ s%\.ts%\.$count\.ts%;
-	while (-e $ARGV[$filename_ptr]){
-		$count++;
-		$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
-	}
-	$renameFileName = $ARGV[$filename_ptr];
-	$renameFileName =~ s%\.ts%\.mp4%;
+	if (RECORDING_SERVER ne ''){
+		$arglist = createArglist();
+		my $RECORDING_SERVER = RECORDING_SERVER;
+		`wget http://$RECORDING_SERVER/process --post-data="cmd=$arglist"`;
+	}else{
 
-	my $now = 60;
-	my $failures=0;
-	while ($now > 59 and $failures < 100){
-	  	$arglist = createArglist();
-
-		if ($arglist =~ m%$PROXY_DETERMINATOR%){
-			print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
-			`$FFMPEG_OEM $PROXY $arglist -v error`;
-		}else{
-			print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
-			`$FFMPEG_OEM $arglist -v error`;
-
-		}
-
-		#$pid = open ( LS, '-|', '/u01/ffmpeg-git-20171123-64bit-static/ffmpeg  -v error ' . $arglist . ' 2>&1');
-		#my $output = do{ local $/; <LS> };
-		#close LS;
-		#print STDERR $output;
-
-		# we will rename the file later
-		$moveList[$current][0] = $ARGV[$filename_ptr];
-		$moveList[$current++][1] = $renameFileName;
-
-		# calculate the new duration -- add a failure to the counter and wait for 5 seconds to let the failure condition pass
-		$now = ($start + $duration + 5) - time ;
-		if ($now > 59){
-			sleep 5;
-			$failures++;
-		}
-
-		# print the duration in correct format
-		my $hour = int($now /60/60);
-	    my $min = int ($now /60%60);
-		my $sec = int ($now %60);
-		$ARGV[$duration_ptr] = ($hour<10? '0':'').$hour.":".($min <10? '0':'').$min.':' . ($sec<10?'0':'').$sec;
-
-		# increment filename
-		$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+		my @moveList;
+		my $current=0;
+		my $finalFilename = $ARGV[$filename_ptr];
+		$finalFilename  =~ s%\.ts%\.mp4%;
+		$ARGV[$filename_ptr] =~ s%\.ts%\.$count\.ts%;
 		while (-e $ARGV[$filename_ptr]){
 			$count++;
 			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
-			$renameFileName = $ARGV[$filename_ptr];
-			$renameFileName =~ s%\.ts%\.mp4%;
 		}
-		print STDERR "next iteration " .$now . "\n";
+		$renameFileName = $ARGV[$filename_ptr];
+		$renameFileName =~ s%\.ts%\.mp4%;
 
-	}
+		my $now = 60;
+		my $failures=0;
+		while ($now > 59 and $failures < 100){
+		  	$arglist = createArglist();
 
-	my $concat = '';
-	my $previous = '';
-	for (my $i=0; $i <= $#moveList; $i++){
-		if ($concat eq ''){
-			$concat .= 'concat:'.$moveList[$i][0];
-		}else{
-			if ($moveList[$i][0] ne $moveList[$i-1][0]){
-				$concat .= '|'.$moveList[$i][0];
+			if ($arglist =~ m%$PROXY_DETERMINATOR%){
+				print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
+				`$FFMPEG_OEM $PROXY $arglist -v error`;
+			}else{
+				print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
+				`$FFMPEG_OEM $arglist -v error`;
+
+			}
+
+			#$pid = open ( LS, '-|', '/u01/ffmpeg-git-20171123-64bit-static/ffmpeg  -v error ' . $arglist . ' 2>&1');
+			#my $output = do{ local $/; <LS> };
+			#close LS;
+			#print STDERR $output;
+
+			# we will rename the file later
+			$moveList[$current][0] = $ARGV[$filename_ptr];
+			$moveList[$current++][1] = $renameFileName;
+
+			# calculate the new duration -- add a failure to the counter and wait for 5 seconds to let the failure condition pass
+			$now = ($start + $duration + 5) - time ;
+			if ($now > 59){
+				sleep 5;
+				$failures++;
+			}
+
+			# print the duration in correct format
+			my $hour = int($now /60/60);
+		    my $min = int ($now /60%60);
+			my $sec = int ($now %60);
+			$ARGV[$duration_ptr] = ($hour<10? '0':'').$hour.":".($min <10? '0':'').$min.':' . ($sec<10?'0':'').$sec;
+
+			# increment filename
+			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+			while (-e $ARGV[$filename_ptr]){
+				$count++;
+				$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+				$renameFileName = $ARGV[$filename_ptr];
+				$renameFileName =~ s%\.ts%\.mp4%;
+			}
+			print STDERR "next iteration " .$now . "\n";
+
+		}
+
+		my $concat = '';
+		my $previous = '';
+		for (my $i=0; $i <= $#moveList; $i++){
+			if ($concat eq ''){
+				$concat .= 'concat:'.$moveList[$i][0];
+			}else{
+				if ($moveList[$i][0] ne $moveList[$i-1][0]){
+					$concat .= '|'.$moveList[$i][0];
+				}
+			}
+
+		}
+		print STDERR "$FFMPEG -i $concat -codec copy $finalFilename";
+	    print LOG "$FFMPEG -i $concat -codec copy $finalFilename\n\n";
+		`$FFMPEG -i "$concat" -codec copy "$finalFilename"`;
+
+
+		for (my $i=0; $i <= $#moveList; $i++){
+			if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
+
+				move $moveList[$i][0], $moveList[$i][1];
+				print STDERR "move $moveList[$i][0],$moveList[$i][1]\n";
 			}
 		}
-
 	}
-	print STDERR "$FFMPEG -i $concat -codec copy $finalFilename";
-    print LOG "$FFMPEG -i $concat -codec copy $finalFilename\n\n";
-	`$FFMPEG -i "$concat" -codec copy "$finalFilename"`;
 
 
-	for (my $i=0; $i <= $#moveList; $i++){
-		if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
-
-			move $moveList[$i][0], $moveList[$i][1];
-			print STDERR "move $moveList[$i][0],$moveList[$i][1]\n";
-		}
-	}
 }
 
 close(LOG);
