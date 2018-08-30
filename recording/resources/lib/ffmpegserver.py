@@ -63,8 +63,13 @@ class ffmpegServer(BaseHTTPRequestHandler):
             for r in re.finditer('cmd\=(.*?)$' ,
                      post_data, re.DOTALL):
                 cmd = r.group(1)
-                print "command = " + str(cmd)
-                os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
+                for r in re.finditer('\-y \"?(.*?)/[^\/]+\"?$' ,
+                         cmd, re.DOTALL):
+                        path = r.group(1)
+
+                print "command = " + str(cmd) + "\n"
+                print "path = " + str(path) + "\n"
+                #os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
             return
 
 
