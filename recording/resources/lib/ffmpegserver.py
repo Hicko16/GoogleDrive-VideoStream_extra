@@ -67,15 +67,15 @@ class ffmpegServer(BaseHTTPRequestHandler):
                          cmd, re.DOTALL):
                         path = r.group(1)
 
-                print "command = " + str(cmd) + "\n"
-                print "path = " + str(path) + "\n"
-                if not os.path.exists(path):
-                    try:
-                        os.makedirs(path)
-                    except OSError as exc: # Guard against race condition
-                        if exc.errno != errno.EEXIST:
-                            raise
-                os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
+                        print "command = " + str(cmd) + "\n"
+                        print "path = " + str(path) + "\n"
+                        if not os.path.exists(path):
+                            try:
+                                os.makedirs(path)
+                            except OSError as exc: # Guard against race condition
+                                if exc.errno != errno.EEXIST:
+                                    raise
+                        os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
             return
 
 

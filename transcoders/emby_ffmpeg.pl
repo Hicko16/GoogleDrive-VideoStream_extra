@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 
 use File::Copy qw(move);
+use File::Basename;
+use File::Path qw/make_path/;
 
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 50;
@@ -386,8 +388,12 @@ if ($isSRT){
 	    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
 		`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
 
+
 		my $finalFilenameUpload = $finalFilename;
 		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+
+		my $finalDIR = dirname($finalFilenameUpload);
+		make_path($finalDIR);
 
 
 		for (my $i=0; $i <= $#moveList; $i++){
