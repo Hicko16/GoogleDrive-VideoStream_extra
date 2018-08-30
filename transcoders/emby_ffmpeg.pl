@@ -36,6 +36,11 @@ use constant PROXY => 'http:// :8888';
 use constant LOGFILE => '/tmp/transcode.log';
 
 use constant RECORDING_SERVER => '';
+use constant RECORDING_DIR => '/u01/recordings/';
+use constant RECORDING_DIR_UPLOAD => '/u01/upload.gd/recordings/';
+my $RECORDING_DIR = RECORDING_DIR;
+my $RECORDING_DIR_UPLOAD = RECORDING_DIR_UPLOAD;
+
 
 my $pidi=0;
 
@@ -311,6 +316,7 @@ if ($isSRT){
 		$renameFileName = $ARGV[$filename_ptr];
 		$renameFileName =~ s%\.ts%\.mp4%;
 
+
 		my $now = 60;
 		my $failures=0;
 		while ($now > 59 and $failures < 100){
@@ -332,7 +338,12 @@ if ($isSRT){
 
 			# we will rename the file later
 			$moveList[$current][0] = $ARGV[$filename_ptr];
-			$moveList[$current++][1] = $renameFileName;
+			$moveList[$current][1] = $renameFileName;
+			$moveList[$current][2] = $moveList[$current][0];
+			$moveList[$current][3] = $moveList[$current][1];
+			$moveList[$current][2] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$moveList[$current][3] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$current++;
 
 			# calculate the new duration -- add a failure to the counter and wait for 5 seconds to let the failure condition pass
 			$now = ($start + $duration + 5) - time ;
@@ -371,18 +382,25 @@ if ($isSRT){
 			}
 
 		}
-		print STDERR "$FFMPEG -i $concat -codec copy $finalFilename";
-	    print LOG "$FFMPEG -i $concat -codec copy $finalFilename\n\n";
-		`$FFMPEG -i "$concat" -codec copy "$finalFilename"`;
+		print STDERR "$FFMPEG_DVR -i $concat -codec copy $finalFilename";
+	    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
+		`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
+
+		my $finalFilenameUpload = $finalFilename;
+		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
 
 
 		for (my $i=0; $i <= $#moveList; $i++){
 			if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
 
-				move $moveList[$i][0], $moveList[$i][1];
-				print STDERR "move $moveList[$i][0],$moveList[$i][1]\n";
+				move $moveList[$i][0], $moveList[$i][2];
+				move $moveList[$i][1], $moveList[$i][3];
+				print STDERR "move $moveList[$i][0],$moveList[$i][2]\n";
+
 			}
 		}
+		move $finalFilename, $finalFilenameUpload;
+
 	}
 
 
