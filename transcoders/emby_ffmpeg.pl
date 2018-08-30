@@ -52,6 +52,7 @@ my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 #these options are not compatible with Emby 3.5.2 or higher
   #my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
 my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
+my $FFMPEG_DVR = 'ffmpeg ';
 
 my $FFPROBE = PATH_TO_EMBY_FFMPEG .'/ffprobe ';
 my $PROXY = PROXY;
@@ -303,10 +304,10 @@ if ($isSRT){
 
 			if ($arglist =~ m%$PROXY_DETERMINATOR%){
 				print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
-				`$FFMPEG_OEM $PROXY $arglist -v error`;
+				`$FFMPEG_DVR $PROXY $arglist -v error`;
 			}else{
 				print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
-				`$FFMPEG_OEM $arglist -v error`;
+				`$FFMPEG_DVR $arglist -v error`;
 
 			}
 
