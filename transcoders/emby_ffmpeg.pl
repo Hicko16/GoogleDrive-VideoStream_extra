@@ -392,7 +392,7 @@ if ($isSRT){
 		my $finalFilenameUpload = $finalFilename;
 		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
 
-		my $finalDIR = dirname($finalFilenameUpload);
+		my ($finalDIR) = $finalFilenameUpload =~ m%(.*?)/[^\/]+$%;
 		make_path($finalDIR);
 
 
