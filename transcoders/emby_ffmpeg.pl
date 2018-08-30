@@ -280,9 +280,23 @@ if ($isSRT){
 }elsif ($duration != 0){
 
 	if (RECORDING_SERVER ne ''){
-		$arglist = createArglist();
+		#$arglist = createArglist();
 		my $RECORDING_SERVER = RECORDING_SERVER;
-		`wget http://$RECORDING_SERVER/process --post-data="cmd=$arglist"`;
+		#`wget http://$RECORDING_SERVER/process --post-data="cmd=$arglist"`;
+		use LWP::UserAgent;
+		my $ua = LWP::UserAgent->new;
+		my $req = HTTP::Request->new(POST => "http://$RECORDING_SERVER/process");
+		$req->content_type('application/x-www-form-urlencoded');
+		$req->content("cmd=$arglist");
+		my $res = $ua->request($req);
+		if ($res->is_success) {
+		    print LOG $res->content;
+		}
+		else {
+		    print LOG $res->status_line, "\n";
+		}
+
+
 	}else{
 
 		my @moveList;
