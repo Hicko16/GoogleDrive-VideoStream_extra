@@ -58,6 +58,7 @@ class ffmpegServer(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length) # <--- Gets the data itself
             self.send_response(200)
             self.end_headers()
+            print "DUMP " + str(post_data) + "\n"
 
             for r in re.finditer('cmd\=(.*?)$' ,
                      post_data, re.DOTALL):
