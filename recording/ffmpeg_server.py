@@ -29,8 +29,15 @@ try:
 except:
     port = 9998
 
+try:
+    ffmpeg = str(sys.argv[2])
+except:
+    ffmpeg = 'ffmpeg'
+
+
 #try:
 server = ffmpegserver.FFMPEGServer(('',  port), ffmpegserver.ffmpegServer)
+server.setFFMPEG(ffmpeg)
 print "FFMPEG Server ready....\n"
 
 while server.ready:

@@ -25,6 +25,7 @@ import threading
 import re
 import urllib, urllib2
 import sys
+import os
 
 
 class ThreadedWebGUIServer(ThreadingMixIn, HTTPServer):
@@ -36,6 +37,8 @@ class FFMPEGServer(ThreadingMixIn,HTTPServer):
         HTTPServer.__init__(self, *args, **kw)
         self.ready = True
 
+    def setFFMPEG(self, ffmpegCmd):
+        self.ffmpegCmd = ffmpegCmd
 
 
 class ffmpegServer(BaseHTTPRequestHandler):
@@ -48,16 +51,20 @@ class ffmpegServer(BaseHTTPRequestHandler):
         headers = str(self.headers)
         print(headers)
 
-
-        print "POST\n\n"
-
         # passed a kill signal?
-        if self.path == '/kill':
-#            self.server.ready = False
+        if self.path == '/process':
+
+            content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+            post_data = self.rfile.read(content_length) # <--- Gets the data itself
+            self.send_response(200)
+            self.end_headers()
+
+            for r in re.finditer('cmd\=(.*?)$' ,
+                     post_data, re.DOTALL):
+                cmd = r.group(1)
+                print "command = " + str(cmd)
+                os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
             return
-
-
-
 
 
     def do_HEAD(self):
@@ -66,12 +73,8 @@ class ffmpegServer(BaseHTTPRequestHandler):
         headers = str(self.headers)
         print(headers)
 
-
-        print "HEAD HEAD HEAD\n\n"
-
         # passed a kill signal?
         if self.path == '/kill':
-#            self.server.ready = False
             return
 
 
@@ -91,12 +94,6 @@ class ffmpegServer(BaseHTTPRequestHandler):
         if self.path == '/kill':
             self.send_response(200)
             self.end_headers()
-            if self.server.username is not None:
-                self.wfile.write('<html><form action="/kill" method="post">Username: <input type="text" name="username"><br />Password: <input type="password" name="password"><br /><input type="submit" value="Stop Server"></form></html>')
-            else:
-                self.wfile.write('<html><form action="/kill" method="post"><input type="submit" value="Stop Server"></form></html>')
-
-            #self.server.ready = False
             return
 
 
