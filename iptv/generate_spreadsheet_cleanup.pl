@@ -4,13 +4,14 @@
 ##
 ## The purpose of this script is to remove invalid IPTV channels in a M3U file.
 ## The script takes a provided M3U file (-s) and outputs a copy of the claned-up M3U file (-t).
+## The script takes a provided comma delimited list (-l).
 ###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 2;
 
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . ' -s source.m3u8 -t target.m3u8';
+use constant USAGE => $0 . ' -s source.m3u8 -t target.m3u8 (-l list1,list2)';
 
 
 
@@ -19,13 +20,25 @@ use LWP;
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:',\%opt));
+die (USAGE) unless (getopts ('s:t:l:',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
 
+die(USAGE) if ($source eq '' or $target eq '');
 
+my $list = $opt{'l'};
+my @filter;
+
+while (my ($item) = $list =~ m%^([^\,]+)%){
+	$list =~ s%^[^\,]+\,?%%;
+	print "item = $item\n";
+	push(@filter,$item);
+
+}
+
+exit(0);
 
  my $ua = new LWP::UserAgent;	# call the constructor method for this object
 
@@ -44,9 +57,14 @@ my $isSuccess = 0;
 my $channel = '';
 my $country = '';
 my $type = '';
+my $skip=0;
 while (my $line = <INPUT>){
 
 	$line =~ s%\r%%;
+	if ($skip){
+		$skip = 0;
+		next;
+	}
 	if ($line =~ m%^\#EXTINF\:\-1%){
 		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([^\:]+)\: ([^\n]+)%;
 		$channel =~ s%\{[^\}]+\}%%;
@@ -65,6 +83,9 @@ while (my $line = <INPUT>){
 		print "$country $channel $type\n";
 	}
 
+	for (my $i=0; $i < $#filter; $i++){
+		
+	}
 
 	if ($line =~ m%^\#%){
 		next;
