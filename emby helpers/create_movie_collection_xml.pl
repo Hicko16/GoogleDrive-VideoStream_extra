@@ -19,10 +19,13 @@ die (USAGE) unless (getopts ('i:q:t:m:c:d:n:v',\%opt));
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
-my $nfoCriteria = $opt{'n'};
-if ($quality eq '' and $inputSpreadsheet eq '' and $nfoCriteria eq ''){
+my @nfoCriteria = split(',', $opt{'n'});
+if ($quality eq '' and $inputSpreadsheet eq '' and $#nfoCriteria < 0){
 	die("either quality, nfo criteria or a spreadsheet for input is required");
 }
+
+my @searchCriteria =
+
 
 my $tvSourceDirectory =  $opt{'t'};
 my $movieSourceDirectory =  $opt{'m'};
@@ -115,18 +118,21 @@ if ($inputSpreadsheet ne ''){
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n" if $isVerse;
-    		if ($nfoCriteria ne ''){
+    		if ($#nfoCriteria == -1){
 				next unless $file =~ m%\.nfo%;
 				open (NFO, "$source/$file") or next;
 				my $match=0;
 
 				while (my $line = <NFO>){
-					if ($line =~ m%$nfoCriteria%){
-						$file  =~ s%\.nfo%\.strm%;
-    					print "match $file\n";
-						$match = 1;
-						last;
-					}
+				    foreach my $criteria (nfoCriteria) {
+						if ($line =~ m%$criteria%){
+							$file  =~ s%\.nfo%\.strm%;
+	    					print "match $file\n";
+							$match = 1;
+							last;
+						}
+				    }
+				    last if $match;
 
 				}
 				close (NFO);
