@@ -166,7 +166,7 @@ EOF
 		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
-    		print "file $file\n";
+    		print "file $file\n" if $isVerse;
 			my ($q) = $file =~ m% (\d+)p%;
 			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
@@ -196,6 +196,8 @@ EOF
 			print "matched $sourceDirectory/$folder/$file \n";
 			my $cleanPath = "$sourceDirectory/$folder/$file";
 			$cleanPath =~  s%\&%\&amp;%g;
+			$cleanPath =~  s%\/\/%\/%g;
+			$cleanPath =~  s%\/$%%;
 			print XML <<EOF
     <CollectionItem>
       <Path>$cleanPath</Path>
