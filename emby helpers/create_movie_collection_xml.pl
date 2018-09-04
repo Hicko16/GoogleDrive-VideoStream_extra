@@ -124,7 +124,7 @@ if ($inputSpreadsheet ne ''){
 				my $match=0;
 
 				while (my $line = <NFO>){
-				    foreach my $criteria (nfoCriteria) {
+				    foreach my $criteria (@nfoCriteria) {
 						if ($line =~ m%$criteria%){
 							$file  =~ s%\.nfo%\.strm%;
 	    					print "match $file\n";
