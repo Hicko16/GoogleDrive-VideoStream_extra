@@ -118,7 +118,7 @@ if ($inputSpreadsheet ne ''){
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n" if $isVerse;
-    		if ($#nfoCriteria == -1){
+    		if ($#nfoCriteria >= 0){
 				next unless $file =~ m%\.nfo%;
 				open (NFO, "$source/$file") or next;
 				my $match=0;
@@ -176,7 +176,7 @@ EOF
 			my ($q) = $file =~ m% (\d+)p%;
 			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
-    		if ($#nfoCriteria == -1){
+    		if ($#nfoCriteria >= 0){
 				next unless $file =~ m%\.nfo$%;
 				open (NFO, "$sourceDirectory/$folder/$file") or next;
 				my $match=0;
