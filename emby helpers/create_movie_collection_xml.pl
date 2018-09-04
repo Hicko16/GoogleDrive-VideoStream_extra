@@ -14,7 +14,7 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:q:t:m:c:d:n:',\%opt));
+die (USAGE) unless (getopts ('i:q:t:m:c:d:n:v',\%opt));
 
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
@@ -28,6 +28,10 @@ my $tvSourceDirectory =  $opt{'t'};
 my $movieSourceDirectory =  $opt{'m'};
 my $targetDirectory =  $opt{'d'};
 my $collectionName =  $opt{'c'};
+my $isVerse = 0;
+if ($opt{'v'}){
+	$isVerse = 1;
+}
 
 my $minQuality = 0;
 my $maxQuality = 9999;
@@ -110,7 +114,7 @@ if ($inputSpreadsheet ne ''){
 		opendir my $dh2, "$source" or die("cannot open $source");
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
-    		print "file $file\n";
+    		print "file $file\n" if $isVerse;
     		if ($nfoCriteria ne ''){
 				next unless $file =~ m%\.nfo%;
 				open (NFO, "$source/$file") or next;
@@ -157,7 +161,7 @@ EOF
 	while (my $folder = readdir $dh) {
 		next if $folder eq '.' or $folder eq '..';
 
-    	print "folder $folder\n";
+    	print "folder $folder\n" if $isVerse;
     	next unless -d "$sourceDirectory/$folder";
 		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
 		while (my $file = readdir $dh2) {
@@ -167,13 +171,13 @@ EOF
 			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
     		if ($nfoCriteria ne ''){
-				next unless $file =~ m%\.nfo%;
+				next unless $file =~ m%\.nfo$%;
 				open (NFO, "$sourceDirectory/$folder/$file") or next;
 				my $match=0;
 
 				while (my $line = <NFO>){
 					if ($line =~ m%$nfoCriteria%i){
-						$file  =~ s%\.nfo%\.strm%;
+						$file  =~ s%\.nfo$%\.strm%;
     					print "match $file\n";
 						$match = 1;
 						last;
@@ -182,7 +186,7 @@ EOF
 				}
 				close (NFO);
 				next unless $match;
-				if ($file eq 'tvshow.nfo'){
+				if ($file eq 'tvshow.strm'){
 					$file = '';
 				}
     		}else{
