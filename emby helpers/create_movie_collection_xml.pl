@@ -148,7 +148,7 @@ EOF
 
 	close(INPUT);
 }else{
-	my @array = ($tvSourceDirectory,$movieSourceDirectory);
+	my @array = ($movieSourceDirectory,$tvSourceDirectory);
 	while (@array) {
 
 	my $sourceDirectory = shift(@array);
