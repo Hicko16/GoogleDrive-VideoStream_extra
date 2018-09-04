@@ -14,7 +14,7 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:q:s:c:t:n:',\%opt));
+die (USAGE) unless (getopts ('i:q:t:m:c:d:n:',\%opt));
 
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
@@ -24,8 +24,9 @@ if ($quality eq '' and $inputSpreadsheet eq '' and $nfoCriteria eq ''){
 	die("either quality, nfo criteria or a spreadsheet for input is required");
 }
 
-my $sourceDirectory =  $opt{'s'};
-my $targetDirectory =  $opt{'t'};
+my $tvSourceDirectory =  $opt{'t'};
+my $movieSourceDirectory =  $opt{'m'};
+my $targetDirectory =  $opt{'d'};
 my $collectionName =  $opt{'c'};
 
 my $minQuality = 0;
@@ -49,8 +50,8 @@ if ($quality == 2160){
 if (!(-e $targetDirectory)){
 	die ("target does not exist " . $targetDirectory);
 }
-if (!(-e $sourceDirectory)){
-	die ("source does not exist " . $sourceDirectory);
+if (!(-e $movieSourceDirectory) and !(-e $tvSourceDirectory)){
+	die ("neither source does exists: " . $movieSourceDirectory . ' or ' . $tvSourceDirectory);
 }
 if ($collectionName eq ''){
 	die ("no collection name specified (-c name).");
@@ -104,7 +105,7 @@ if ($inputSpreadsheet ne ''){
 	#      <Path>/u01/STRM/movies/the mask of zorro(1998)/the mask of zorro(1998) - original 1080p.strm</Path>
 	#    </CollectionItem>
 		my ($title, $year) = $line =~ m%([^\t]+)\t([^\t]+)\n%;
-		my $source = "$sourceDirectory/$title($year)";
+		my $source = "$movieSourceDirectory/$title($year)";
     	next unless -d "$source";
 		opendir my $dh2, "$source" or die("cannot open $source");
 		while (my $file = readdir $dh2) {
@@ -147,7 +148,11 @@ EOF
 
 	close(INPUT);
 }else{
-	opendir my $dh, $sourceDirectory or die("cannot open $sourceDirectory");
+	my @array = [$tvSourceDirectory,$movieSourceDirectory];
+	while (@array) {
+
+	my $sourceDirectory = shift(@array);
+	if (opendir my $dh, $sourceDirectory){
 
 	while (my $folder = readdir $dh) {
 		next if $folder eq '.' or $folder eq '..';
@@ -167,7 +172,7 @@ EOF
 				my $match=0;
 
 				while (my $line = <NFO>){
-					if ($line =~ m%$nfoCriteria%){
+					if ($line =~ m%$nfoCriteria%i){
 						$file  =~ s%\.nfo%\.strm%;
     					print "match $file\n";
 						$match = 1;
@@ -177,11 +182,14 @@ EOF
 				}
 				close (NFO);
 				next unless $match;
+				if ($file eq 'tvshow.nfo'){
+					$file = '';
+				}
     		}else{
 				next unless ($file =~ m%\.strm$%);
 			}
 			#$file =~ s%\&%\&amp;%g;
-			print "matched $file \n";
+			print "matched $sourceDirectory/$folder/$file \n";
 			my $cleanPath = "$sourceDirectory/$folder/$file";
 			$cleanPath =~  s%\&%\&amp;%g;
 			print XML <<EOF
@@ -194,7 +202,8 @@ EOF
 
 	}
 	closedir $dh;
-
+	}
+	}
 
 }
 print XML <<EOF;
