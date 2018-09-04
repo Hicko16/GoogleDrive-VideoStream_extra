@@ -136,7 +136,7 @@ if ($inputSpreadsheet ne ''){
 
 				}
 				close (NFO);
-				next unless $match;
+				last if $match;
     		}else{
 				next unless ($file =~ m%\.strm$%);
     		}
