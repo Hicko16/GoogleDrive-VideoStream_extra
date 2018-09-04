@@ -164,7 +164,7 @@ EOF
 			next if $file eq '.' or $file eq '..';
     		print "file $file\n";
 			my ($q) = $file =~ m% (\d+)p%;
-			next if $q == 0;
+			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
     		if ($nfoCriteria ne ''){
 				next unless $file =~ m%\.nfo%;
