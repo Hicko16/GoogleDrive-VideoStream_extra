@@ -136,7 +136,7 @@ if ($inputSpreadsheet ne ''){
 
 				}
 				close (NFO);
-				last if $match;
+				next unless $match;
     		}else{
 				next unless ($file =~ m%\.strm$%);
     		}
@@ -176,18 +176,21 @@ EOF
 			my ($q) = $file =~ m% (\d+)p%;
 			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
-    		if ($nfoCriteria ne ''){
+    		if ($#nfoCriteria == -1){
 				next unless $file =~ m%\.nfo$%;
 				open (NFO, "$sourceDirectory/$folder/$file") or next;
 				my $match=0;
 
 				while (my $line = <NFO>){
-					if ($line =~ m%$nfoCriteria%i){
-						$file  =~ s%\.nfo$%\.strm%;
-    					print "match $file\n";
-						$match = 1;
-						last;
-					}
+				    foreach my $criteria (@nfoCriteria) {
+						if ($line =~ m%$criteria%i){
+							$file  =~ s%\.nfo$%\.strm%;
+	    					print "match $file\n";
+							$match = 1;
+							last;
+						}
+				    }
+				    last if $match;
 
 				}
 				close (NFO);
