@@ -47,13 +47,13 @@ my $RECORDING_DIR_UPLOAD = RECORDING_DIR_UPLOAD;
 my $pidi=0;
 my $KILLSIGNAL=0;
 
-$SIG{QUIT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a quit $pid $!"; };
-$SIG{TERM} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a term $pid $!"; };
-$SIG{INT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a int $pid $!"; };
-$SIG{HUP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a hup $pid $!"; };
-$SIG{ABRT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a abrt $pid $!"; };
-$SIG{TRAP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a trap $pid $!"; };
-$SIG{STOP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;die "Caught a stop $pid $!"; };
+$SIG{QUIT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid; };#die "Caught a quit $pid $!"; };
+$SIG{TERM} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a term $pid $!"; };
+$SIG{INT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a int $pid $!"; };
+$SIG{HUP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a hup $pid $!"; };
+$SIG{ABRT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a abrt $pid $!"; };
+$SIG{TRAP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a trap $pid $!"; };
+$SIG{STOP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;};#die "Caught a stop $pid $!"; };
 
 my $FFMPEG_OEM = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
