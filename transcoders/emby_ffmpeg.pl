@@ -431,14 +431,14 @@ if ($isSRT){
 				`$FFMPEG_DVR $PROXY $arglist -v error`;
 			}else{
 				print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
-				`$FFMPEG_DVR $arglist -v error`;
+				#`$FFMPEG_DVR $arglist -v error`;
+				$pid = open ( LS, '-|', $FFMPEG_DVR  . ' -v error ' . $arglist . ' 2>&1');
+				my $output = do{ local $/; <LS> };
+				close LS;
+				print STDERR $output;
 
 			}
 
-			#$pid = open ( LS, '-|', '/u01/ffmpeg-git-20171123-64bit-static/ffmpeg  -v error ' . $arglist . ' 2>&1');
-			#my $output = do{ local $/; <LS> };
-			#close LS;
-			#print STDERR $output;
 
 			# we will rename the file later
 			$moveList[$current][0] = $ARGV[$filename_ptr];
