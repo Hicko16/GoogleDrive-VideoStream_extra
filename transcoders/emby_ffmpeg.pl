@@ -435,13 +435,13 @@ if ($isSRT){
 				print STDERR 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 
-				`$FFMPEG_TEST $arglist -v error`;
+				#`$FFMPEG_TEST $arglist -v error`;
+				$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
+				my $output = do{ local $/; <LS> };
+				close LS;
+				print LOG $output;
 				$KILLSIGNAL = 1 if -e "/tmp/recordprocess_".$pid;
 				print LOG 'killed = ' . $KILLSIGNAL . "\n";
-				#$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
-				#my $output = do{ local $/; <LS> };
-				#close LS;
-				#print STDERR $output;
 
 			}
 
