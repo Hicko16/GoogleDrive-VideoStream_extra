@@ -44,16 +44,16 @@ my $RECORDING_DIR = RECORDING_DIR;
 my $RECORDING_DIR_UPLOAD = RECORDING_DIR_UPLOAD;
 
 
-my $pidi=0;
+my $pid=0;
 my $KILLSIGNAL=0;
 
-$SIG{QUIT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a quit $pid $!"; };
-$SIG{TERM} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a term $pid $!"; };
-$SIG{INT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a int $pid $!"; };
-$SIG{HUP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a hup $pid $!"; };
-$SIG{ABRT} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a abrt $pid $!"; };
-$SIG{TRAP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a trap $pid $!"; };
-$SIG{STOP} = sub {  $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a stop $pid $!"; };
+$SIG{QUIT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a quit $pid $!"; };
+$SIG{TERM} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a term $pid $!"; };
+$SIG{INT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a int $pid $!"; };
+$SIG{HUP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a hup $pid $!"; };
+$SIG{ABRT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a abrt $pid $!"; };
+$SIG{TRAP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a trap $pid $!"; };
+$SIG{STOP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a stop $pid $!"; };
 
 my $FFMPEG_OEM = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
