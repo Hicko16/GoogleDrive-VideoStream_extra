@@ -235,7 +235,7 @@ if ($isSRT){
 #### LIVE TV REQUEST
 # request with no duration, so not a DVR request, cycle over network errors
 # in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
-}elsif (!($arglist =~ 'recording') and $duration_ptr == -1){
+}elsif (!($arglist =~ m%recording%) and $duration_ptr == -1){
 
 	# emby 3.5.2 remove -individual_header_trailer0
 	#$arglist =~ s%\-individual_header_trailer 0%%;
@@ -284,7 +284,7 @@ if ($isSRT){
 # request with duration indicates timed recording
 # provided for backward compatibility with emby < 3.5
 # * in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
-}elsif ($arglist =~ 'recording' or $duration != 0){
+}elsif ($arglist =~ m%recording% or $duration != 0){
 
 	if (RECORDING_SERVER ne ''){
 		#$arglist = createArglist();
