@@ -435,11 +435,11 @@ if ($isSRT){
 				print STDERR 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 
-				#`$FFMPEG_DVR $arglist -v error`;
-				$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
-				my $output = do{ local $/; <LS> };
-				close LS;
-				print STDERR $output;
+				`$FFMPEG_TEST $arglist -v error`;
+				#$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
+				#my $output = do{ local $/; <LS> };
+				#close LS;
+				#print STDERR $output;
 
 			}
 
