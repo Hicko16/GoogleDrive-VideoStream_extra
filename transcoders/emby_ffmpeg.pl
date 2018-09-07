@@ -235,7 +235,7 @@ if ($isSRT){
 #### LIVE TV REQUEST
 # request with no duration, so not a DVR request, cycle over network errors
 # in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
-}elsif ($duration_ptr == -1){
+}elsif (!($arglist =~ 'recording') and $duration_ptr == -1){
 
 	# emby 3.5.2 remove -individual_header_trailer0
 	#$arglist =~ s%\-individual_header_trailer 0%%;
@@ -284,7 +284,7 @@ if ($isSRT){
 # request with duration indicates timed recording
 # provided for backward compatibility with emby < 3.5
 # * in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
-}elsif ($duration != 0){
+}elsif ($arglist =~ 'recording' or $duration != 0){
 
 	if (RECORDING_SERVER ne ''){
 		#$arglist = createArglist();
@@ -304,7 +304,7 @@ if ($isSRT){
 		}
 
 
-	}else{
+	}elsif ($duration !=0){
 
 		my @moveList;
 		my $current=0;
@@ -369,6 +369,95 @@ if ($isSRT){
 				$renameFileName =~ s%\.ts%\.mp4%;
 			}
 			print STDERR "next iteration " .$now . "\n";
+
+		}
+
+		my $concat = '';
+		my $previous = '';
+		for (my $i=0; $i <= $#moveList; $i++){
+			if ($concat eq ''){
+				$concat .= 'concat:'.$moveList[$i][0];
+			}else{
+				if ($moveList[$i][0] ne $moveList[$i-1][0]){
+					$concat .= '|'.$moveList[$i][0];
+				}
+			}
+
+		}
+		print STDERR "$FFMPEG_DVR -i $concat -codec copy $finalFilename";
+	    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
+		`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
+
+
+		my $finalFilenameUpload = $finalFilename;
+		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+
+		my ($finalDIR) = $finalFilenameUpload =~ m%(.*?)/[^\/]+$%;
+		make_path($finalDIR);
+
+
+		for (my $i=0; $i <= $#moveList; $i++){
+			if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
+
+				move $moveList[$i][0], $moveList[$i][2];
+				move $moveList[$i][1], $moveList[$i][3];
+				print STDERR "move $moveList[$i][0],$moveList[$i][2]\n";
+
+			}
+		}
+		move $finalFilename, $finalFilenameUpload;
+
+	}else{
+
+		my @moveList;
+		my $current=0;
+		my $finalFilename = $ARGV[$filename_ptr];
+		$finalFilename  =~ s%\.ts%\.mp4%;
+		$ARGV[$filename_ptr] =~ s%\.ts%\.$count\.ts%;
+		while (-e $ARGV[$filename_ptr]){
+			$count++;
+			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+		}
+		$renameFileName = $ARGV[$filename_ptr];
+		$renameFileName =~ s%\.ts%\.mp4%;
+
+
+		my $failures=0;
+		while ($failures < 100){
+		  	$arglist = createArglist();
+
+			if ($arglist =~ m%$PROXY_DETERMINATOR%){
+				print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
+				`$FFMPEG_DVR $PROXY $arglist -v error`;
+			}else{
+				print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
+				`$FFMPEG_DVR $arglist -v error`;
+
+			}
+
+			#$pid = open ( LS, '-|', '/u01/ffmpeg-git-20171123-64bit-static/ffmpeg  -v error ' . $arglist . ' 2>&1');
+			#my $output = do{ local $/; <LS> };
+			#close LS;
+			#print STDERR $output;
+
+			# we will rename the file later
+			$moveList[$current][0] = $ARGV[$filename_ptr];
+			$moveList[$current][1] = $renameFileName;
+			$moveList[$current][2] = $moveList[$current][0];
+			$moveList[$current][3] = $moveList[$current][1];
+			$moveList[$current][2] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$moveList[$current][3] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$current++;
+
+			# increment filename
+			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+			while (-e $ARGV[$filename_ptr]){
+				$count++;
+				$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+				$renameFileName = $ARGV[$filename_ptr];
+				$renameFileName =~ s%\.ts%\.mp4%;
+			}
+			print STDERR "next iteration \n";
 
 		}
 
