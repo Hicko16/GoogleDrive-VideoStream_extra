@@ -326,6 +326,7 @@ if ($isSRT){
 
 			if ($arglist =~ m%$PROXY_DETERMINATOR%){
 				print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
+
 				`$FFMPEG_DVR $PROXY $arglist -v error`;
 			}else{
 				print STDERR 'run ffmpeg  -v error ' . $arglist . "\n";
@@ -431,6 +432,8 @@ if ($isSRT){
 				`$FFMPEG_TEST $PROXY $arglist -v error`;
 			}else{
 				print STDERR 'run DVR ffmpeg  -v error ' . $arglist . "\n";
+				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
+
 				#`$FFMPEG_DVR $arglist -v error`;
 				$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
 				my $output = do{ local $/; <LS> };
