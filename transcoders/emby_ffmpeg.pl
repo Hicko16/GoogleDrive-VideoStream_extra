@@ -436,6 +436,7 @@ if ($isSRT){
 				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 
 				`$FFMPEG_TEST $arglist -v error`;
+				print LOG 'killed = ' . $KILLSIGNAL . "\n";
 				#$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
 				#my $output = do{ local $/; <LS> };
 				#close LS;
