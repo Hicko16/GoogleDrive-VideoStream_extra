@@ -8,7 +8,7 @@
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 2;
 use constant REMOVE_VOD => 1;
-use constant WEB_TEST => 1;
+use constant WEB_TEST => 0;
 
 use Getopt::Std;		# and the getopt module
 
@@ -27,6 +27,7 @@ die (USAGE) unless (getopts ('s:t:w:',\%opt));
 my $source = $opt{'s'};
 my $target = $opt{'t'};
 my @filters = split(',', $opt{'w'});
+die (USAGE) if ($source eq '' or $target eq '');
 
 
  my $ua = new LWP::UserAgent;	# call the constructor method for this object

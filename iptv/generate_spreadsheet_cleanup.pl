@@ -8,6 +8,7 @@
 ###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 2;
+use constant WEB_TEST => 0;
 
 use Getopt::Std;		# and the getopt module
 
@@ -38,7 +39,6 @@ while (my ($item) = $list =~ m%^([^\,]+)%){
 
 }
 
-exit(0);
 
  my $ua = new LWP::UserAgent;	# call the constructor method for this object
 
@@ -83,10 +83,6 @@ while (my $line = <INPUT>){
 		print "$country $channel $type\n";
 	}
 
-	for (my $i=0; $i < $#filter; $i++){
-		
-	}
-
 	if ($line =~ m%^\#%){
 		next;
 	}
@@ -98,16 +94,23 @@ while (my $line = <INPUT>){
 	$req->protocol('HTTP/1.1');
 
 	for (my $i=0; $i <= RETRY; $i++){
-		my $res = $ua->request($req);
+		if (WEB_TEST){
+			my $res = $ua->request($req);
 
-		if($res->is_success){
-		  		print STDOUT "success --> $URL\n";
-				print OUTPUT "\t1\t$country\t$channel\t$type\t$line\n";
-				last;
-				$isSuccess = 1;
-		}elsif ($i == RETRY){
-			print STDOUT "failed --> $URL\n";
-			print OUTPUT "\t0\t$country\t$channel\t$type\n";
+			if($res->is_success){
+			  		print STDOUT "success --> $URL\n";
+					print OUTPUT "\t1\t$country\t$channel\t$type\t$line\n";
+					last;
+					$isSuccess = 1;
+			}elsif ($i == RETRY){
+				print STDOUT "failed --> $URL\n";
+				print OUTPUT "\t0\t$country\t$channel\t$type\n";
+			}
+		}else{
+					print OUTPUT "\t1\t$country\t$channel\t$type\t$line\n";
+					last;
+					$isSuccess = 1;
+
 		}
 	}
 
