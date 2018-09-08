@@ -442,6 +442,7 @@ if ($isSRT){
 				#print LOG $output;
 print LOG "Died from signal ", ($? & 127), "\n" if $? & 127;
 print LOG "Exited with error ", ($? >> 8), "\n" if $? >> 8;
+print LOG "signal = " . $? . "\n";
 				$KILLSIGNAL = 1 if -e "/tmp/recordprocess_".$pid;
 				print LOG 'killed = ' . $KILLSIGNAL . "\n";
 
