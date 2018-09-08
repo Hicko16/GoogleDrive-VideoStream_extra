@@ -65,6 +65,7 @@ while (my $line = <INPUT>){
   		#not in our whitelist list filter, don't include
   		if (!$next){
 	  		$line = <INPUT>;
+	  		$buffer = '';
   		}
 		next;
 
