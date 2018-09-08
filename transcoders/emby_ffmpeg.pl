@@ -431,6 +431,9 @@ if ($isSRT){
 				`$FFMPEG_TEST $arglist -v error`;
 				if ($? == 0){
 					$KILLSIGNAL = 1;
+				}else{
+					sleep 5;
+
 				}
 				#$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
 				#my $output = do{ local $/; <LS> };
