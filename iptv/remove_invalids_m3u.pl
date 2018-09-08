@@ -7,6 +7,8 @@
 ###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 2;
+use constant REMOVE_VOD => 1;
+use constant WEB_TEST => 1;
 
 use Getopt::Std;		# and the getopt module
 
@@ -19,12 +21,12 @@ use LWP;
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:',\%opt));
+die (USAGE) unless (getopts ('s:t:w:',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
-
+my @filters = split(',', $opt{'w'});
 
 
  my $ua = new LWP::UserAgent;	# call the constructor method for this object
@@ -40,12 +42,28 @@ my $line = <INPUT>;
 print OUTPUT $line;
 my $buffer = '';
 my $isSuccess = 0;
+
+
 while (my $line = <INPUT>){
 
 	$buffer .= $line;
 
 	if ($line =~ m%^\#%){
-		next;
+		next if $#filters == -1;
+
+		my $next = 0;
+  		foreach my $filter(@filters) {
+
+  			if ($line =~ m%$filter%){
+  				print "filter $filter $line\n";
+  				$next = 1; next;
+  			}
+  		}
+  		#not in our whitelist list filter, don't include
+  		if (!$next){
+	  		$line = <INPUT>;
+			next;
+  		}
 	}
 
 	my ($URL) = $line =~ m%([^\n]+)\n%;
@@ -55,16 +73,22 @@ while (my $line = <INPUT>){
 	$req->protocol('HTTP/1.1');
 
 	for (my $i=0; $i <= RETRY; $i++){
-		my $res = $ua->request($req);
+		if (WEB_TEST){
+			my $res = $ua->request($req);
 
 
-		if($res->is_success){
-		  		print STDOUT "success --> $URL\n";
-				print OUTPUT $buffer;
-				last;
-				$isSuccess = 1;
-		}elsif ($i == RETRY){
-			print STDOUT "failed --> $URL\n";
+			if($res->is_success){
+			  		print STDOUT "success --> $URL\n";
+					print OUTPUT $buffer;
+					last;
+					$isSuccess = 1;
+			}elsif ($i == RETRY){
+				print STDOUT "failed --> $URL\n";
+			}
+		}else{
+					print OUTPUT $buffer;
+					last;
+
 		}
 	}
 	$buffer = '';
