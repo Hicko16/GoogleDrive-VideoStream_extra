@@ -46,7 +46,10 @@ my $isSuccess = 0;
 
 while (my $line = <INPUT>){
 
+	#remove carriage return
+	$line =~ s%\r%%;
 	$buffer .= $line;
+
 
 	if ($line =~ m%^\#%){
 		next if $#filters == -1;
@@ -62,10 +65,10 @@ while (my $line = <INPUT>){
   		#not in our whitelist list filter, don't include
   		if (!$next){
 	  		$line = <INPUT>;
-			next;
   		}
-	}
+		next;
 
+	}
 	my ($URL) = $line =~ m%([^\n]+)\n%;
 	# Create a user agent object
 
