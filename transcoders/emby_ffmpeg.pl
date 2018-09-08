@@ -440,8 +440,8 @@ if ($isSRT){
 				#my $output = do{ local $/; <LS> };
 				#close LS;
 				#print LOG $output;
-die("Died from signal ", ($? & 127), "\n") if $? & 127;
-die("Exited with error ", ($? >> 8), "\n") if $? >> 8;
+print LOG "Died from signal ", ($? & 127), "\n" if $? & 127;
+print LOG "Exited with error ", ($? >> 8), "\n" if $? >> 8;
 				$KILLSIGNAL = 1 if -e "/tmp/recordprocess_".$pid;
 				print LOG 'killed = ' . $KILLSIGNAL . "\n";
 
