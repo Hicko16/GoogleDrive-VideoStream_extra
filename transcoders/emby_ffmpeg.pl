@@ -47,14 +47,6 @@ my $RECORDING_DIR_UPLOAD = RECORDING_DIR_UPLOAD;
 my $pid=0;
 my $KILLSIGNAL=0;
 
-$SIG{QUIT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a quit $pid $!"; };
-$SIG{TERM} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a term $pid $!"; };
-$SIG{INT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a int $pid $!"; };
-$SIG{HUP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a hup $pid $!"; };
-$SIG{ABRT} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a abrt $pid $!"; };
-$SIG{TRAP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a trap $pid $!"; };
-$SIG{STOP} = sub {  `touch /tmp/kill`; $KILLSIGNAL = 1; kill 'KILL', $pid;open(DATA,">/tmp/recordprocess_".$pid ); close(DATA); };#die "Caught a stop $pid $!"; };
-
 my $FFMPEG_OEM = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 #these options are not compatible with Emby 3.5.2 or higher
@@ -425,7 +417,7 @@ if ($isSRT){
 
 
 		my $failures=0;
-		#while ($KILLSIGNAL == 0 and $failures < 100){
+		while ($KILLSIGNAL == 0 and $failures < 100){
 		  	$arglist = createArglist();
 
 			if ($arglist =~ m%$PROXY_DETERMINATOR%){
@@ -435,7 +427,11 @@ if ($isSRT){
 				print STDERR 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 
-				`$FFMPEG_TEST $arglist -v error`;
+				#`touch /tmp/$ARGV[$filename_ptr].signal`;
+				`<$FFMPEG_TEST $arglist -v error`;
+				if ($? == 0){
+					$KILLSIGNAL = 1;
+				}
 				#$pid = open ( LS, '-|', $FFMPEG_TEST  . ' -v error ' . $arglist . ' 2>&1');
 				#my $output = do{ local $/; <LS> };
 				#close LS;
@@ -444,6 +440,67 @@ if ($isSRT){
 			}
 
 
+			# we will rename the file later
+			$moveList[$current][0] = $ARGV[$filename_ptr];
+			$moveList[$current][1] = $renameFileName;
+			$moveList[$current][2] = $moveList[$current][0];
+			$moveList[$current][3] = $moveList[$current][1];
+			$moveList[$current][2] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$moveList[$current][3] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+			$current++;
+
+			$failures++;
+
+
+			# increment filename
+			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+			while (-e $ARGV[$filename_ptr]){
+				$count++;
+				$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
+				$renameFileName = $ARGV[$filename_ptr];
+				$renameFileName =~ s%\.ts%\.mp4%;
+			}
+			print STDERR "next iteration \n";
+
+		}
+		if ($failures < 100){
+
+			my $concat = '';
+			my $previous = '';
+			for (my $i=0; $i <= $#moveList; $i++){
+				if ($concat eq ''){
+					$concat .= 'concat:'.$moveList[$i][0];
+				}else{
+					if ($moveList[$i][0] ne $moveList[$i-1][0]){
+						$concat .= '|'.$moveList[$i][0];
+					}
+				}
+
+			}
+			print STDERR "$FFMPEG_DVR -i $concat -codec copy $finalFilename";
+		    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
+			`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
+
+
+			my $finalFilenameUpload = $finalFilename;
+			$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
+
+			my ($finalDIR) = $finalFilenameUpload =~ m%(.*?)/[^\/]+$%;
+			make_path($finalDIR);
+
+
+			for (my $i=0; $i <= $#moveList; $i++){
+				if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
+
+					move $moveList[$i][0], $moveList[$i][2];
+					move $moveList[$i][1], $moveList[$i][3];
+					print STDERR "move $moveList[$i][0],$moveList[$i][2]\n";
+
+				}
+			}
+			move $finalFilename, $finalFilenameUpload;
+
+		}
 	}
 
 
