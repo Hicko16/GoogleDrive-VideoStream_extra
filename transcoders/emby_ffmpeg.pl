@@ -425,7 +425,7 @@ if ($isSRT){
 
 
 		my $failures=0;
-		while ($KILLSIGNAL == 0 and $failures < 100){
+		#while ($KILLSIGNAL == 0 and $failures < 100){
 		  	$arglist = createArglist();
 
 			if ($arglist =~ m%$PROXY_DETERMINATOR%){
@@ -440,70 +440,9 @@ if ($isSRT){
 				#my $output = do{ local $/; <LS> };
 				#close LS;
 				#print LOG $output;
-print LOG "Died from signal ", ($? & 127), "\n" if $? & 127;
-print LOG "Exited with error ", ($? >> 8), "\n" if $? >> 8;
-print LOG "signal = " . $? . "\n";
-				$KILLSIGNAL = 1 if -e "/tmp/recordprocess_".$pid;
-				print LOG 'killed = ' . $KILLSIGNAL . "\n";
 
 			}
 
-
-			# we will rename the file later
-			$moveList[$current][0] = $ARGV[$filename_ptr];
-			$moveList[$current][1] = $renameFileName;
-			$moveList[$current][2] = $moveList[$current][0];
-			$moveList[$current][3] = $moveList[$current][1];
-			$moveList[$current][2] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
-			$moveList[$current][3] =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
-			$current++;
-
-			# increment filename
-			$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
-			while (-e $ARGV[$filename_ptr]){
-				$count++;
-				$ARGV[$filename_ptr] =~ s%\.\d+\.ts%\.$count\.ts%;
-				$renameFileName = $ARGV[$filename_ptr];
-				$renameFileName =~ s%\.ts%\.mp4%;
-			}
-			print STDERR "next iteration \n";
-
-		}
-
-		my $concat = '';
-		my $previous = '';
-		for (my $i=0; $i <= $#moveList; $i++){
-			if ($concat eq ''){
-				$concat .= 'concat:'.$moveList[$i][0];
-			}else{
-				if ($moveList[$i][0] ne $moveList[$i-1][0]){
-					$concat .= '|'.$moveList[$i][0];
-				}
-			}
-
-		}
-		print STDERR "$FFMPEG_DVR -i $concat -codec copy $finalFilename";
-	    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
-		`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
-
-
-		my $finalFilenameUpload = $finalFilename;
-		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
-
-		my ($finalDIR) = $finalFilenameUpload =~ m%(.*?)/[^\/]+$%;
-		make_path($finalDIR);
-
-
-		for (my $i=0; $i <= $#moveList; $i++){
-			if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
-
-				move $moveList[$i][0], $moveList[$i][2];
-				move $moveList[$i][1], $moveList[$i][3];
-				print STDERR "move $moveList[$i][0],$moveList[$i][2]\n";
-
-			}
-		}
-		move $finalFilename, $finalFilenameUpload;
 
 	}
 
