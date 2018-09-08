@@ -428,7 +428,7 @@ if ($isSRT){
 				print LOG 'run DVR ffmpeg  -v error ' . $arglist . "\n";
 
 				#`touch /tmp/$ARGV[$filename_ptr].signal`;
-				`<$FFMPEG_TEST $arglist -v error`;
+				`$FFMPEG_TEST $arglist -v error`;
 				if ($? == 0){
 					$KILLSIGNAL = 1;
 				}
