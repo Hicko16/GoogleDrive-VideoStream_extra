@@ -27,15 +27,13 @@ die(USAGE) if ($source eq '' or $target eq '');
 
 
 
-open (INPUT, $source) or die ("cannot open $source: " + $!);
-open (OUTPUT, '> '.$target) or die ("cannot create $target: " + $!);
-OUTPUT->autoflush;
+open (CHANNELS, $channelList) or die ("cannot open $channelList: " + $!);
 
 my %channelMapping;
-while (my $line = <INPUT>){
+while (my $line = <CHANNELS>){
 
 	 $line =~ s%\r%%;
-	if ($line =~ m%^[^\t]+\t1%){
+	if ($line =~ m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%){
 		my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
 		$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
 		$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
@@ -44,6 +42,11 @@ while (my $line = <INPUT>){
 
 
 }
+open (INPUT, $source) or die ("cannot open $source: " + $!);
+open (OUTPUT, '> '.$target) or die ("cannot create $target: " + $!);
+OUTPUT->autoflush;
+
+
 close(OUTPUT);
 close(INPUT);
 
