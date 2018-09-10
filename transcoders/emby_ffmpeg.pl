@@ -482,7 +482,7 @@ if ($isSRT){
 			}
 			print STDERR "$FFMPEG_DVR -i $concat -codec copy $finalFilename";
 		    print LOG "$FFMPEG_DVR -i $concat -codec copy $finalFilename\n\n";
-			`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
+			`$FFMPEG_TEST -i "$concat" -codec copy "$finalFilename"`;
 
 
 			my $finalFilenameUpload = $finalFilename;
@@ -497,7 +497,7 @@ if ($isSRT){
 
 					move $moveList[$i][0], $moveList[$i][2];
 					move $moveList[$i][1], $moveList[$i][3];
-					print STDERR "move $moveList[$i][0],$moveList[$i][2]\n";
+					print LOG "move $moveList[$i][0],$moveList[$i][2]\n";
 
 				}
 			}
