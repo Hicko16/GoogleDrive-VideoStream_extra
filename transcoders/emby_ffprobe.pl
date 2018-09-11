@@ -36,9 +36,14 @@ sub createArglist(){
 
 $arglist = createArglist();
 
+if ($arglist =~ m%file://%){
+	exit(0);
+}
 
 open (LOG, '>>' . LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
+
+
 
 if ($arglist =~ m%$IPTV_DETERMINATOR%){
 	print LOG "relaying IPTV " . $arglist . "\n";
