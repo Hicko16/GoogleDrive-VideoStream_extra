@@ -107,7 +107,7 @@ foreach my $current (0 .. $#ARGV) {
 	}
 }
 $arglist = createArglist();
-if ($arglist =~ m%file://%){
+if ($arglist =~ m%file\:\/\/%){
 	exit(0);
 }
 open (LOG, '>>' . LOGFILE) or die $!;
