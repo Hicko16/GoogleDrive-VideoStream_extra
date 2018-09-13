@@ -65,6 +65,7 @@ while (my $line = <INPUT>){
 		$channel =~ s% \- %%;
 		$channel =~ s%ʜᴅ%%;
 		$channel =~ s%\s+$%%;
+		$country =~ s%\d+$%%;
 
 
 		if (defined($channelMapping{$country . ' - ' . $channel}[0])){
