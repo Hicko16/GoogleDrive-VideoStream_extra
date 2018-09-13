@@ -7,12 +7,10 @@
 ###
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 2;
-use constant REMOVE_VOD => 1;
-use constant WEB_TEST => 0;
 
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . ' -s source.m3u8 -t target.m3u8';
+use constant USAGE => $0 . " -s source.m3u8 -t target.m3u8 (-w whitelist1,,whitelist2) (-c) (-v)\n where -v enabled removing VOD and -c enabled web check to validate URL\n double comma (,,) is used to split entries in the whitelist";
 
 
 
@@ -21,12 +19,21 @@ use LWP;
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:w:',\%opt));
+die (USAGE) unless (getopts ('s:t:w:v',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
-my @filters = split(',', $opt{'w'});
+my @filters = split(',,', $opt{'w'});
+my @blacklist;
+my $isWebCheck = 1 if defined($opt{'c'});
+my $isRemoveVOD = 1 if defined($opt{'v'});
+
+
+if ($isRemoveVOD){
+	@blacklist = ('24/7','²⁴/⁷');
+}
+
 die (USAGE) if ($source eq '' or $target eq '');
 
 
@@ -53,20 +60,39 @@ while (my $line = <INPUT>){
 
 
 	if ($line =~ m%^\#%){
-		next if $#filters == -1;
 
-		my $next = 0;
+		next if $#filters == -1 and $#blacklist == -1;
+
+		if ($#blacklist != -1){
+			my $include = 1;
+	  		foreach my $filter(@blacklist) {
+	  			if ($line =~ m%$filter%){
+	  				print "blacklist $filter $line\n";
+	  				$include = 0; next;
+	  			}
+	  		}
+	  		if ($include == 0){
+		  		$line = <INPUT>;
+		  		$buffer = '';
+		  		next;
+	  		}
+
+		}
+
+  		next if $#filters == -1;
+		my $include = 0;
   		foreach my $filter(@filters) {
 
   			if ($line =~ m%$filter%){
   				print "filter $filter $line\n";
-  				$next = 1; next;
+  				$include = 1; next;
   			}
   		}
   		#not in our whitelist list filter, don't include
-  		if (!$next){
+  		if ($include == 0){
 	  		$line = <INPUT>;
 	  		$buffer = '';
+	  		print "blank $line\n";
   		}
 		next;
 
@@ -78,7 +104,7 @@ while (my $line = <INPUT>){
 	$req->protocol('HTTP/1.1');
 
 	for (my $i=0; $i <= RETRY; $i++){
-		if (WEB_TEST){
+		if ($isWebCheck){
 			my $res = $ua->request($req);
 
 
