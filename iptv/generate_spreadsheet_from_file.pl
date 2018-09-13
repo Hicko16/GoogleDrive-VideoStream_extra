@@ -35,7 +35,7 @@ my $type = '';
 while (my $line = <INPUT>){
 
 	 $line =~ s%\r%%;
-	if ($line =~ m%^\#EXTINF\:\-1%){
+	if ($line =~ m%^\#EXTINF\:\-1,[^\:]+\:%){
 		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([^\:]+)\: ([^\n]+)%;
 		$channel =~ s%\{[^\}]+\}%%;
 		$channel =~ s%\([^\)]+\)%%;
@@ -50,7 +50,25 @@ while (my $line = <INPUT>){
 			$type = '';
 		}
 
-		print "$country $channel $type\n";
+		print "found1 $country $channel $type\n";
+	}elsif ($line =~ m%^\#EXTINF\:\-1,[^\|]+\|+%){
+		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([^\|]+)\s?\| ([^\n]+)%;
+		$channel =~ s%\{[^\}]+\}%%;
+		$channel =~ s%\([^\)]+\)%%;
+		$channel =~ s%ʜᴅ%%;
+
+		if ($channel =~ m%news%i or $channel =~ m%%i){
+			$type = 'news';
+		}elsif($channel =~ m%sport%i or $channel =~ m%espn%i or $channel =~ m%nfl%i){
+			$type = 'sports';
+		}elsif($channel =~ m%stars%i or $channel =~ m%showtime%i){
+			$type = 'movies';
+		}else{
+			$type = '';
+		}
+		print "found2 $country $channel $type\n";
+		print OUTPUT "$country\t$channel\t\n";
+
 	}
 
 

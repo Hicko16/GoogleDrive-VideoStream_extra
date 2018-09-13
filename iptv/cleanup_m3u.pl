@@ -10,7 +10,7 @@ use constant RETRY => 2;
 
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . ' -s  source.tab -t target.m3u8 -a service_number';
+use constant USAGE => $0 . ' -s  source.m3u8 -t target.m3u8 -a service_number -c channellist.tab';
 
 
 use IO::Handle;
@@ -57,21 +57,24 @@ while (my $line = <INPUT>){
 	$line =~ s%\r?\n%%;
 
 	if ($line =~ m%^\#EXTINF\:\-1%){
-		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([^\:]+)\: ([^\n]+)%;
+
+		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([\S]+)[^\|]+\| ([^\n]+)$%;
 		$channel =~ s%\{[^\}]+\}%%;
 		$channel =~ s%\([^\)]+\)%%;
 		$channel =~ s%\[[^\)]+\]%%;
 		$channel =~ s% \- %%;
+		$channel =~ s%ʜᴅ%%;
 		$channel =~ s%\s+$%%;
+
 
 		if (defined($channelMapping{$country . ' - ' . $channel}[0])){
 			print OUTPUT "#EXTINF:-1 tvg-id=\"".$channelMapping{$country . ' - ' . $channel}[0].$serviceNumber."\" tvg-name=\"".$channelMapping{$country . ' - ' . $channel}[1]."\"\n";
 			my $line = <INPUT>;
 			$line =~ s%\r%%;
 			print OUTPUT $line . "\n";
-			#print "$country ${channel}x\n";
+			print "$country ${channel}x\n";
 		}else{
-			print "$country $channel not defined\n";
+			print "$country ${channel}x not defined\n";
 		}
 	}
 
