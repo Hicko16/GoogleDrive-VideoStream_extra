@@ -49,7 +49,7 @@ open (INPUT, $source) or die ("cannot open $source: " + $!);
 open (INPUTXML, $sourceXML) or die ("cannot open $sourceXML: " + $!);
 my $XMLTV = <INPUTXML>;
 $XMLTV =~ s%\|%%g;
-$XMLTV =~ s%</display-name>%</display-name>\n%g;
+#$XMLTV =~ s%</display-name>%</display-name>\n%g;
 
 close(INPUTXML);
 
