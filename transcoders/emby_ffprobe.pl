@@ -36,7 +36,7 @@ sub createArglist(){
 
 $arglist = createArglist();
 
-if ($arglist =~ m%file://%){
+if ($arglist =~ m%file:/%){
 	exit(0);
 }
 
