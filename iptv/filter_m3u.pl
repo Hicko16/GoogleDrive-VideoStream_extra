@@ -19,7 +19,7 @@ use LWP;
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:w:v',\%opt));
+die (USAGE) unless (getopts ('s:t:w:vc',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
@@ -105,14 +105,15 @@ while (my $line = <INPUT>){
 
 	for (my $i=0; $i <= RETRY; $i++){
 		if ($isWebCheck){
-			my $res = $ua->request($req);
-
+			my $res = $ua->request($req);#, , ('Range' => 'bytes=0-80'));
 
 			if($res->is_success){
+					#if ($res->content() ne ''){
 			  		print STDOUT "success --> $URL\n";
 					print OUTPUT $buffer;
 					last;
 					$isSuccess = 1;
+					#}
 			}elsif ($i == RETRY){
 				print STDOUT "failed --> $URL\n";
 			}
