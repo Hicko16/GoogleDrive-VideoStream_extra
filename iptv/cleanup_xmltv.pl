@@ -82,7 +82,7 @@ while (my $line = <INPUT>){
 
 
 		#print "$country ${channel}x $rawName\n";
-		if (defined($channelMapping{$country . ' - ' . $channel}[0])){
+		if (!($channel =~ m%\&%) and defined($channelMapping{$country . ' - ' . $channel}[0])){
 			my $entry = $channelMapping{$country . ' - ' . $channel}[1];
 			#print "match $entry = $rawName\n";
 			$XMLTV =~ s%<display-name>$rawName</display-name>%<display-name>$entry</display-name>%;
