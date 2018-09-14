@@ -29,7 +29,6 @@ my @blacklist;
 my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
-
 if ($isRemoveVOD){
 	@blacklist = ('24/7','²⁴/⁷');
 }

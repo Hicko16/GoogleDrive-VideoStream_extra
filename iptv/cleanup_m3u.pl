@@ -23,7 +23,7 @@ my $source = $opt{'s'};
 my $target = $opt{'t'};
 my $channelList = $opt{'c'};
 my $serviceNumber = $opt{'a'};
-
+my @channelcache;
 
 die(USAGE) if ($source eq '' or $target eq '');
 
@@ -39,7 +39,7 @@ while (my $line = <CHANNELS>){
 		my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
 		$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
 		$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
-		#print $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
+		#print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
 	}
 
 
@@ -69,11 +69,17 @@ while (my $line = <INPUT>){
 
 
 		if (defined($channelMapping{$country . ' - ' . $channel}[0])){
-			print OUTPUT "#EXTINF:-1 tvg-id=\"".$channelMapping{$country . ' - ' . $channel}[0].$serviceNumber."\" tvg-name=\"".$channelMapping{$country . ' - ' . $channel}[1]."\"\n";
+			my $channelNumber = int($channelMapping{$country . ' - ' . $channel}[0].$serviceNumber);
+			print $channelNumber . " x\n";
+			while ($channelcache[$channelNumber] != 0){
+				$channelNumber++;
+			}
+			$channelcache[$channelNumber]++;
+			print OUTPUT "#EXTINF:-1 tvg-id=\"".$channelNumber."\" tvg-name=\"".$channelMapping{$country . ' - ' . $channel}[1]."\"\n";
 			my $line = <INPUT>;
 			$line =~ s%\r%%;
 			print OUTPUT $line . "\n";
-			print "$country ${channel}x\n";
+			print "$channelNumber $country ${channel}x\n";
 		}else{
 			print "$country ${channel}x not defined\n";
 		}
