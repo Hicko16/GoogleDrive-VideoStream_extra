@@ -385,6 +385,7 @@ if ($isSRT){
 		`$FFMPEG_DVR -i "$concat" -codec copy "$finalFilename"`;
 
 
+
 		my $finalFilenameUpload = $finalFilename;
 		$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
 
