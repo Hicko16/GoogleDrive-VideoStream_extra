@@ -25,13 +25,19 @@ from SocketServer import ThreadingMixIn
 import threading
 
 try:
-    port = str(sys.argv[1])
+    iptvFile = str(sys.argv[1])
+except:
+    iptvFile = 'iptv.txt'
+
+
+try:
+    port = str(sys.argv[2])
 except:
     port = 9998
 
 #try:
 server = webproxy.WebProxyServer(('',  port), webproxy.webProxy)
-server.setCredentials()
+server.setCredentials(iptvFile)
 print "Simple Proxy Server ready....\n"
 
 while server.ready:

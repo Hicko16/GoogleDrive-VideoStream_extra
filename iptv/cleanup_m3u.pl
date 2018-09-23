@@ -39,7 +39,7 @@ while (my $line = <CHANNELS>){
 		my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
 		$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
 		$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
-		#print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
+		print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
 	}
 
 
@@ -59,6 +59,10 @@ while (my $line = <INPUT>){
 	if ($line =~ m%^\#EXTINF\:\-1%){
 
 		($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([\S]+)[^\|]+\| ([^\n]+)$%;
+		if ($country eq ''){
+			($country,$channel) = $line =~ m%^\#EXTINF\:\-1\,([\S]+)[^\:]+\: ([^\n]+)$%;
+
+		}
 		$channel =~ s%\{[^\}]+\}%%;
 		$channel =~ s%\([^\)]+\)%%;
 		$channel =~ s%\[[^\)]+\]%%;
