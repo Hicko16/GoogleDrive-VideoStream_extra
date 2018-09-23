@@ -38,6 +38,9 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.ready = True
 
 
+    def setCredentials(self):
+        print "set credentials\n"
+
 
 class webProxy(BaseHTTPRequestHandler):
 
@@ -103,52 +106,16 @@ class webProxy(BaseHTTPRequestHandler):
 
         # redirect url to output
         elif re.search(r'/twisted/', str(self.path)):
-#            self.send_response(200)
-#            self.end_headers()
             print "TWISTED" + "\n\n\n"
             count = 0
-            results = re.search(r'/([^\/]+)/(.*)$', str(self.path))
+            results = re.search(r'/twisted/(.*)$', str(self.path))
             if results:
-                domain = str(results.group(1))
-                parameters = str(results.group(2))
-            #self.send_response(200)
-            #self.end_headers()
-            #xbmcplugin.assignOutputBuffer(self.wfile)
-            #cookies = self.headers['Cookie']
-
-            req = urllib2.Request(domain + '/' + parameters,  None)
-            print "proxy "+ domain + '/' + parameters + "\n"
-
-            try:
-                response = urllib2.urlopen(req)
-            except urllib2.URLError, e:
-                if e.code == 403 or e.code == 401:
-                    print "STILL ERROR"+str(e.code)+"\n"
-                    return
-                else:
-                    return
-
-            self.send_response(200)
-
-            print str(response.info()) + "\n"
-            self.send_header('Content-Type',response.info().getheader('Content-Type'))
-            #self.send_header('Content-Range', response.info().getheader('Content-Range'))
-            self.send_header('Cache-Control',response.info().getheader('Cache-Control'))
-            self.send_header('Date',response.info().getheader('Date'))
-            #self.send_header('Content-type','video/mp4')
-            #self.send_header('Accept-Ranges','bytes')
-
+                url = str(results.group(1))
+            self.send_response(301)
+            self.send_header('Location','http://' + str(url))
             self.end_headers()
 
-            CHUNK = 16 * 1024
-            while True:
-                chunk = response.read(CHUNK)
-                if not chunk:
-                    break
-                self.wfile.write(chunk)
 
-            #response_data = response.read()
-            response.close()
             return
 
 

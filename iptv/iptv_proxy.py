@@ -31,6 +31,7 @@ except:
 
 #try:
 server = webproxy.WebProxyServer(('',  port), webproxy.webProxy)
+server.setCredentials()
 print "Simple Proxy Server ready....\n"
 
 while server.ready:
