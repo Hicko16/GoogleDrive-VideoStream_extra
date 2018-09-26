@@ -1,3 +1,4 @@
+
 - testing removal of -individual_header_trailer0 (emby 3.5.2 affecting live tv)
 - add a script to cleanup a m3u8 iptv file
 - add a script to fix tv STRM files by injecting the show name into the filename
