@@ -46,12 +46,12 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         print "set credentials "+str(iptvFile)+"\n"
         iptvFH = open(iptvFile,"r")
         for line in iptvFH:
-            self.iptvMatrix.append(line.rstrip().split(','))
+            self.iptvMatrix.append(line.rstrip().split(',') + [0])
 
         iptvFH.close()
 
         for entry in self.iptvMatrix:
-            print "entry " + str(entry[1])
+            print "entry " + str(entry[2])
             if entry[2] == "0":
                 entry[2] = 0
             else:
@@ -65,11 +65,11 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
             if entry[2] == 0:
                 entry[2] =1
                 self.lock.release()
-
                 return (entry[0],entry[1])
 
         self.lock.release()
         return (-1,0)
+
     def freeCredential(self, username):
         self.lock.acquire()
         for entry in self.iptvMatrix:
@@ -104,8 +104,6 @@ class webProxy(BaseHTTPRequestHandler):
 
 
 
-
-
     def do_HEAD(self):
 
         # debug - print headers in log
@@ -134,17 +132,8 @@ class webProxy(BaseHTTPRequestHandler):
 
 
         # passed a kill signal?
-        if self.path == '/kill':
-            self.send_response(200)
-            self.end_headers()
-            if self.server.username is not None:
-                self.wfile.write('<html><form action="/kill" method="post">Username: <input type="text" name="username"><br />Password: <input type="password" name="password"><br /><input type="submit" value="Stop Server"></form></html>')
-            else:
-                self.wfile.write('<html><form action="/kill" method="post"><input type="submit" value="Stop Server"></form></html>')
 
-            #self.server.ready = False
-            return
-        elif re.search(r'/testlock/', str(self.path)):
+        if re.search(r'/testlock/', str(self.path)):
             import time
             self.server.lock.acquire()
             print self.server.value
@@ -153,8 +142,11 @@ class webProxy(BaseHTTPRequestHandler):
             self.server.lock.release()
             print self.server.value
 
-        elif re.search(r'/test/', str(self.path)):
-            print self.server.getCredential()
+        elif re.search(r'/get/', str(self.path)):
+            userInfo = self.server.getCredential()
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]))
 
         elif re.search(r'/free/', str(self.path)):
             self.send_response(200)
