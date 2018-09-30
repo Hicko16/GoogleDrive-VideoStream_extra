@@ -10,42 +10,45 @@ use constant RETRY => 2;
 
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . ' -s  source.m3u8 -t target.m3u8 -a service_number -c channellist.tab';
+use constant USAGE => $0 . ' -s  source.m3u8 -t target.m3u8 -a service_number (-c channellist.tab | -n number)';
 
 
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:c:a:',\%opt));
+die (USAGE) unless (getopts ('s:t:c:a:n:',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
 my $channelList = $opt{'c'};
 my $serviceNumber = $opt{'a'};
+my $number = $opt{'n'};
+
 my @channelcache;
 
 die(USAGE) if ($source eq '' or $target eq '');
 
 
+if ($channelList ne ''){
+	open (CHANNELS, $channelList) or die ("cannot open $channelList: " + $!);
 
-open (CHANNELS, $channelList) or die ("cannot open $channelList: " + $!);
+	my %channelMapping;
+	while (my $line = <CHANNELS>){
 
-my %channelMapping;
-while (my $line = <CHANNELS>){
+		$line =~ s%\r?\n%%;
+		if ($line =~ m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%){
+			my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
+			$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
+			$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
+			#print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
+		}
 
-	$line =~ s%\r?\n%%;
-	if ($line =~ m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%){
-		my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
-		$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
-		$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
-		#print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
+
+
 	}
-
-
-
+	close(CHANNELS);
 }
-close(CHANNELS);
 open (INPUT, $source) or die ("cannot open $source: " + $!);
 open (OUTPUT, '> '.$target) or die ("cannot create $target: " + $!);
 OUTPUT->autoflush;
@@ -88,6 +91,12 @@ while (my $line = <INPUT>){
 			$line =~ s%\r%%;
 			print OUTPUT $line . "\n";
 			print "$channelNumber $country ${channel}x\n";
+		}elsif ($number ne ''){
+			print OUTPUT "#EXTINF:-1 tvg-id=\"".$number.$serviceNumber."\" tvg-name=\"".$channel."\"\n";
+			my $line = <INPUT>;
+			$line =~ s%\r%%;
+			print OUTPUT $line . "\n";
+			print "$number $country ${channel}x\n";
 		}else{
 			print "$country ${channel}x not defined\n";
 		}
