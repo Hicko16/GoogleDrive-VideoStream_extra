@@ -92,11 +92,13 @@ while (my $line = <INPUT>){
 			print OUTPUT $line . "\n";
 			print "$channelNumber $country ${channel}x\n";
 		}elsif ($number ne ''){
+			($channel) = $line =~ m%^\#EXTINF\:\-1\,([^\n]+)$%;
 			print OUTPUT "#EXTINF:-1 tvg-id=\"".$number.$serviceNumber."\" tvg-name=\"".$channel."\"\n";
 			my $line = <INPUT>;
 			$line =~ s%\r%%;
 			print OUTPUT $line . "\n";
 			print "$number $country ${channel}x\n";
+			$number++;
 		}else{
 			print "$country ${channel}x not defined\n";
 		}
