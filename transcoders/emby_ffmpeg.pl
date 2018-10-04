@@ -181,6 +181,9 @@ if ($isSRT){
 
 		$arglist =~ s%\-f matroska,webm %\-f mp4 %;
 
+		#for emby 3.6
+		$arglist =~ s%\-f matroska %\-f mp4 %;
+
 		print STDERR "URL = $url, $arglist\n";
 	    print LOG "URL = $url, $arglist\n\n";
 
