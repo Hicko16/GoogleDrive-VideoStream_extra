@@ -15,7 +15,7 @@ my $RECORDING_DIR_UPLOAD = CONFIG::RECORDING_DIR_UPLOAD;
 my $pid=0;
 my $KILLSIGNAL=0;
 
-my $FFMPEG_OEM = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
+#my $FFMPEG_OEM = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
 my $FFMPEG = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 #these options are not compatible with Emby 3.5.2 or higher
   #my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
@@ -78,6 +78,15 @@ $arglist = createArglist();
 if ($arglist =~ m%file\:\/%){
 	exit(0);
 }
+
+my $FFMPEG_OEM;
+if (CONFIG::ALT_FFMPEG){
+	$FFMPEG_OEM = CONFIG::FFMPEG_OEM_332;
+}else{
+	$FFMPEG_OEM = CONFIG::FFMPEG_OEM;
+}
+
+
 open (LOG, '>>' . CONFIG::LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
