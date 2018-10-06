@@ -8,12 +8,12 @@ use lib dirname (__FILE__) . "/config";
 my $pidi=0;
 
 
-my $FFPROBE_OEM = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
+my $FFPROBE_OEM = CONFIG->PATH_TO_EMBY_FFMPEG.'/ffprobe.oem ';
 #my $FFPROBE_OEM = 'ffprobe ';
 
-my $PROXY = CONFIG::PROXY;
-my $PROXY_DETERMINATOR = CONFIG::PROXY_DETERMINATOR;
-my $IPTV_DETERMINATOR = CONFIG::IPTV_DETERMINATOR;
+my $PROXY = CONFIG->PROXY;
+my $PROXY_DETERMINATOR = CONFIG->PROXY_DETERMINATOR;
+my $IPTV_DETERMINATOR = CONFIG->IPTV_DETERMINATOR;
 
 
 sub createArglist(){
@@ -33,7 +33,7 @@ if ($arglist =~ m%file:/%){
 	exit(0);
 }
 
-open (LOG, '>>' . CONFIG::LOGFILE) or die $!;
+open (LOG, '>>' . CONFIG->LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
 
@@ -90,10 +90,10 @@ my $current=0;
 my $stdout=0;
 while(($line) = $output =~ m%^(.*?)\n%){
 	$output =~ s%^.*?\n%%;
-	if (CONFIG::FILTER_PGS and $line =~ m%hdmv_pgs_subtitle% and $line =~ m%Stream \#%){
+	if (CONFIG->FILTER_PGS and $line =~ m%hdmv_pgs_subtitle% and $line =~ m%Stream \#%){
 		$skip = 1;
 		$index[$index] = 1
-	}elsif(CONFIG::FILTER_PGS and ($line =~ m%Stream \#%)){
+	}elsif(CONFIG->FILTER_PGS and ($line =~ m%Stream \#%)){
 		$skip = 0;
 	}
 	if ($line =~ m%Stream \#%){
