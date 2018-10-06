@@ -3,28 +3,27 @@
 use File::Copy qw(move);
 use File::Path qw/make_path/;
 
-#require './config.cfg';
-use File::Basename;
-use lib dirname (__FILE__) . "/config";
+require './config.cfg';
+#use File::Basename;
+#use lib dirname (__FILE__) . "/config";
 
-
-my $RECORDING_DIR = CONFIG::RECORDING_DIR;
-my $RECORDING_DIR_UPLOAD = CONFIG::RECORDING_DIR_UPLOAD;
+my $RECORDING_DIR = CONFIG->RECORDING_DIR;
+my $RECORDING_DIR_UPLOAD = CONFIG->RECORDING_DIR_UPLOAD;
 
 
 my $pid=0;
 my $KILLSIGNAL=0;
 
 #my $FFMPEG_OEM = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -timeout 5000000 ';
-my $FFMPEG = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
+my $FFMPEG = CONFIG->PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 #these options are not compatible with Emby 3.5.2 or higher
   #my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
-my $FFMPEG_TEST = CONFIG::PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
+my $FFMPEG_TEST = CONFIG->PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 my $FFMPEG_DVR = 'ffmpeg ';
 
-my $FFPROBE = CONFIG::PATH_TO_EMBY_FFMPEG .'/ffprobe ';
-my $PROXY = CONFIG::PROXY;
-my $PROXY_DETERMINATOR = CONFIG::PROXY_DETERMINATOR;
+my $FFPROBE = CONFIG->PATH_TO_EMBY_FFMPEG .'/ffprobe ';
+my $PROXY = CONFIG->PROXY;
+my $PROXY_DETERMINATOR = CONFIG->PROXY_DETERMINATOR;
 
 sub createArglist(){
 	my $arglist = '';
@@ -80,14 +79,15 @@ if ($arglist =~ m%file\:\/%){
 }
 
 my $FFMPEG_OEM;
-if (CONFIG::ALT_FFMPEG){
-	$FFMPEG_OEM = CONFIG::FFMPEG_OEM_332;
+my $ALT_FFMPEG_DETERMINATOR = CONFIG->ALT_FFMPEG_DETERMINATOR;
+if ((CONFIG->ALT_FFMPEG) && $arglist =~ m%$ALT_FFMPEG_DETERMINATOR%){
+	$FFMPEG_OEM = CONFIG->FFMPEG_OEM_332;
 }else{
-	$FFMPEG_OEM = CONFIG::FFMPEG_OEM;
+	$FFMPEG_OEM = CONFIG->FFMPEG_OEM;
 }
 
 
-open (LOG, '>>' . CONFIG::LOGFILE) or die $!;
+open (LOG, '>>' . CONFIG->LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
 
@@ -95,7 +95,7 @@ print LOG "passed in $arglist\n";
 if ($isSRT){
 
 	# block subtitle remuxing requets?
-	if (CONFIG::BLOCK_SRT){
+	if (CONFIG->BLOCK_SRT){
 		die("SRT transcoding is disabled.");
 	}else{
 		print STDERR "running " . 'ffmpeg ' . $arglist . "\n";
@@ -112,7 +112,7 @@ if ($isSRT){
 	# when direct streaming, prefer the Google Transcode version over remuxing
 	# this will reduce ffmpeg from remuxing and causing high cpu at the start of a new playback request
 	# the remuxing will be spreadout over the entire playback session as Google will limit the transfer rate
-	if (CONFIG::PREFER_GOOGLE_TRANSCODE){
+	if (CONFIG->PREFER_GOOGLE_TRANSCODE){
 
 		# request to transcode?
 		if ($arglist =~ m%\-pix_fmt yuv420p% or $arglist =~ m%\-bsf\:v h264_mp4toannexb% or $arglist =~ m%\-codec\:v\:0 libx264%){
@@ -130,7 +130,7 @@ if ($isSRT){
 		}else{
 			#you've made it here because transcode was requested but the resolution is likely not provided
 			# force Google transcode stream stream?
-			if (CONFIG::FORCE_GOOGLE_TRANSCODE_FOR_REMUX){
+			if (CONFIG->FORCE_GOOGLE_TRANSCODE_FOR_REMUX){
 				$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 			}
 			#$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
@@ -141,7 +141,7 @@ if ($isSRT){
 
 		print LOG "AUDIO SELECTION $audioSelection\n";
 		#if ($arglist =~ m%\-map 0\:2 %){
-		if ((CONFIG::FORCE_REMUX_AUDIO and $audioSelection == 1) or $audioSelection > 1){
+		if ((CONFIG->FORCE_REMUX_AUDIO and $audioSelection == 1) or $audioSelection > 1){
 			$arglist =~ s%\-map 0\:$audioSelection %\-map 1\:$audioSelection %;
 			my $audioURL = '-i "'.$url.'"';
 			if ($seek ne ''){
@@ -185,9 +185,9 @@ if ($isSRT){
 
 		# content is 4K HEVC which is going to trigger video transcoding (at this point)
 		# even when you block video transcoding in Emby admin console, it will try to video encode if remuxing is enabled
-		if (CONFIG::BLOCK_TRANSCODE and $output =~ m%hevc%){
+		if (CONFIG->BLOCK_TRANSCODE and $output =~ m%hevc%){
 			# prefer to drop to Google Transcode over video transcoding
-			if (CONFIG::GOOGLE_TRANSCODE){
+			if (CONFIG->GOOGLE_TRANSCODE){
 				$arglist =~ s%\"?\Q$url\E\"?%\"$url\&preferred_quality\=0\&override\=true\"%;
 				$arglist =~ s%\-f matroska,webm %\-f mp4 %;
 
@@ -261,9 +261,9 @@ if ($isSRT){
 # * in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
 }elsif ($arglist =~ m%recording% or $duration != 0){
 
-	if (CONFIG::RECORDING_SERVER ne ''){
+	if (CONFIG->RECORDING_SERVER ne ''){
 		#$arglist = createArglist();
-		my $RECORDING_SERVER = CONFIG::RECORDING_SERVER;
+		my $RECORDING_SERVER = CONFIG->RECORDING_SERVER;
 		#`wget http://$RECORDING_SERVER/process --post-data="cmd=$arglist"`;
 		use LWP::UserAgent;
 		my $ua = LWP::UserAgent->new;
