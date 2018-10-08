@@ -217,14 +217,21 @@ if ($isSRT){
 
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
+	my $username;
+	my $password;
+	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+		require './crawler.pm';
+		TOOLS_CRAWLER::ignoreCookies();
+		my @results = TOOLS_CRAWLER::complexGET(IPTV_MANAGE_SERVER . '/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
-	require './crawler.pm';
-	TOOLS_CRAWLER::ignoreCookies();
-	my @results = TOOLS_CRAWLER::complexGET('',undef,[],[],[('username=([^\&])[^\&]+', '\&', '\&'), ('password=([^\n])[^\n]+', '\n', '\n')]);
+		$username = $results[3];
+		$password = $results[5];
+		print "username = $username, password = $password\n";
 
-	if ($results[3] eq 'F'){
-		print $directory . '/' . $file . "\n";
+		$arglist =~ s%USERNAME%$username%;
+		$arglist =~ s%PASSWORD%$password%;
 	}
+
 
 	my $retry=1;
 #	while ($retry< RETRY and $retry > 0){
@@ -262,6 +269,12 @@ if ($isSRT){
 			print STDERR "\n\n\nDONE\n\n";
 			$retry++;
 		}
+
+
+	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+		TOOLS_CRAWLER::simpleGET(IPTV_MANAGE_SERVER.'/free/'. $username);
+	}
+
 	#}
 
 #### LIVE TV DVR REQUEST
