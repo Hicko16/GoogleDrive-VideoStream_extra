@@ -51,11 +51,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         iptvFH.close()
 
         for entry in self.iptvMatrix:
-            print "entry " + str(entry[2])
-            if entry[2] == "0":
-                entry[2] = 0
-            else:
-                entry[2] = 1
+            print "entry " + str(entry[1]) + '  ' + str(entry[2])
 
     def getCredential(self):
         self.lock.acquire()
@@ -146,7 +142,8 @@ class webProxy(BaseHTTPRequestHandler):
             userInfo = self.server.getCredential()
             self.send_response(200)
             self.end_headers()
-            self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]))
+            self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
+
 
         elif re.search(r'/free/', str(self.path)):
             self.send_response(200)

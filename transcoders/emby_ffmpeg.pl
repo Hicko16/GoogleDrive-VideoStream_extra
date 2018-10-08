@@ -217,6 +217,15 @@ if ($isSRT){
 
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
+
+	require './crawler.pm';
+	TOOLS_CRAWLER::ignoreCookies();
+	my @results = TOOLS_CRAWLER::complexGET('',undef,[],[],[('username=([^\&])[^\&]+', '\&', '\&'), ('password=([^\n])[^\n]+', '\n', '\n')]);
+
+	if ($results[3] eq 'F'){
+		print $directory . '/' . $file . "\n";
+	}
+
 	my $retry=1;
 #	while ($retry< RETRY and $retry > 0){
 
