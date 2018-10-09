@@ -234,47 +234,33 @@ if ($isSRT){
 	}
 
 
-	my $retry=1;
-#	while ($retry< RETRY and $retry > 0){
 
-		if ($arglist =~ m%\-pix_fmt yuv420p%){
-			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
-		}
+	if ($arglist =~ m%\-pix_fmt yuv420p%){
+		$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+	}
 
-		#$pid = open ( LS, '-|', $FFMPEG . ' ' . $arglist . ' 2>&1');
-		#my $output = do{ local $/; <LS> };
-		#close LS;
-		#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
+	#$pid = open ( LS, '-|', $FFMPEG . ' ' . $arglist . ' 2>&1');
+	#my $output = do{ local $/; <LS> };
+	#close LS;
+	#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
 
 
-		if ($arglist =~ m%$PROXY_DETERMINATOR%){
-			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
-	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
-			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
-		}else{
-			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
-	        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
-			`$FFMPEG_TEST $arglist -v error`;
-		}
+	if ($arglist =~ m%$PROXY_DETERMINATOR%){
+		print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
+        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
+		`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
+	}else{
+		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
+        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
+		`$FFMPEG_TEST $arglist -v error`;
+	}
 
-		if ( $arglist =~ m%\/stream\/channelid%){
-			last;
-		}elsif($output =~ m%403% or $output =~ m%Connection timed out%){
-			print STDERR "ERROR:";
-			print STDERR $output;
-			print STDERR 'retry ffmpeg ' . $arglist . "\n";
-			sleep 2;
-			$retry++;
-		}else{
-			print STDERR $output;
-			print STDERR "\n\n\nDONE\n\n";
-			$retry++;
-		}
 
 
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 		TOOLS_CRAWLER::simpleGET(CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username);
 	}
+	print STDERR "\n\n\nDONE\n\n";
 
 	#}
 
