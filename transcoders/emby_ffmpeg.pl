@@ -221,7 +221,7 @@ if ($isSRT){
 	my $username;
 	my $password;
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-		require 'crawler.pm';
+		require CONFIG->PATH . 'crawler.pm';
 		TOOLS_CRAWLER::ignoreCookies();
 		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
@@ -252,8 +252,8 @@ if ($isSRT){
 	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
 			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
 		}else{
-			print STDERR "running LIVETV " . $FFMPEG_OEM . ' ' . $arglist . "\n";
-	        print LOG "running LIVETV " . $FFMPEG_OEM . ' ' . $arglist . "\n\n";
+			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
+	        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 			`$FFMPEG_TEST $arglist -v error`;
 		}
 
