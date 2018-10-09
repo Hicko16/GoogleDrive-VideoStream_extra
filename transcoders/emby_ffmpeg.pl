@@ -221,9 +221,9 @@ if ($isSRT){
 	my $username;
 	my $password;
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-		require './crawler.pm';
+		require 'crawler.pm';
 		TOOLS_CRAWLER::ignoreCookies();
-		my @results = TOOLS_CRAWLER::complexGET(IPTV_MANAGE_SERVER . '/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
 		$username = $results[3];
 		$password = $results[5];
@@ -273,7 +273,7 @@ if ($isSRT){
 
 
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-		TOOLS_CRAWLER::simpleGET(IPTV_MANAGE_SERVER.'/free/'. $username);
+		TOOLS_CRAWLER::simpleGET(CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username);
 	}
 
 	#}
