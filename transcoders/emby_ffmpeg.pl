@@ -3,9 +3,10 @@
 use File::Copy qw(move);
 use File::Path qw/make_path/;
 
-require './config.cfg';
-#use File::Basename;
-#use lib dirname (__FILE__) . "/config";
+
+use File::Basename;
+use lib dirname (__FILE__) ;
+require 'config.cfg';
 
 my $RECORDING_DIR = CONFIG->RECORDING_DIR;
 my $RECORDING_DIR_UPLOAD = CONFIG->RECORDING_DIR_UPLOAD;
