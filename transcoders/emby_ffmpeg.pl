@@ -216,6 +216,11 @@ if ($isSRT){
 	# emby 3.5.2 remove -individual_header_trailer0
 	#$arglist =~ s%\-individual_header_trailer 0%%;
 
+	#capture m3u8 filename
+
+	my ($m3u8) = $arglist =~ m%segment_file ([^\ ]+\.m3u8)%;
+	print LOG "m3u8 output file " . $m3u8 . "\n";
+
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
 	my $username;
