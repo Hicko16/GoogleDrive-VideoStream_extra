@@ -22,7 +22,7 @@ my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
 my @nfoCriteria = split(',', $opt{'n'});
 if ($quality eq '' and $inputSpreadsheet eq '' and $#nfoCriteria < 0){
-	die("either quality, nfo criteria or a spreadsheet for input is required");
+	die($0 . "(-i spreadsheet) (-q quality) (-t tv_folder) (-m movie_folder) -c collection_name -d target_dir -n nfo_criteria (-v)\n" ."either quality, nfo criteria or a spreadsheet for input is required");
 }
 
 my @searchCriteria =
