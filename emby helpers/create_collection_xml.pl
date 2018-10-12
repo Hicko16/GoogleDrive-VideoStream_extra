@@ -186,7 +186,7 @@ EOF
 
 				while (my $file2 = readdir $dh2) {
 					next if $file2 eq '.' or $file2 eq '..';
-					push @files, "$file/$file2"
+					#push @files, "$file/$file2"
 				}
 				closedir $dh2;
 				next;
@@ -214,7 +214,7 @@ EOF
 				}
 				close (NFO);
 				next unless $match;
-				if ($file =~ m%tvshow.strm%){
+				if ($file =~ m%tvshow.strm$%){
 					$file = '';
 				}
     		}else{
@@ -232,7 +232,6 @@ EOF
     </CollectionItem>
 EOF
 		}
-		closedir $dh2;
 
 	}
 	closedir $dh;
