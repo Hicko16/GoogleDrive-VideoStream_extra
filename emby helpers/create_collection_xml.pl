@@ -2,7 +2,8 @@
 
 ###
 ##
-## The purpose of this script is to create a movie collection by symlinking.
+## The purpose of this script is to create a movie collection by creating a collections.xml
+## This on works on Emby < 3.6, as in 3.6, collections.xml is no longer used.
 ##
 ## The input is a txt file of the form"movie<tab>year
 ##
