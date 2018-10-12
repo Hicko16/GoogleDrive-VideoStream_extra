@@ -214,8 +214,8 @@ EOF
 				}
 				close (NFO);
 				next unless $match;
-				if ($file =~ m%tvshow.strm$%){
-					$file = '';
+				if ($file =~ m%/tvshow\.strm$%){
+					$file =~ s%/tvshow\.strm%/%;
 				}
     		}else{
 				next unless ($file =~ m%\.strm$%);
