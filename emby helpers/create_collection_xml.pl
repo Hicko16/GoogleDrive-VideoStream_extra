@@ -15,14 +15,14 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:q:t:m:c:d:n:v',\%opt));
+die (USAGE) unless (getopts ('i:q:t:m:c:d:n:vx',\%opt));
 
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
 my @nfoCriteria = split(',', $opt{'n'});
 if ($quality eq '' and $inputSpreadsheet eq '' and $#nfoCriteria < 0){
-	die($0 . "(-i spreadsheet) (-q quality) (-t tv_folder) (-m movie_folder) -c collection_name -d target_dir -n nfo_criteria (-v)\n" ."either quality, nfo criteria or a spreadsheet for input is required");
+	die($0 . "(-i spreadsheet) (-q quality) (-t tv_folder) (-m movie_folder) -c collection_name -d target_dir -n nfo_criteria (-v) (-x)\n -v verbose, -x deep dive into tv" ."either quality, nfo criteria or a spreadsheet for input is required");
 }
 
 my @searchCriteria =
@@ -35,6 +35,10 @@ my $collectionName =  $opt{'c'};
 my $isVerse = 0;
 if ($opt{'v'}){
 	$isVerse = 1;
+}
+my $isTVDeep = 0;
+if ($opt{'x'}){
+	$isTVDeep = 1;
 }
 
 my $minQuality = 0;
@@ -181,7 +185,7 @@ EOF
 
 		while (my $file = pop @files) {
 			# is a tv season folder?
-			if (-d $file){
+			if ($isTVDeep and -d $file){
 				opendir my $dh2, $file or die("cannot open $file");
 
 				while (my $file2 = readdir $dh2) {
