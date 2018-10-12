@@ -218,8 +218,8 @@ if ($isSRT){
 
 	#capture m3u8 filename
 
-	my ($m3u8) = $arglist =~ m%segment_file ([^\ ]+\.m3u8)%;
-	print LOG "m3u8 output file " . $m3u8 . "\n";
+	my ($channel,$m3u8) = $arglist =~ m%\-i \"[^\"]+/([^\/]+)\.[^\"]+\".*segment_file ([^\ ]+\.m3u8)%;
+	print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
