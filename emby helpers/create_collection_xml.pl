@@ -171,15 +171,33 @@ EOF
     	print "folder $folder\n" if $isVerse;
     	next unless -d "$sourceDirectory/$folder";
 		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
+		my @files;
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
+			push @files, "$sourceDirectory/$folder/$file"
+		}
+		closedir $dh2;
+
+
+		while (my $file = pop @files) {
+			# is a tv season folder?
+			if (-d $file){
+				opendir my $dh2, $file or die("cannot open $file");
+
+				while (my $file2 = readdir $dh2) {
+					next if $file2 eq '.' or $file2 eq '..';
+					push @files, "$file/$file2"
+				}
+				closedir $dh2;
+				next;
+			}
     		print "file $file\n" if $isVerse;
 			my ($q) = $file =~ m% (\d+)p%;
 			#next if $q == 0;
 			next if $q > $maxQuality or $q < $minQuality;
     		if ($#nfoCriteria >= 0){
 				next unless $file =~ m%\.nfo$%;
-				open (NFO, "$sourceDirectory/$folder/$file") or next;
+				open (NFO, $file) or next;
 				my $match=0;
 
 				while (my $line = <NFO>){
@@ -196,15 +214,15 @@ EOF
 				}
 				close (NFO);
 				next unless $match;
-				if ($file eq 'tvshow.strm'){
+				if ($file =~ m%tvshow.strm%){
 					$file = '';
 				}
     		}else{
 				next unless ($file =~ m%\.strm$%);
 			}
 			#$file =~ s%\&%\&amp;%g;
-			print "matched $sourceDirectory/$folder/$file \n";
-			my $cleanPath = "$sourceDirectory/$folder/$file";
+			print "matched $file \n";
+			my $cleanPath = $file;
 			$cleanPath =~  s%\&%\&amp;%g;
 			$cleanPath =~  s%\/\/%\/%g;
 			$cleanPath =~  s%\/$%%;
