@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 
 use File::Basename;
-use lib dirname (__FILE__) . "/config";
+use lib dirname (__FILE__) ;
+require 'config.cfg';
 
 
 
