@@ -5,10 +5,7 @@ use LWP::UserAgent;
 use LWP;
 use HTTP::Request::Common;
 use strict;
-
-use File::Basename;
-use lib dirname (__FILE__) ;
-require 'common.config';
+require './common.config';
 
 
 package TOOLS_CRAWLER;
