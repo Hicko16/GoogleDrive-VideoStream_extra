@@ -28,10 +28,12 @@ my $logFile = '/var/lib/'.$instance.'/logs/embyserver.txt';
 
 $output = `tail -1000 $logFile 2>&1`;
 
-if ($output =~ m%WebSocketException%){
-	print "WEB SOCKET ERROR \n";
 
+if ($output =~ m%WebSocketException%){
+        print "restarting emby";
+        `/usr/sbin/service $instance restart`;
 }
+
 
 
 
