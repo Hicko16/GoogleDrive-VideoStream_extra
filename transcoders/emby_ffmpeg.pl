@@ -53,7 +53,7 @@ foreach my $current (0 .. $#ARGV) {
 		my ($hour,$min,$sec) = $ARGV[$current] =~ m%0?(\d+):0?(\d+):0?(\d+)%;
 		$duration = $hour*60*60 + $min*60 + $sec;
 		$duration_ptr = $current;
-	}elsif ($ARGV[$current] =~ m%^htt.*\:9988%){
+	}elsif ($ARGV[$current] =~ m%^htt.*\:9988% or $ARGV[$current] =~ m%^htt.*\:9989% or $ARGV[$current] =~ m%^htt.*\:9990%){
 		$url = $ARGV[$current];
 	}elsif (0 and $ARGV[$current] =~ m%\-user_agent%){
 		$ARGV[$current++] = '';
@@ -107,7 +107,7 @@ if ($isSRT){
 
 # ### Python-GoogleDrive-VideoStream REQUEST
 # we've been told to either video/audio transcode or direct stream
-}elsif ($arglist =~ m%\:9988%){
+}elsif ($arglist =~ m%\:9988% or $arglist =~ m%\:9989% or $arglist =~ m%\:9990%){
 
 
 	# when direct streaming, prefer the Google Transcode version over remuxing
