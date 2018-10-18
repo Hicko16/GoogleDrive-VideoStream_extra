@@ -5,7 +5,7 @@ use LWP::UserAgent;
 use LWP;
 use HTTP::Request::Common;
 use strict;
-require '../common.config';
+require './common.config';
 
 
 package TOOLS_CRAWLER;
