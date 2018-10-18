@@ -15,9 +15,9 @@ use File::Copy;
 
 use File::Basename;
 use lib dirname (__FILE__) ;
-require 'crawler.pm';
+#require 'crawler.pm';
 
-#require '../crawler.pm';
+require '../crawler.pm';
 
 
 my %opt;
