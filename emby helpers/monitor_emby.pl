@@ -21,9 +21,10 @@ require 'crawler.pm';
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:',\%opt));
+die (USAGE) unless (getopts ('i:w:',\%opt));
 
 my $instance  = $opt{'i'};
+my $webhook = $opt{'w'};
 my $logFile = '/var/lib/'.$instance.'/logs/embyserver.txt';
 
 $output = `tail -1000 $logFile 2>&1`;
@@ -32,6 +33,7 @@ $output = `tail -1000 $logFile 2>&1`;
 if ($output =~ m%WebSocketException%){
         print "restarting emby";
         `/usr/sbin/service $instance restart`;
+        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
 }
 
 
