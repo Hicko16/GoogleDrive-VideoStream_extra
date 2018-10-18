@@ -21,7 +21,7 @@ require 'crawler.pm';
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:w:p:d:',\%opt));
+die (USAGE) unless (getopts ('w:p:d:',\%opt));
 
 my $port  = $opt{'p'};
 my $directory  = $opt{'d'};
