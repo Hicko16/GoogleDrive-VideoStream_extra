@@ -21,21 +21,39 @@ require 'crawler.pm';
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:w:',\%opt));
+die (USAGE) unless (getopts ('i:w:p:',\%opt));
 
 my $instance  = $opt{'i'};
+my $port =  $opt{'p'};
 my $webhook = $opt{'w'};
 my $logFile = '/var/lib/'.$instance.'/logs/embyserver.txt';
 
 $output = `tail -1000 $logFile 2>&1`;
-
-
 if ($output =~ m%WebSocketException%){
         print "restarting emby";
         `/usr/sbin/service $instance restart`;
-        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted - web socket exception", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
 }
 
+if ($port > 0){
 
+	my $url = 'http://localhost:'.$port;
+
+	TOOLS_CRAWLER::ignoreCookies();
+	my @results = TOOLS_CRAWLER::simpleGET($url);
+
+	if ($results[0] != 1){
+		sleep 30;
+		@results = TOOLS_CRAWLER::simpleGET($url);
+		if ($results[0] != 1){
+	        print "restarting emby";
+	        `/usr/sbin/service $instance restart`;
+	        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted - not responsive", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+		}
+
+	}
+
+
+}
 
 
