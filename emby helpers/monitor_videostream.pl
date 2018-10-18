@@ -36,7 +36,9 @@ if ($results[0] != 1){
 	@results = TOOLS_CRAWLER::simpleGET($url);
 	if ($results[0] != 1){
 		`cd "$directory";sh vs-noscheduler.sh restart`;
-        `curl -X POST --data '{ "embeds": [{"title": "VideoStream Issue", "description": "Instance restarted - missing process", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+		if ($webhook ne ''){
+        	`curl -X POST --data '{ "embeds": [{"title": "VideoStream Issue", "description": "Instance restarted - missing process", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+		}
 
 	}
 
