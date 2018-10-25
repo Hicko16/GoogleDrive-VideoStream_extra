@@ -258,7 +258,7 @@ if ($isSRT){
 	}else{
 		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
         print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
-		`$FFMPEG_TEST $arglist -v error`;
+		`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
 	}
 
 
