@@ -4,10 +4,12 @@
 
 require './crawler.pm';
 TOOLS_CRAWLER::ignoreCookies();
-my @results = TOOLS_CRAWLER::complexGET('http://localhost:9998/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+
+my$hostname = 'localhost:9998';
+my @results = TOOLS_CRAWLER::complexGET('http://'.$hostname.'/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
 print "username = $results[3], password = $results[5]\n";
 
-TOOLS_CRAWLER::simpleGET('http://localhost:9998/free/test1');
+TOOLS_CRAWLER::simpleGET('http://'.$hostname.'/free/'.$results[3]);
 
 
