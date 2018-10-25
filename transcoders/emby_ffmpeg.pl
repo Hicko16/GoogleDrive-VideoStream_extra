@@ -258,14 +258,19 @@ if ($isSRT){
 	}else{
 		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
         print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
-		`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username;
+			`$FFMPEG_TEST $arglist -v error; wget "$url"; echo "FREED" >> /tmp/transcode.log`;
+		}else{
+			`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+		}
 	}
 
 
 
-	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-		TOOLS_CRAWLER::simpleGET(CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username);
-	}
+	#if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+	#	TOOLS_CRAWLER::simpleGET(CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username);
+	#}
 	print STDERR "\n\n\nDONE\n\n";
 
 	#}
