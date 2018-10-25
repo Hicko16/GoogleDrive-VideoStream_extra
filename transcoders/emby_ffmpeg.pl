@@ -260,7 +260,7 @@ if ($isSRT){
         print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
         if (CONFIG->IPTV_MANAGE_SERVER ne ''){
         	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username;
-			`$FFMPEG_TEST $arglist -v error; wget "$url"2>> /tmp/transcode.log; echo "FREED" >> /tmp/transcode.log`;
+			`$FFMPEG_TEST $arglist -v error; wget "$url";wget "$url"; echo "FREED" >> /tmp/transcode.log`;
 		}else{
 			`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
 		}
