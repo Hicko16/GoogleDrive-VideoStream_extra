@@ -179,7 +179,7 @@ class webProxy(BaseHTTPRequestHandler):
                 channel = str(results.group(1))
                 session = str(results.group(2))
                 # fetch credentials
-                response = urllib2.urlopen(self.server.serverURL + '/get/')
+                response = urllib2.urlopen(self.server.serverURL + '/get/' + session)
                 data = response.read()
                 self.wfile.write(data)
                 results = re.search(r'username=([^\&]*)&password=([^\&]*)', data)
