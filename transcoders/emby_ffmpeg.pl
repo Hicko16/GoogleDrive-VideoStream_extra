@@ -259,7 +259,7 @@ if ($isSRT){
 		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
         print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
         if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$channel;
+        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
 			`$FFMPEG_TEST $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
 #use IO::Handle;
 #my $handle = IO::Handle->new;
