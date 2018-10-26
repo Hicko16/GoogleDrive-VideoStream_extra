@@ -88,15 +88,18 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
 
     def checkRunnings(self):
         self.lock.acquire()
+        sessionsToDelete = []
         for session in self.sessions:
             #hasn't been modified in over a min
             if not os.path.exists(os.path.join(self.transcodetmp, session)) or time.time() - os.stat(os.path.join(self.transcodetmp, session)).st_mtime > 70:
                 print "release session " + session + " username " + self.sessions[session] + "\n"
                 response = urllib2.urlopen(self.serverURL + '/free/' + self.sessions[session] + '/' + session)
-                try:
-                    del self.sessions[session]
-                except KeyError:
-                    pass
+                sessiongsToDelete.append(session)
+        for session in sessionsToDelete:
+            try:
+                del self.sessions[session]
+            except KeyError:
+                pass
         self.lock.release()
 
 
