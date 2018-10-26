@@ -92,7 +92,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
             #hasn't been modified in over a min
             if not os.path.exists(os.path.join(self.transcodetmp, session)) or time.time() - os.stat(os.path.join(self.transcodetmp, session)).st_mtime > 70:
                 print "release session " + session + " username " + self.sessions[session] + "\n"
-                response = urllib2.urlopen(self.serverURL + '/free/' + username + '/' + session)
+                response = urllib2.urlopen(self.serverURL + '/free/' + self.sessions[session] + '/' + session)
 
         self.lock.release()
 
