@@ -61,24 +61,24 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         for entry in self.iptvMatrix:
             print "entry " + str(entry[1]) + '  ' + str(entry[2])
 
-    def getCredential(self):
+    def getCredential(self, session):
         self.lock.acquire()
 
         for entry in self.iptvMatrix:
             print "testing" + str(entry[2]) + "x"
             if entry[2] == 0:
-                entry[2] =1
+                entry[2] =session
                 self.lock.release()
                 return (entry[0],entry[1])
 
         self.lock.release()
         return (-1,0)
 
-    def freeCredential(self, username):
+    def freeCredential(self, username, session):
         self.lock.acquire()
         for entry in self.iptvMatrix:
             print "testing" + str(username) + "vs" + str(entry[1])
-            if entry[0] == username and entry[2] == 1:
+            if entry[0] == username and entry[2] == session:
                 entry[2] =0
                 print "releasing " + str(username)
                 self.lock.release()
@@ -91,7 +91,9 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         for session in self.sessions:
             #hasn't been modified in over a min
             if not os.path.exists(os.path.join(self.transcodetmp, session)) or time.time() - os.stat(os.path.join(self.transcodetmp, session)).st_mtime > 70:
-                    print "release session " + session + " username " + self.sessions[session] + "\n"
+                print "release session " + session + " username " + self.sessions[session] + "\n"
+                response = urllib2.urlopen(self.server.serverURL + '/free/' + username + '/' + session)
+
         self.lock.release()
 
 
@@ -141,6 +143,9 @@ class webProxy(BaseHTTPRequestHandler):
         headers = str(self.headers)
         print(headers)
 
+        if len (self.server.sessions) > 0:
+            self.server.checkRunnings()
+
 
         # passed a kill signal?
 
@@ -154,7 +159,10 @@ class webProxy(BaseHTTPRequestHandler):
             print self.server.value
 
         elif re.search(r'/get/', str(self.path)):
-            userInfo = self.server.getCredential()
+            results = re.search(r'/get/([^\/]+)$', str(self.path))
+            if results:
+                session = str(results.group(1))
+            userInfo = self.server.getCredential(session)
             self.send_response(200)
             self.end_headers()
             self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
@@ -162,17 +170,14 @@ class webProxy(BaseHTTPRequestHandler):
 
         # relay the request the IPTV manager
         # - track the channel
-        # - track the playback file
+        # - track the playback file (session)
         elif re.search(r'/relay/', str(self.path)):
-            if len (self.server.sessions) > 0:
-                self.server.checkRunnings()
             self.send_response(200)
             self.end_headers()
             results = re.search(r'/relay/([^\/]+)/([^\/]+)$', str(self.path))
             if results:
                 channel = str(results.group(1))
                 session = str(results.group(2))
-                import urllib2
                 # fetch credentials
                 response = urllib2.urlopen(self.server.serverURL + '/get/')
                 data = response.read()
@@ -190,10 +195,11 @@ class webProxy(BaseHTTPRequestHandler):
         elif re.search(r'/free/', str(self.path)):
             self.send_response(200)
             self.end_headers()
-            results = re.search(r'/free/(.*)$', str(self.path))
+            results = re.search(r'/free/([^\/]+)/([^\/]+)$', str(self.path))
             if results:
                 username = str(results.group(1))
-                self.server.freeCredential(username)
+                session = str(results.group(2))
+                self.server.freeCredential(username, session)
 
 
         # redirect url to output
