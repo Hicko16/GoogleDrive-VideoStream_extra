@@ -218,7 +218,7 @@ if ($isSRT){
 
 	#capture m3u8 filename
 
-	my ($m3u8) = $arglist =~ m%segment_list ([^\ ]+\.m3u8)%;
+	my ($m3u8) = $arglist =~ m%segment_list [^\ ]+/([^\/]+\.m3u8)%;
 	my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
 	print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
