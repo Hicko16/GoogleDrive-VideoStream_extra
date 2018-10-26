@@ -41,6 +41,9 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock = Lock()
         self.value = 0
 
+    def setServer(self, serverURL):
+        self.serverURL = serverURL
+
 
     def setCredentials(self, iptvFile):
         print "set credentials "+str(iptvFile)+"\n"
@@ -153,8 +156,15 @@ class webProxy(BaseHTTPRequestHandler):
                 channel = str(results.group(1))
                 session = str(results.group(2))
                 import urllib2
-                response = urllib2.urlopen('http://python.org/')
-                self.server.freeCredential(username)
+                # fetch credentials
+                response = urllib2.urlopen(self.server.serverURL + '/get/')
+                data = response.read()
+                self.wfile.write(data)
+                results = re.search(r'username=([^\&]*)&password=([^\&]*)', data)
+                if results:
+                    username = str(results.group(1))
+                    password = str(results.group(2))
+
 
 
         elif re.search(r'/free/', str(self.path)):
