@@ -27,6 +27,9 @@ import threading
 import re
 import urllib, urllib2
 import sys
+import os.path
+import time
+
 
 
 class ThreadedWebGUIServer(ThreadingMixIn, HTTPServer):
@@ -38,11 +41,13 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         HTTPServer.__init__(self, *args, **kw)
         self.ready = True
         self.iptvMatrix = []
+        self.sessions = {}
         self.lock = Lock()
         self.value = 0
 
-    def setServer(self, serverURL):
+    def setServer(self, serverURL, transcodetmp):
         self.serverURL = serverURL
+        self.transcodetmp = transcodetmp
 
 
     def setCredentials(self, iptvFile):
@@ -81,6 +86,13 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock.release()
 
 
+    def checkRunnings(self):
+        self.lock.acquire()
+        for session in self.sessions:
+            #hasn't been modified in over a min
+            if not os.path.exists(os.path.join(self.transcodetmp, session)) or time.time() - os.stat(os.path.join(self.transcodetmp, session)).st_mtime > 70:
+                    print "release session " + session + " username " + self.sessions[session] + "\n"
+        self.lock.release()
 
 
 class webProxy(BaseHTTPRequestHandler):
@@ -147,10 +159,15 @@ class webProxy(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
 
+
+        # relay the request the IPTV manager
+        # - track the channel
+        # - track the playback file
         elif re.search(r'/relay/', str(self.path)):
+            if len (self.server.sessions) > 0:
+                self.server.checkRunnings()
             self.send_response(200)
             self.end_headers()
-            count = 0
             results = re.search(r'/relay/([^\/]+)/([^\/]+)$', str(self.path))
             if results:
                 channel = str(results.group(1))
@@ -164,13 +181,15 @@ class webProxy(BaseHTTPRequestHandler):
                 if results:
                     username = str(results.group(1))
                     password = str(results.group(2))
+                    print "username = " + username + "\n"
+            self.server.sessions[session] = username
+
 
 
 
         elif re.search(r'/free/', str(self.path)):
             self.send_response(200)
             self.end_headers()
-            count = 0
             results = re.search(r'/free/(.*)$', str(self.path))
             if results:
                 username = str(results.group(1))
@@ -180,7 +199,6 @@ class webProxy(BaseHTTPRequestHandler):
         # redirect url to output
         elif re.search(r'/twisted/', str(self.path)):
             print "TWISTED" + "\n\n\n"
-            count = 0
             results = re.search(r'/twisted/(.*)$', str(self.path))
             if results:
                 url = str(results.group(1))
