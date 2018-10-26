@@ -229,7 +229,7 @@ if ($isSRT){
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 		require CONFIG->PATH . 'crawler.pm';
 		TOOLS_CRAWLER::ignoreCookies();
-		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/' . $channel,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/' . $m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
 		$username = $results[3];
 		$password = $results[5];
