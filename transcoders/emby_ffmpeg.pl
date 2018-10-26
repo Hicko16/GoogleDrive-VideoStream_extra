@@ -219,7 +219,7 @@ if ($isSRT){
 	#capture m3u8 filename
 
 	my ($m3u8) = $arglist =~ m%segment_file ([^\ ]+\.m3u8)%;
-	my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+)\.[^\ ]+%;
+	my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
 	print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
     print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
@@ -229,7 +229,7 @@ if ($isSRT){
 	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 		require CONFIG->PATH . 'crawler.pm';
 		TOOLS_CRAWLER::ignoreCookies();
-		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/',undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/get/' . $channel,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
 		$username = $results[3];
 		$password = $results[5];
@@ -259,8 +259,7 @@ if ($isSRT){
 		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
         print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
         if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username;
-$SIG{INT} = sub{ `echo "KILL $url\n">> /tmp/transcode.log`;};
+        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$channel;
 			`$FFMPEG_TEST $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
 #use IO::Handle;
 #my $handle = IO::Handle->new;
