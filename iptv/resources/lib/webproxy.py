@@ -195,7 +195,7 @@ class webProxy(BaseHTTPRequestHandler):
                     username = str(results.group(1))
                     password = str(results.group(2))
                     print "username = " + username + "\n"
-            self.server.sessions[session] = username
+                    self.server.sessions[session] = username
 
 
 
