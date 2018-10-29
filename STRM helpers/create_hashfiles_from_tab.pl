@@ -55,9 +55,13 @@ close(OUTPUT);
 
 open(OUTPUT,'>' . $outputfiles . '.hashes') or die ("Cannot open $outputfiles.hashes ".$!);
 foreach my $key (keys %hashMatches) {
-	for (my $i=0; $i < $#{$hashMatches{$key}}; $i++){
-		print OUTPUT $key . ','.$hashMatches{$key}[$i] . "\n";
+	print OUTPUT $key . ',';
+	print OUTPUT $hashMatches{$key}[0];
+	for (my $i=1; $i < $#{$hashMatches{$key}}; $i++){
+		print OUTPUT '|'.$hashMatches{$key}[$i];
 	}
+	print OUTPUT "\n";
+
 }
 close(OUTPUT);
 
