@@ -85,7 +85,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
             else:
                 usedConnections = usedConnections + 1
 
-        if free > 0:
+        if freeConnections > 0:
             return "[OK] free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
         else:
             return "[ALERT] free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
