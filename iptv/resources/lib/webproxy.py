@@ -85,7 +85,11 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
             else:
                 usedConnections = usedConnections + 1
 
-        return "free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
+        if free > 0:
+            return "[OK] free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
+        else:
+            return "[ALERT] free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
+
 
     def freeCredential(self, username, session):
         self.lock.acquire()
