@@ -74,6 +74,19 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock.release()
         return (-1,0)
 
+
+    def getStats(self):
+        freeConnections = 0
+        usedConnections = 0
+        for entry in self.iptvMatrix:
+            print "testing" + str(entry[2]) + "x"
+            if entry[2] == 0:
+                freeConnections = freeConnections + 1
+            else:
+                usedConnections = usedConnections + 1
+
+        return "free = " + str(freeConnections) + ', used = ' + str(usedConnections) + "\n"
+
     def freeCredential(self, username, session):
         self.lock.acquire()
         for entry in self.iptvMatrix:
@@ -210,6 +223,7 @@ class webProxy(BaseHTTPRequestHandler):
                 self.server.freeCredential(username, session)
 
 
+
         # redirect url to output
         elif re.search(r'/twisted/', str(self.path)):
             print "TWISTED" + "\n\n\n"
@@ -220,7 +234,10 @@ class webProxy(BaseHTTPRequestHandler):
             self.send_header('Location','http://' + str(url))
             self.end_headers()
 
-
+        else:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(self.server.getStats())
             return
 
 
