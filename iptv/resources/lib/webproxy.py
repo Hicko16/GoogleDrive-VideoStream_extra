@@ -241,7 +241,3 @@ class webProxy(BaseHTTPRequestHandler):
             return
 
 
-        # redirect url to output
-        else:
-            # no options
-            return
