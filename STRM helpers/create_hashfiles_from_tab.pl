@@ -9,10 +9,11 @@ use Getopt::Std;		# and the getopt module
 
 
 my %opt;
-die (USAGE) unless (getopts ('f:o:',\%opt));
+die (USAGE) unless (getopts ('m:f:o:',\%opt));
 
 # list of files
 my $fileList = $opt{'f'};
+my $mainfile = $opt{'m'};
 # output files
 my $outputfiles = $opt{'o'};
 my @files = split(',', $fileList);
@@ -20,6 +21,20 @@ my @files = split(',', $fileList);
 my %mainAssignment;
 my %hashMatches;
 my $count = 0;
+
+#open(INPUT,$mainfile) or die ("Cannot open $mainfile ".$!);
+
+#while(my $line =<INPUT>){#
+#	my ($fileID,$fileName, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^[^\t]*\t[^\t]*\t([^\t]*)\t([^\t]*)\t[^\t]*\t[^\t]*\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
+#	#print ".$fileID";
+#	if ($fileID ne '' and $hash ne '' and $mainAssignment{$fileID} eq ''){
+#		$tmpAssignment{$fileID} = $hash;
+#		push @{$hashMatches{$hash}}, $fileID;
+#	}
+#}#
+
+#close(INPUT);
+
 foreach my $file (@files) {
 	open(INPUT,$file) or die ("Cannot open $file ".$!);
 	my %tmpAssignment;
@@ -33,6 +48,7 @@ foreach my $file (@files) {
 	}
 	if ($count == 0){
 		%mainAssignment = %tmpAssignment;
+		$count++;
 	}
 
 	close(INPUT);
