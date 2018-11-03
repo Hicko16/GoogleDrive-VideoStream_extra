@@ -20,15 +20,16 @@ die (USAGE) unless (getopts ('s:t:w:vc',\%opt));
 # directory to scan
 my $target = $opt{'t'};
 my @files = split(',', $opt{'s'});
-my @blacklist = ('XXX','²⁴/⁷','24/7', '24-7', 'WEBCAMS', 'ₓₓₓ', 'IHEART', 'MC RADIO', 'RADIO');
+my @blacklist = ('XXX','²⁴/⁷','24/7', '24-7', 'WEBCAMS', 'ₓₓₓ', 'IHEART', 'MC RADIO', 'RADIO', 'MC', 'MX', 'TV SHOW', 'DJING');
+my %matches = ('EPL' => 'Sports', 'AHL' => 'Sports', 'BR' => 'Brazil', 'ESPN' => 'Sports', 'FSR' => 'Sports', 'NFL' => 'Sports', 'VIP' => 'Sports','PPV' => 'Sports','AU' => 'Australian', 'AS' => '', 'PT' => 'Sports', 'SEV' => 'Sports',  'NHL' => 'Sports', 'NBA' => 'Sports', 'NEWS' => 'United States - Regionals', 'ES' => 'Spain', 'IR' => 'Ireland', 'PT' => 'Portugal', 'IN' => 'Indian', 'USA' => 'United States', 'UK' => 'United Kingdom' , 'LOC' => 'United States - Regionals', 'CA' => 'Canada', 'FUBO' => 'United States');
+my %filters = ('ʜᴅ' => '', 'HD' => '');
 my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
+my %tvGrid;
 
 die (USAGE) if ($target eq '');
 
 
-open (OUTPUT, '> '.$target) or die ("cannot create $target: " + $!);
-OUTPUT->autoflush;
 
 foreach my $source(@files) {
 	open (INPUT, $source) or die ("cannot open $source: " + $!);
@@ -67,17 +68,45 @@ foreach my $source(@files) {
 			if ($next){
 				next;
 			}
+	  		foreach my $match(keys %matches) {
+	  			if ($groupTitle =~ m%$match%){
+	  				$groupTitle = $matches{$match};
+	  			}
+	  		}
+	  		foreach my $match(keys %filters) {
+	  			if ($name =~ m%$match%){
+	  				$name =~ s%$match%$filters{$match}%;
+	  			}
+	  		}
+	  		$groupTitle = "\L$groupTitle\E";
+  			$name = "\L$name\E";
+  			$name =~  s/^\s+|\s+$//g;
 
 			$line = <INPUT>;
 			$line =~ s%\r%%;
 			$line =~ s%\n%%;
-			print OUTPUT $groupTitle . "\t" . $name . "\t" . $line . "\n";
+			#print OUTPUT $groupTitle . "\t" . $name . "\t" . $line . "\n";
+			$tvGrid{$groupTitle}{$name}[$#{$tvGrid{$groupTitle}{$name}}+1] = $line;
 		}
 
 	}
 	close(INPUT);
 
 }
+
+open (OUTPUT, '> '.$target) or die ("cannot create $target: " + $!);
+OUTPUT->autoflush;
+
+  		foreach my $group (sort keys  %tvGrid) {
+	  		foreach my $name (sort keys %{$tvGrid{$group}}) {
+	  			my $URL = '';
+	  			for (my $i=0; $i <= $#{$tvGrid{$group}{$name}}; $i++){
+	  				$URL .= $tvGrid{$group}{$name}[$i] . "\t";
+	  			}
+				print OUTPUT $group . "\t" . $name . "\t" . $URL . "\n";
+
+	  		}
+  		}
 close(OUTPUT);
 
 
