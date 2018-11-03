@@ -37,7 +37,7 @@ except:
 
 
 try:
-    port = str(sys.argv[3])
+    port = int(sys.argv[3])
 except:
     port = 9998
 
