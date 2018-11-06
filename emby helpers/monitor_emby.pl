@@ -66,7 +66,7 @@ if ($port > 0){
 
 if ($isTest){
 
-	`curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "$label -- Instance restarted - not responsive", "type": "link" }] }' -H "Content-Type: application/json" $webhook` if $webhook ne '';
+	`curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "$label -- TEST MESSAGE", "type": "link" }] }' -H "Content-Type: application/json" $webhook` if $webhook ne '';
 
 }
 
