@@ -10,7 +10,7 @@ require 'config.cfg';
 
 my $RECORDING_DIR = CONFIG->RECORDING_DIR;
 my $RECORDING_DIR_UPLOAD = CONFIG->RECORDING_DIR_UPLOAD;
-
+my $IPTV_DETERMINATOR  = CONFIG->IPTV_DETERMINATOR;
 
 my $pid=0;
 my $KILLSIGNAL=0;
@@ -218,65 +218,73 @@ if ($isSRT){
 
 	#capture m3u8 filename
 
-	my ($m3u8) = $arglist =~ m%segment_list [^\ ]+/([^\/]+\.m3u8)%;
-	my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
-	$channel = 'x';
-	print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
-    print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
+	if ($arglist =~ m%$IPTV_DETERMINATOR%){
+		my ($m3u8) = $arglist =~ m%segment_list [^\ ]+/([^\/]+\.m3u8)%;
+		my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
+		$channel = 'x';
+		print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
-
-	my $username;
-	my $password;
-	if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-		require CONFIG->PATH . 'crawler.pm';
-		TOOLS_CRAWLER::ignoreCookies();
-		my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
-
-		$username = $results[3];
-		$password = $results[5];
-		print "username = $username, password = $password\n";
-
-		$arglist =~ s%USERNAME%$username%;
-		$arglist =~ s%PASSWORD%$password%;
-	}
+	    print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
 
 
+		my $username;
+		my $password;
+		if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+			require CONFIG->PATH . 'crawler.pm';
+			TOOLS_CRAWLER::ignoreCookies();
+			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
 
-	if ($arglist =~ m%\-pix_fmt yuv420p%){
-		$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
-	}
+			$username = $results[3];
+			$password = $results[5];
+			print "username = $username, password = $password\n";
 
-	#$pid = open ( LS, '-|', $FFMPEG . ' ' . $arglist . ' 2>&1');
-	#my $output = do{ local $/; <LS> };
-	#close LS;
-	#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
-
-
-	if ($arglist =~ m%$PROXY_DETERMINATOR%){
-		print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
-        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
-		`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
-	}else{
-		print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
-        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
-        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
-			`$FFMPEG_TEST $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
-#use IO::Handle;
-#my $handle = IO::Handle->new;
-#my $pid = open($handle, "$FFMPEG_TEST $arglist -v error; wget '$url';echo 'FREED $url' >> /tmp/transcode.log" . '& |') or die $!;
-#while ( kill 0, $pid){
-#	print LOG "looping\n";
-#	sleep 5;
-#}
-#`wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
-
-
-		}else{
-			`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+			$arglist =~ s%USERNAME%$username%;
+			$arglist =~ s%PASSWORD%$password%;
 		}
+
+
+
+		if ($arglist =~ m%\-pix_fmt yuv420p%){
+			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+		}
+
+		#$pid = open ( LS, '-|', $FFMPEG . ' ' . $arglist . ' 2>&1');
+		#my $output = do{ local $/; <LS> };
+		#close LS;
+		#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
+
+
+		if ($arglist =~ m%$PROXY_DETERMINATOR%){
+			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
+	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
+			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
+		}else{
+			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
+	        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
+	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+	        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
+				`$FFMPEG_TEST $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
+	#use IO::Handle;
+	#my $handle = IO::Handle->new;
+	#my $pid = open($handle, "$FFMPEG_TEST $arglist -v error; wget '$url';echo 'FREED $url' >> /tmp/transcode.log" . '& |') or die $!;
+	#while ( kill 0, $pid){
+	#	print LOG "looping\n";
+	#	sleep 5;
+	#}
+	#`wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
+
+
+			}else{
+				`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+			}
+		}
+
+	}else{
+		`$FFMPEG_TEST $arglist -v error`;
+
 	}
+
 
 
 
