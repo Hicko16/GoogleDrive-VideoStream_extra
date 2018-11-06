@@ -17,7 +17,8 @@ use File::Basename;
 use lib dirname (__FILE__) ;
 require '../crawler.pm';
 
-#require '../crawler.pm';
+use constant USAGE => $0 . " -i emby-server -p 8096 -l label [-w webhook] [-t]\n\t -t sends test message\n";
+
 
 
 my %opt;
@@ -25,12 +26,15 @@ die (USAGE) unless (getopts ('i:w:p:tl:',\%opt));
 
 my $instance  = $opt{'i'};
 my $label  = $opt{'l'};
-
 my $port =  $opt{'p'};
 my $webhook = $opt{'w'};
 my $isTest=0;
 $isTest = 1 if ($opt{'t'});
 my $logFile = '/var/lib/'.$instance.'/logs/embyserver.txt';
+
+die(USAGE) if ($port eq '' or $instance eq '');
+
+
 
 $output = `tail -1000 $logFile 2>&1`;
 if ($output =~ m%WebSocketException%){
