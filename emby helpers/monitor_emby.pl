@@ -21,18 +21,22 @@ require '../crawler.pm';
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:w:p:',\%opt));
+die (USAGE) unless (getopts ('i:w:p:tl:',\%opt));
 
 my $instance  = $opt{'i'};
+my $label  = $opt{'l'};
+
 my $port =  $opt{'p'};
 my $webhook = $opt{'w'};
+my $isTest=0;
+$isTest = 1 if ($opt{'t'});
 my $logFile = '/var/lib/'.$instance.'/logs/embyserver.txt';
 
 $output = `tail -1000 $logFile 2>&1`;
 if ($output =~ m%WebSocketException%){
         print "restarting emby";
         `/usr/sbin/service $instance restart`;
-        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted - web socket exception", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "$label -- Instance restarted - web socket exception", "type": "link" }] }' -H "Content-Type: application/json" $webhook` if $webhook ne '';
 }
 
 if ($port > 0){
@@ -48,11 +52,17 @@ if ($port > 0){
 		if ($results[0] != 1){
 	        print "restarting emby";
 	        `/usr/sbin/service $instance restart`;
-	        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "Instance restarted - not responsive", "type": "link" }] }' -H "Content-Type: application/json" $webhook`;
+	        `curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "$label -- Instance restarted - not responsive", "type": "link" }] }' -H "Content-Type: application/json" $webhook` if $webhook ne '';
 		}
 
 	}
 
+
+}
+
+if ($isTest){
+
+	`curl -X POST --data '{ "embeds": [{"title": "Emby Issue", "description": "$label -- Instance restarted - not responsive", "type": "link" }] }' -H "Content-Type: application/json" $webhook` if $webhook ne '';
 
 }
 
