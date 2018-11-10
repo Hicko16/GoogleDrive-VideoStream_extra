@@ -116,7 +116,7 @@ if ($isSRT){
 	if (CONFIG->PREFER_GOOGLE_TRANSCODE){
 
 		#force to localhost for transcoding
-		$arglist =~ s%\://([^\/]+)\/%localhost%;
+		$arglist =~ s%\://([^\/]+)\/%://localhost/%;
 
 
 		# request to transcode?
