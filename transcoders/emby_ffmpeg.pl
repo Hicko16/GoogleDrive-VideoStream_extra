@@ -115,6 +115,10 @@ if ($isSRT){
 	# the remuxing will be spreadout over the entire playback session as Google will limit the transfer rate
 	if (CONFIG->PREFER_GOOGLE_TRANSCODE){
 
+		#force to localhost for transcoding
+		$arglist =~ s%\://([^\/]+)\/%localhost%;
+
+
 		# request to transcode?
 		if ($arglist =~ m%\-pix_fmt yuv420p% or $arglist =~ m%\-bsf\:v h264_mp4toannexb% or $arglist =~ m%\-codec\:v\:0 libx264%){
 			if ($arglist =~ m%\,426\)% or $arglist =~ m%\,640\)% ){
