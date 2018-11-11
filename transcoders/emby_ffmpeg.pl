@@ -119,6 +119,7 @@ if ($isSRT){
 		#$arglist =~ s%\://([^\/]+)\:%://127.0.0.1\:%;
 
 
+
 		# request to transcode?
 		if ($arglist =~ m%\-pix_fmt yuv420p% or $arglist =~ m%\-bsf\:v h264_mp4toannexb% or $arglist =~ m%\-codec\:v\:0 libx264%){
 			if ($arglist =~ m%\,426\)% or $arglist =~ m%\,640\)% ){
