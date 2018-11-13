@@ -64,7 +64,7 @@ my $replace=1;
 my $seek = '';
 my $originalvideo  = '';
 my $srtfile = '';
-my $video = 'http://premium1.monkeydevices.com:9988/default.py?kv=1jlVj9dwEJIxmjWMA4v---AHT0OnG2UTMISmpWdyZjhHewxGUtLClxyG92GEg4sZ8AX2ZCaPJwEOmXa3Da57ejW99Z2MWzePSdAyBgRQ0ZGOg+e7vIrqX7V5kYCEeWMeVzE8DqZrtipfCLHSeJsJf+v9vEhg6nu7WefDoF2GRDokW9vLzY9CB5YtyiXaWGepeB97hILy---IxXJ---G38VSfUXRDL---4o7iJOrAa0pXRlhO3RcXW+t8A6NhiOJ875P2suTGrQXAU6TBgTphX4suflRKeNaYZSMy2o7v5m1QAh41aLRXMaF4YeIbsNNI5y8QNM6oJVIPmDgCtdpIhCxUdBPeVFcEMxGjsCViYCczVSGDNGNhp2DNXzqr5ql6I2mS5v28WMLm5Br3SBD8X8+gVeERgA==';
+my $video = '';
 foreach my $current (0 .. $#ARGV) {
 	# fetch how long to encode
 	if ($ARGV[$current] =~ m%\d\d:\d\d:\d\d%){
