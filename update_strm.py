@@ -115,6 +115,8 @@ def main():
                     skip = True
 
                 if not skip:
+                    okv= kv
+                    obaseurl= baseurl
                     if verbose:
                         print "kv = " + str(kv) + "\n"
                     if (search is not None and replace is not None):
@@ -122,11 +124,15 @@ def main():
                         baseurl = baseurl.replace(search,replace, 5)
                         if verbose:
                             print "kv (with replacements) = " + str(kv) + "\n"
-                    file = open(str(root) + '/' + str(filename), "w")
-                    if not decryptOnly:
-                        kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
-                    file.write(str(kv) + "\n")
-                    file.close()
+                    if (baseurl != obaseurl or  kv != okv):
+                        file = open(str(root) + '/' + str(filename), "w")
+                        if not decryptOnly:
+                            kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
+                        file.write(str(kv) + "\n")
+                        file.close()
+                    else:
+                        if verbose:
+                            print "skip, no changes to make for "+ str(kv) + "\n"
 
 
                 #print "encrypted = " + encrypt.encryptString(kv) + "\n"
