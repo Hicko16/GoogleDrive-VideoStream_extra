@@ -114,6 +114,7 @@ def main():
                     print "issue with file " + str(root) + '/' + str(filename)
                     skip = True
 
+
                 if not skip:
                     okv= kv
                     obaseurl= baseurl
