@@ -79,6 +79,7 @@ foreach my $current (0 .. $#ARGV) {
 		$ARGV[$current++] = '-i';
 		$originalvideo = $ARGV[$current];
 		($video) = $originalvideo =~ m%\/([^\/]+)$%;
+		$video =~ s/ /\%20/g;
 		$video = PATH_TO_VIDEOSTREAM . '/TEST?file=' . $video;
 		print "VIDEO = " . $originalvideo . $video. "\n\n";
 		#$ARGV[$current] = $video;
