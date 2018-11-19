@@ -80,6 +80,7 @@ foreach my $current (0 .. $#ARGV) {
 		$originalvideo = $ARGV[$current];
 		($video) = $originalvideo =~ m%\/([^\/]+)$%;
 		$video = PATH_TO_VIDEOSTREAM . '/TEST?file=' . $video;
+		print "VIDEO = " . $originalvideo . $video. "\n\n";
 		#$ARGV[$current] = $video;
 		$replace = 2;
 	}elsif ($replace ==2 and  $ARGV[$current] =~ m%\-i%){
