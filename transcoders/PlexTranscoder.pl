@@ -18,6 +18,7 @@ use constant GOOGLE_TRANSCODE => 1;
 use constant PREFER_GOOGLE_TRANSCODE => 1;
 
 use constant PATH_TO_TRANSCODER => '"/usr/lib/plexmediaserver/Plex Transcoder.oem"';
+use constant PATH_TO_VIDEOSTREAM => 'http://127.0.0.1:9988/';
 
 use constant LOGFILE => '/tmp/transcode.log';
 
@@ -77,6 +78,8 @@ foreach my $current (0 .. $#ARGV) {
 	}elsif ($replace==1 and  $ARGV[$current] =~ m%\-i%){
 		$ARGV[$current++] = '-i';
 		$originalvideo = $ARGV[$current];
+		($video) = $originalvideo =~ m%\/([^\/]+)$%;
+		$video = PATH_TO_VIDEOSTREAM . '/TEST?file=' . $video;
 		#$ARGV[$current] = $video;
 		$replace = 2;
 	}elsif ($replace ==2 and  $ARGV[$current] =~ m%\-i%){
