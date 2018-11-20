@@ -18,7 +18,7 @@ use constant USAGE => $0 . "-p 8096 -i emby-server -a api_key -b backup_location
 
 use Time::localtime;
 my $tm = localtime;
-my $time = printf("%04d%02d%02d\n", $tm->year+1900,($tm->mon)+1, $tm->mday);
+my $time = sprintf("%04d%02d%02d\n", $tm->year+1900,($tm->mon)+1, $tm->mday);
 
 
 my %opt;
