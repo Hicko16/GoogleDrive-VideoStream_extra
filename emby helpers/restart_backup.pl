@@ -18,7 +18,7 @@ use constant USAGE => $0 . "-p 8096 -i emby-server -a api_key -b backup_location
 
 use Time::localtime;
 my $tm = localtime;
-my $time = printf(".%04d%02d%02d\n", $tm->year+1900,($tm->mon)+1, $tm->mday);
+my $time = printf("%04d%02d%02d\n", $tm->year+1900,($tm->mon)+1, $tm->mday);
 
 
 my %opt;
@@ -39,7 +39,7 @@ my $url = 'http://127.0.0.1:'.$port.'/emby/System/Shutdown?api_key='.$apiKey;
 TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::simplePOST($url);
 sleep(10);
-copy($libraryDB,$backupLocation.$time);
+copy($libraryDB,$backupLocation . '.'.$time);
 `/usr/sbin/service $instance start`;
 
 
