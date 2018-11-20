@@ -37,7 +37,7 @@ die(USAGE) if ($port eq '' or $instance eq '');
 my $url = 'http://127.0.0.1:'.$port.'/emby/System/Shutdown?api_key='.$apiKey;
 
 TOOLS_CRAWLER::ignoreCookies();
-my @results = TOOLS_CRAWLER::complexPOST($url);
+my @results = TOOLS_CRAWLER::complexPOST($url,'',(),(),());
 sleep(10);
 copy($libraryDB,$backupLocation.$time);
 `/usr/sbin/service $instance start`;
