@@ -567,6 +567,14 @@ sub simpleGET($){
 
 }
 
+sub simplePOST($){
+  my $site = shift;
+
+  my $req = new HTTP::Request POST => "$site";
+  return simpleWEB($site, $req);
+
+}
+
 
 ######
 #
