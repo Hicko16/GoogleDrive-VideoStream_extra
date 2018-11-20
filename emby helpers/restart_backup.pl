@@ -25,7 +25,7 @@ my %opt;
 die (USAGE) unless (getopts ('p:a:i:b:',\%opt));
 
 my $instance  = $opt{'i'};
-my $backupLocation  = $opt{'b'} . '/library.db';
+my $backupLocation  = $opt{'b'} . '/library.db.'. $time;
 my $label  = $opt{'l'};
 my $port =  $opt{'p'};
 my $apiKey = $opt{'a'};
@@ -39,7 +39,7 @@ my $url = 'http://127.0.0.1:'.$port.'/emby/System/Shutdown?api_key='.$apiKey;
 TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::simplePOST($url);
 sleep(10);
-copy($libraryDB,$backupLocation . '.'.$time);
+copy($libraryDB,$backupLocation);
 `/usr/sbin/service $instance start`;
 `/bin/gzip $backupLocation`;
 
