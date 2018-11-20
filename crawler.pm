@@ -571,6 +571,9 @@ sub simplePOST($){
   my $site = shift;
 
   my $req = new HTTP::Request POST => "$site";
+  $req->content_type("application/x-www-form-urlencoded");
+  $cookie_jar->add_cookie_header($req) unless ($ignoreCookies);
+  $req->content('');
   return simpleWEB($site, $req);
 
 }
