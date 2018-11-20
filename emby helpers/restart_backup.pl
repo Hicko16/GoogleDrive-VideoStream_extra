@@ -22,7 +22,7 @@ my $time = printf(".%04d%02d%02d\n", $tm->year+1900,($tm->mon)+1, $tm->mday);
 
 
 my %opt;
-die (USAGE) unless (getopts ('p:a:i:',\%opt));
+die (USAGE) unless (getopts ('p:a:i:b:',\%opt));
 
 my $instance  = $opt{'i'};
 my $backupLocation  = $opt{'b'} . '/library.db';
