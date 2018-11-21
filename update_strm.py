@@ -119,12 +119,16 @@ def main():
                     okv= kv
                     obaseurl= baseurl
                     if verbose:
-                        print "kv = " + str(kv) + "\n"
+                        print "kv = " + str(kv) + ","
+                        print "baseurl = " + str(baseurl) + "\n"
+
                     if (search is not None and replace is not None):
                         kv = kv.replace(search,replace, 5)
                         baseurl = baseurl.replace(search,replace, 5)
                         if verbose:
-                            print "kv (with replacements) = " + str(kv) + "\n"
+                            print "kv (with replacements) = " + str(kv) + ","
+                            print "baseurl (with replacements) = " + str(baseurl) + "\n"
+
                     if (baseurl != obaseurl or  kv != okv):
                         file = open(str(root) + '/' + str(filename), "w")
                         if not decryptOnly:
