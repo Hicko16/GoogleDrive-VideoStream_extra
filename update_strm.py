@@ -126,6 +126,8 @@ def main():
                         kv = kv.replace(search,replace, 5)
                         baseurl = baseurl.replace(search,replace, 5)
                         if verbose:
+                            print "search = " + str(search) + "," + "replace = " + str(replace) + "\n"
+
                             print "kv (with replacements) = " + str(kv) + ","
                             print "baseurl (with replacements) = " + str(baseurl) + "\n"
 
