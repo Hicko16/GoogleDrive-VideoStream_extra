@@ -29,11 +29,11 @@ my @channelcache;
 
 die(USAGE) if ($source eq '' or $target eq '');
 
+my %channelMapping;
 
 if ($channelList ne ''){
 	open (CHANNELS, $channelList) or die ("cannot open $channelList: " + $!);
 
-	my %channelMapping;
 	while (my $line = <CHANNELS>){
 
 		$line =~ s%\r?\n%%;
@@ -41,7 +41,7 @@ if ($channelList ne ''){
 			my ($channelNumber,$country,$channelName,$cleanChannelName) = $line =~  m%^([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)%;
 			$channelMapping{$country . ' - ' . $channelName}[0] = $channelNumber;
 			$channelMapping{$country . ' - ' . $channelName}[1] = $cleanChannelName;
-			#print "$channelNumber " . $channelMapping{$country . ' - ' . $channelName}[1] ." $country ${channelName}x\n";
+			print "|$channelNumber|" . $channelMapping{$country . ' - ' . $channelName}[1] ."|$country|${channelName}|\n";
 		}
 
 
@@ -100,7 +100,7 @@ while (my $line = <INPUT>){
 			print "$number $country ${channel}x\n";
 			$number++;
 		}else{
-			print "$country ${channel}x not defined\n";
+			print "|$country|${channel}|".$channelMapping{$country . ' - ' . $channel}[0]."| not defined\n";
 		}
 	}
 
