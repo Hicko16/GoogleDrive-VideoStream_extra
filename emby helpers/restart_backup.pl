@@ -14,7 +14,7 @@ use File::Basename;
 use lib dirname (__FILE__) ;
 require '../crawler.pm';
 
-use constant USAGE => $0 . "-p 8096 -i emby-server -a api_key -b backup_location \n";
+use constant USAGE => $0 . "-p 8096 -i emby-server -a api_key -b backup_location -l instance_name \n";
 
 use Time::localtime;
 my $tm = localtime;
@@ -30,6 +30,9 @@ my $label  = $opt{'l'};
 my $port =  $opt{'p'};
 my $apiKey = $opt{'a'};
 my $libraryDB = '/var/lib/'.$instance.'/data/library.db';
+my $embyLibrary =  '/var/lib/'.$instance;
+my $backupLocationEmby  = $opt{'b'} . '/emby.' . $label . '.tgz';
+
 
 die(USAGE) if ($port eq '' or $instance eq '');
 
@@ -40,6 +43,7 @@ TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::simplePOST($url);
 sleep(10);
 copy($libraryDB,$backupLocation);
+`/usr/lib/tar -zcvf $backupLocationEmby $embyLibrary`;
 `/usr/sbin/service $instance start`;
 `/bin/gzip $backupLocation`;
 
