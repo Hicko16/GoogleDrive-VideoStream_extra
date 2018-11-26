@@ -31,7 +31,7 @@ my $port =  $opt{'p'};
 my $apiKey = $opt{'a'};
 my $libraryDB = '/var/lib/'.$instance.'/data/library.db';
 my $embyLibrary =  '/var/lib/'.$instance;
-my $backupLocationEmby  = $opt{'b'} . '/emby.' . $label . '.tgz';
+my $backupLocationEmby  = $opt{'b'} . '/emby.' . $label . '.'.$time.'.tgz';
 
 
 die(USAGE) if ($port eq '' or $instance eq '');
