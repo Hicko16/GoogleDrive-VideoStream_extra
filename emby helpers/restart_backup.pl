@@ -30,7 +30,7 @@ my $label  = $opt{'l'};
 my $port =  $opt{'p'};
 my $apiKey = $opt{'a'};
 my $libraryDB = '/var/lib/'.$instance.'/data/library.db';
-my $embyLibrary =  '/var/lib/'.$instance;
+my $embyLibrary =  '/var/lib/'.$instance . '/*';
 my $backupLocationEmby  = $opt{'b'} . '/emby.' . $label . '.'.$time.'.tgz';
 
 
