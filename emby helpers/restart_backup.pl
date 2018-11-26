@@ -43,7 +43,7 @@ TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::simplePOST($url);
 sleep(10);
 copy($libraryDB,$backupLocation);
-`/usr/bin/tar -zcvf $backupLocationEmby $embyLibrary`;
+`/bin/tar -zcvf $backupLocationEmby $embyLibrary`;
 `/usr/sbin/service $instance start`;
 `/bin/gzip $backupLocation`;
 
