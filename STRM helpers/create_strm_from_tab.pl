@@ -27,6 +27,11 @@ if ($opt{'a'}){
 	$includeTV = 1;
 }
 
+if ($directory eq ''){
+	die (USAGE);
+}
+
+
 # some checks
 if (!(-e $directory)){
 	die ("target does not exist " . $directory);
