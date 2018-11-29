@@ -40,7 +40,7 @@ except:
 #try:
 server = webproxy.WebProxyServer(('',  port), webproxy.webProxy)
 server.setCredentials(iptvFile)
-print "Simple Proxy Server ready....\n"
+print "IPTV Proxy-Credentials Server ready....\n"
 
 while server.ready:
     server.handle_request()
