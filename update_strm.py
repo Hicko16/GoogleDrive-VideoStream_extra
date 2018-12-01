@@ -29,13 +29,15 @@ from resources.lib import encryption
 import getopt, sys
 
 def main():
+    usage = "-d directory [-s salt -p salt password -x search -z replace -a -e]\nwhere -a means decrypt only and -e means encrypt only"
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "s:p:d:x:z:va", ["help", "directory=", "salt=", "password=", "search=", "replace="])
+        opts, args = getopt.getopt(sys.argv[1:], "s:p:d:x:z:vae", ["help", "directory=", "salt=", "password=", "search=", "replace="])
     except getopt.GetoptError as err:
         # print help information and exit:
         print str(err)  # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
+
     directory = None
     salt = None
     password = None
@@ -70,7 +72,7 @@ def main():
 
     if (directory is None):
         print "No directory (-d) provided."
-        print "-d directory [-s salt -p salt password -x search -z replace -a -e]\nwhere -a means decrypt only and -e means encrypt only"
+        print usage
         return
 
     if (salt is None or password is None):
