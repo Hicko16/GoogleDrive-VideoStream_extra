@@ -11,7 +11,7 @@ use constant USAGE => $0 . " -d directory_to_save -t transcode_label -s spreadsh
 
 
 my %opt;
-die (USAGE) unless (getopts ('s:d:t:h:oa',\%opt));
+die (USAGE) unless (getopts ('s:d:t:h:oav',\%opt));
 
 # directory to scan
 my $directory = $opt{'d'};
@@ -21,6 +21,10 @@ my $hostname = $opt{'h'};
 my $generateOriginal = 0;
 if ($opt{'o'}){
 	$generateOriginal = 1;
+}
+my $isVerbose = 0;
+if ($opt{'v'}){
+	$isVerbose = 1;
 }
 my $includeTV = 0;
 if ($opt{'a'}){
@@ -65,7 +69,7 @@ while(my $line =<INPUT>){
 			$version =  'v'.($movieCount{$movieTitle}+1) . ' ';
 		}
 
-		print "$movieTitle $resolution $hash\n";
+		print "$movieTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal){
 			if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original '.$version.$resolution . 'p.strm')){
 				open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original '.$version.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
@@ -108,7 +112,7 @@ while(my $line =<INPUT>){
 			$version = ' v' . ($tvCount{$tvTitle.$tvSeason.$tvEpisode}+1);
 		}
 
-		print "$tvTitle $resolution $hash\n";
+		print "$tvTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal){
 			if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm')){
 				open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
