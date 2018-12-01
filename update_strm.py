@@ -43,12 +43,15 @@ def main():
     replace = None
     verbose = False
     decryptOnly = False
+    encryptOnly = False
     wasEncrypted = False
     for o, a in opts:
         if o in ('-v'):
             verbose = True
         elif o in ('-a'):
             decryptOnly = True
+        elif o in ('-e'):
+            encryptOnly = True
         elif  o in ("-p", "--password"):
             password = a
         elif o in ("-s", "--salt"):
@@ -67,7 +70,7 @@ def main():
 
     if (directory is None):
         print "No directory (-d) provided."
-        print "-d directory [-s salt -p salt password -x search -z replace -a]"
+        print "-d directory [-s salt -p salt password -x search -z replace -a -e]\nwhere -a means decrypt only and -e means encrypt only"
         return
 
     if (salt is None or password is None):
@@ -135,6 +138,11 @@ def main():
                         file = open(str(root) + '/' + str(filename), "w")
                         if not decryptOnly:
                             kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
+                        file.write(str(kv) + "\n")
+                        file.close()
+                    elif (not wasEncrypted and encryptOnly):
+                        file = open(str(root) + '/' + str(filename), "w")
+                        kv = str(baseurl) + '?kv=' + str(encrypt.encryptString(kv))
                         file.write(str(kv) + "\n")
                         file.close()
                     else:
