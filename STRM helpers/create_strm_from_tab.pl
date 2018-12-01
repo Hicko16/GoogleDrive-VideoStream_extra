@@ -11,7 +11,7 @@ use constant USAGE => $0 . " -d directory_to_save -t transcode_label -s spreadsh
 
 
 my %opt;
-die (USAGE) unless (getopts ('s:d:t:h:o',\%opt));
+die (USAGE) unless (getopts ('s:d:t:h:oa',\%opt));
 
 # directory to scan
 my $directory = $opt{'d'};
