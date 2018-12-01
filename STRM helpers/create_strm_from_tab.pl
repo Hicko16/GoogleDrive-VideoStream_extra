@@ -70,7 +70,7 @@ while(my $line =<INPUT>){
 
 		my $version = '';
 		if ($movieCount{$movieTitle} >= 1){
-			$version =  'v'.($movieCount{$movieTitle}+1) . ' ';
+			$version =  ($movieCount{$movieTitle}+1) . ' ';
 		}
 
 		print "$movieTitle $resolution $hash\n" if $isVerbose;
@@ -114,7 +114,7 @@ while(my $line =<INPUT>){
 
 		my $version = '';
 		if ($tvCount{$tvTitle.$tvSeason.$tvEpisode} >= 1){
-			$version = ' v' . ($tvCount{$tvTitle.$tvSeason.$tvEpisode}+1);
+			$version = ' ' . ($tvCount{$tvTitle.$tvSeason.$tvEpisode}+1);
 		}
 
 		print "$tvTitle $resolution $hash\n" if $isVerbose;
