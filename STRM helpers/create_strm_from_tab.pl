@@ -61,8 +61,8 @@ while(my $line =<INPUT>){
 		}
 
 		my $version = '';
-		if ($movieCount{$movieTitle} >= 1){
-			$version =  ($movieCount{$movieTitle}+1) . ' ';
+		if ($movieCount{$movieTitle.$resolution} >= 1){
+			$version =  ($movieCount{$movieTitle.$resolution}+1) . ' ';
 		}
 
 		print "$movieTitle $resolution $hash\n";
@@ -94,7 +94,7 @@ while(my $line =<INPUT>){
 		}
 
 		$movieHash{$hash} = 1;
-		$movieCount{$movieTitle}++;
+		$movieCount{$movieTitle.$resolution}++;
 	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
 		if (!(-e $tvDirectory . $tvTitle) ){
 			mkdir $tvDirectory . $tvTitle;
@@ -104,8 +104,8 @@ while(my $line =<INPUT>){
 		}
 
 		my $version = '';
-		if ($tvCount{$tvTitle.$tvSeason.$tvEpisode} >= 1){
-			$version = ' ' . ($tvCount{$tvTitle.$tvSeason.$tvEpisode}+1);
+		if ($tvCount{$tvTitle.$tvSeason.$tvEpisode.$resolution} >= 1){
+			$version = ' ' . ($tvCount{$tvTitle.$tvSeason.$tvEpisode.$resolution}+1);
 		}
 
 		print "$tvTitle $resolution $hash\n";
@@ -138,7 +138,7 @@ while(my $line =<INPUT>){
 		}
 
 		$tvHash{$hash} = 1;
-		$tvCount{$tvTitle.$tvSeason.$tvEpisode}++;
+		$tvCount{$tvTitle.$tvSeason.$tvEpisode.$resolution}++;
 	}
 }
 
