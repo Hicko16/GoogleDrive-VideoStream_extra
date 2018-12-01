@@ -19,19 +19,19 @@ my $transcodeLabel = $opt{'t'};
 my $inputSpreadsheet = $opt{'s'};
 my $hostname = $opt{'h'};
 my $generateOriginal = 0;
-if ($opt{'o'}){
+if (defined($opt{'o'})){
 	$generateOriginal = 1;
 }
 my $generateTranscode = 0;
-if ($opt{'z'}){
+if (defined($opt{'z'})){
 	$generateTranscode = 1;
 }
 my $isVerbose = 0;
-if ($opt{'v'}){
+if (defined($opt{'v'})){
 	$isVerbose = 1;
 }
 my $includeTV = 0;
-if ($opt{'a'}){
+if (defined($opt{'a'})){
 	$includeTV = 1;
 }
 
@@ -104,7 +104,7 @@ while(my $line =<INPUT>){
 		}
 		$movieHash{$hash} = 1;
 		$movieCount{$movieTitle}++;
-	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
+	}elsif ($includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
 		if (!(-e $tvDirectory . $tvTitle) ){
 			mkdir $tvDirectory . $tvTitle;
 		}
