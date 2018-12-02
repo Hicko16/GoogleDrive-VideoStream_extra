@@ -186,7 +186,7 @@ $arglist =~ s%\-loglevel quiet \-loglevel_plex error%%;
 
 #teting
 $arglist =~ s%\-avoid_negative_tsdisabled%%;
-$arglist =~ s%\-codec\:0 \S+ \-codec\:1 \S+%%;
+$arglist =~ s%\-codec\:\d+ \S+ \-codec\:\d+ \S+%%;
 
 print LOG "$PATH_TO_TRANSCODER $arglist\n\n";
 close(LOG);
