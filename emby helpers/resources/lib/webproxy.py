@@ -144,7 +144,6 @@ class webProxy(BaseHTTPRequestHandler):
                 response = urllib2.urlopen('https://www.dinopass.com/password/simple')
                 password = response.read()
 
-                self.wfile.write(self.server.serverURL + '/emby/Users/New?api_key=' + self.server.key+ "{\"Name\":\""+str(username)+"\"}")
                 request = urllib2.Request(self.server.serverURL + '/emby/Users/New?api_key=' + self.server.key, "{\"Name\":\""+str(username)+"\"}",{'Content-Type': 'application/json'})
                 response = urllib2.urlopen(request)
                 data = response.read()
@@ -155,9 +154,12 @@ class webProxy(BaseHTTPRequestHandler):
                     response = urllib2.urlopen(request)
                     request = urllib2.Request(self.server.serverURL + '/emby/Users/'+str(ID)+'/Password?api_key=' + self.server.key, "{\"Id\":\""+str(username)+"\",\"CurrentPassword\":\"\",\"CurrentPw\":\"\",\"NewPw\":\""+str(password)+"\"}",{'Content-Type': 'application/json'})
                     response = urllib2.urlopen(request)
-                    response = urllib2.urlopen(self.server.serverURL + '/emby/Users/'+str(ID)+'/Connect/Link?ConnectUsername='+str(username)+'&api_key=' + self.server.key, data='')
+                    try:
+                        response = urllib2.urlopen(self.server.serverURL + '/emby/Users/'+str(ID)+'/Connect/Link?ConnectUsername='+str(username)+'&api_key=' + self.server.key, data='')
+                        self.wfile.write('ID created and linked to connect ID.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(username) + ', password = ' + str(password))
+                    except:
+                        self.wfile.write('Local (manual) ID created but linking to connect ID failed.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(username) + ', password = ' + str(password))
 
-                    self.wfile.write('ID created and linked to connect ID.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(username) + ', password = ' + str(password))
                 else:
                     self.wfile.write('ID could not be created.')
 
