@@ -31,7 +31,7 @@ my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
 if ($isRemoveVOD){
-	@blacklist = ('24/7','²⁴/⁷');
+	@blacklist = ('MatchCenter','24/7','²⁴/⁷');
 }
 
 die (USAGE) if ($source eq '' or $target eq '');
