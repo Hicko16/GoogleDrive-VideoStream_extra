@@ -220,7 +220,7 @@ EOF
 			next if $q > $maxQuality or $q < $minQuality;
     		if ($#nfoCriteria >= 0){
 				next unless $file =~ m%\.nfo$%;
-				next unless $file =~ m%original$%;
+				next unless $file =~ m%original%;
 
 				open (NFO, $file) or next;
 				my $match=0;
