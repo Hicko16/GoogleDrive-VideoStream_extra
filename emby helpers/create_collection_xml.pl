@@ -108,6 +108,8 @@ print XML <<EOF;
   <CollectionItems>
 EOF
 
+my %elminateDuplicates;
+
 if ($inputSpreadsheet ne ''){
 
 	open(INPUT,$inputSpreadsheet) or die ("Cannot open $inputSpreadsheet ".$!);
@@ -138,8 +140,12 @@ if ($inputSpreadsheet ne ''){
 							#remove the strm file from path
 							$file  =~ s%\/([\/]+)\.strm$%%;
 
-	    					print "match $file\n";
-							$match = 1;
+							if ($elminateDuplicates{$file} == 0){
+		    					print "match $file\n";
+								$match = 1;
+								$elminateDuplicates{$file}++;
+							}
+
 #							last;
 						}
 				    }
@@ -225,8 +231,12 @@ EOF
 							#remove the strm file from path
 							$file  =~ s%\/([^\/]+)\.strm$%%;
 
-	    					print "match $file\n";
-							$match = 1;
+							if ($elminateDuplicates{$file} == 0){
+		    					print "match $file\n";
+								$match = 1;
+								$elminateDuplicates{$file}++;
+							}
+
 #							last;
 						}
 				    }
