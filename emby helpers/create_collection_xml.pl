@@ -220,6 +220,8 @@ EOF
 			next if $q > $maxQuality or $q < $minQuality;
     		if ($#nfoCriteria >= 0){
 				next unless $file =~ m%\.nfo$%;
+				next unless $file =~ m%original$%;
+
 				open (NFO, $file) or next;
 				my $match=0;
 
@@ -229,7 +231,7 @@ EOF
 							$file  =~ s%\.nfo$%\.strm%;
 
 							#remove the strm file from path
-							$file  =~ s%\/([^\/]+)\.strm$%%;
+							#$file  =~ s%\/([^\/]+)\.strm$%%;
 
 							if ($elminateDuplicates{$file} == 0){
 		    					print "match $file\n";
