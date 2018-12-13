@@ -134,6 +134,10 @@ if ($inputSpreadsheet ne ''){
 				    foreach my $criteria (@nfoCriteria) {
 						if ($line =~ m%$criteria%){
 							$file  =~ s%\.nfo%\.strm%;
+
+							#remove the strm file from path
+							$file  =~ s%\/([\/]+)\.strm$%%;
+
 	    					print "match $file\n";
 							$match = 1;
 #							last;
@@ -141,7 +145,6 @@ if ($inputSpreadsheet ne ''){
 				    }
 				    foreach my $criteria (@blacklistnfoCriteria) {
 						if ($line =~ m%$criteria%){
-							$file  =~ s%\.nfo%\.strm%;
 	    					print "blacklist $file\n";
 							$match = 0;
 							last;
