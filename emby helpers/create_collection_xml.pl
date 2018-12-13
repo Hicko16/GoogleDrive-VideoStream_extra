@@ -15,12 +15,14 @@ use File::Copy;
 
 
 my %opt;
-die (USAGE) unless (getopts ('i:q:t:m:c:d:n:vx',\%opt));
+die (USAGE) unless (getopts ('i:q:t:m:c:d:w:b:vx',\%opt));
 
 # directory for backups
 my $inputSpreadsheet  = $opt{'i'};
 my $quality =  $opt{'q'};
-my @nfoCriteria = split(',', $opt{'n'});
+my @nfoCriteria = split(',', $opt{'w'});
+my @blacklistnfoCriteria = split(',', $opt{'b'});
+
 if ($quality eq '' and $inputSpreadsheet eq '' and $#nfoCriteria < 0){
 	die($0 . "(-i spreadsheet) (-q quality) (-t tv_folder) (-m movie_folder) -c collection_name -d target_dir -n nfo_criteria (-v) (-x)\n -v verbose, -x deep dive into tv" ."either quality, nfo criteria or a spreadsheet for input is required");
 }
@@ -134,10 +136,18 @@ if ($inputSpreadsheet ne ''){
 							$file  =~ s%\.nfo%\.strm%;
 	    					print "match $file\n";
 							$match = 1;
+#							last;
+						}
+				    }
+				    foreach my $criteria (@blacklistnfoCriteria) {
+						if ($line =~ m%$criteria%){
+							$file  =~ s%\.nfo%\.strm%;
+	    					print "blacklist $file\n";
+							$match = 0;
 							last;
 						}
 				    }
-				    last if $match;
+#				    last if $match;
 
 				}
 				close (NFO);
@@ -210,10 +220,19 @@ EOF
 							$file  =~ s%\.nfo$%\.strm%;
 	    					print "match $file\n";
 							$match = 1;
+#							last;
+						}
+				    }
+				    foreach my $criteria (@blacklistnfoCriteria) {
+						if ($line =~ m%$criteria%){
+							$file  =~ s%\.nfo%\.strm%;
+	    					print "blacklist $file\n";
+							$match = 0;
 							last;
 						}
 				    }
-				    last if $match;
+
+#				    last if $match;
 
 				}
 				close (NFO);
