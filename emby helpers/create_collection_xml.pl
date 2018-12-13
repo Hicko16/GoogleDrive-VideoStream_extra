@@ -223,7 +223,7 @@ EOF
 							$file  =~ s%\.nfo$%\.strm%;
 
 							#remove the strm file from path
-							$file  =~ s%\/([\/]+)\.strm$%%;
+							$file  =~ s%\/([^\/]+)\.strm$%%;
 
 	    					print "match $file\n";
 							$match = 1;
