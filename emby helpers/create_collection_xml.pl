@@ -193,7 +193,7 @@ EOF
 
     	print "folder $folder\n" if $isVerse;
     	next unless -d "$sourceDirectory/$folder";
-		opendir my $dh2, "$sourceDirectory/$folder" or die("cannot open $sourceDirectory/$folder");
+		opendir my $dh2, "$sourceDirectory/$folder" or next;
 		my @files;
 		while (my $file = readdir $dh2) {
 			next if $file eq '.' or $file eq '..';
