@@ -271,15 +271,6 @@ if ($isSRT){
 	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 	        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
 				`$FFMPEG_TEST $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
-	#use IO::Handle;
-	#my $handle = IO::Handle->new;
-	#my $pid = open($handle, "$FFMPEG_TEST $arglist -v error; wget '$url';echo 'FREED $url' >> /tmp/transcode.log" . '& |') or die $!;
-	#while ( kill 0, $pid){
-	#	print LOG "looping\n";
-	#	sleep 5;
-	#}
-	#`wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
-
 
 			}else{
 				`$FFMPEG_TEST $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
