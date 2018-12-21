@@ -7,11 +7,11 @@
 
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . " -d directory_to_save -t transcode_label -s spreadsheet.tab -h hostname [-o] [-a] [-u]\n\t -u unique only no duplicates, -o original only -z transcode only, -a include tv (default movies only)\n";
+use constant USAGE => $0 . " -d directory_to_save -t transcode_label -s spreadsheet.tab -h hostname [-o] [-a] [-u]\n\t -u unique only no duplicates, -o original only -z transcode only, -a include tv (default movies only)\ngenerate only-- -1 only >1080p original only -2 other originals only -3 1080p transcode only -4 720p transcode only\n";
 
 
 my %opt;
-die (USAGE) unless (getopts ('s:d:t:h:oavzu',\%opt));
+die (USAGE) unless (getopts ('s:d:t:h:oavzu1234',\%opt));
 
 # directory to scan
 my $directory = $opt{'d'};
@@ -23,6 +23,22 @@ if (defined($opt{'o'})){
 	$generateOriginal = 1;
 }
 
+my $only4k = 0;
+if (defined($opt{'1'})){
+	$only4k = 1;
+}
+my $onlynon4k = 0;
+if (defined($opt{'2'})){
+	$onlynon4k = 1;
+}
+my $onlyTC1080p = 0;
+if (defined($opt{'3'})){
+	$onlyTC1080p = 1;
+}
+my $onlyTC720p = 0;
+if (defined($opt{'4'})){
+	$onlyTC720p = 1;
+}
 my $isOnlyUnique = 0;
 if (defined($opt{'u'})){
 	$isOnlyUnique = 1;
@@ -80,27 +96,29 @@ while(my $line =<INPUT>){
 		}
 
 		print "$movieTitle $resolution $hash\n" if $isVerbose;
-		if ($generateOriginal){
+		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
 			if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm')){
 				open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 				print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
 				close OUTPUT;
 			}
 		}
-		if ($generateTranscode){
-			if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' )){
-				open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
-				print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=2&override=true';
-				close OUTPUT;
+		if ($generateTranscode or $onlyTC1080p or $onlyTC720p){
+			if ($generateTranscode){
+				if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' )){
+					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
+					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=2&override=true';
+					close OUTPUT;
+				}
 			}
-			if ($resolution > 420){
+			if (($generateTranscode or $onlyTC720p) and $resolution > 420){
 				if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 720p.strm' )){
 					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 720p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=1&override=true';
 					close OUTPUT;
 				}
 			}
-			if ($resolution > 720){
+			if (($generateTranscode or $onlyTC1080p) and $resolution > 720){
 				if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 1080p.strm' )){
 					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 1080p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=0&override=true';
@@ -125,28 +143,30 @@ while(my $line =<INPUT>){
 		}
 
 		print "$tvTitle $resolution $hash\n" if $isVerbose;
-		if ($generateOriginal){
+		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
 			if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm')){
 				open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 				print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
 				close OUTPUT;
 			}
 		}
-		if ($generateTranscode){
-			if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 480p.strm' )){
-				open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 480p.strm' ) or die ("Cannot create STRM file ".$!);
-				print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=2&override=true';
-				close OUTPUT;
-			}
+		if ($generateTranscode or $onlyTC1080p or $onlyTC720p){
 
-			if ($resolution > 420){
+			if ($generateTranscode){
+				if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 480p.strm' )){
+					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 480p.strm' ) or die ("Cannot create STRM file ".$!);
+					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=2&override=true';
+					close OUTPUT;
+				}
+			}
+			if (($generateTranscode or $onlyTC720p) and $resolution > 420){
 				if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 720p.strm' )){
 					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 720.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=1&override=true';
 					close OUTPUT;
 				}
 			}
-			if ($resolution > 720){
+			if (($generateTranscode or $onlyTC1080p) and $resolution > 720){
 				if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 1080p.strm' )){
 					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 1080p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=0&override=true';
