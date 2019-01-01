@@ -109,6 +109,7 @@ def main():
                     wasEncrypted = True
                 else:
                     kv = url
+                    wasEncrypted = False
                 m = re.search("^([^\?]+)\?", url)
                 baseurl = None
                 if m:
