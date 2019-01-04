@@ -80,13 +80,7 @@ if ($arglist =~ m%file\:\/%){
 }
 
 my $FFMPEG_OEM;
-my $ALT_FFMPEG_DETERMINATOR = CONFIG->ALT_FFMPEG_DETERMINATOR;
-if ((CONFIG->ALT_FFMPEG) && $arglist =~ m%$ALT_FFMPEG_DETERMINATOR%){
-	$FFMPEG_OEM = CONFIG->FFMPEG_OEM_332;
-}else{
-	$FFMPEG_OEM = CONFIG->FFMPEG_OEM;
-}
-
+$FFMPEG_OEM = CONFIG->FFMPEG_OEM;
 
 open (LOG, '>>' . CONFIG->LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
@@ -108,6 +102,12 @@ if ($isSRT){
 # ### Python-GoogleDrive-VideoStream REQUEST
 # we've been told to either video/audio transcode or direct stream
 }elsif ($arglist =~ m%\:9988% or $arglist =~ m%\:9989% or $arglist =~ m%\:9990%){
+
+	my $FFMPEG_OEM;
+	my $ALT_FFMPEG_DETERMINATOR = CONFIG->ALT_FFMPEG_DETERMINATOR;
+	if ((CONFIG->ALT_FFMPEG) && $arglist =~ m%$ALT_FFMPEG_DETERMINATOR%){
+		$FFMPEG_OEM = CONFIG->FFMPEG_OEM_332;
+	}
 
 
 	# when direct streaming, prefer the Google Transcode version over remuxing
