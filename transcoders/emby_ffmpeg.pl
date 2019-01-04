@@ -217,7 +217,7 @@ if ($isSRT){
 #### LIVE TV REQUEST
 # request with no duration, so not a DVR request, cycle over network errors
 # in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
-}elsif (!($arglist =~ m%recording%) and $duration_ptr == -1){
+}elsif (!($arglist =~ m%recording%) and $duration_ptr == -1 and $arglist =~ m%$IPTV_DETERMINATOR%){
 
 	# emby 3.5.2 remove -individual_header_trailer0
 	#$arglist =~ s%\-individual_header_trailer 0%%;
