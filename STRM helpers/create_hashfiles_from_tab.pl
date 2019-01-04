@@ -24,6 +24,7 @@ my $count = 0;
 
 
 
+
 foreach my $file (@files) {
 	open(INPUT,$file) or die ("Cannot open $file ".$!);
 	my %tmpAssignment;
