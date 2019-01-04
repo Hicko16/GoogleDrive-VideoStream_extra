@@ -531,6 +531,14 @@ if ($isSRT){
 	}
 
 
+# all else, direct directly to ffmpeg.oem
+}else{
+	print STDERR "running " . 'ffmpeg ' . $arglist . "\n";
+    print LOG "running " . 'ffmpeg ' . $arglist . "\n\n";
+
+	`$FFMPEG_OEM $arglist`;
+
+
 }
 
 close(LOG);
