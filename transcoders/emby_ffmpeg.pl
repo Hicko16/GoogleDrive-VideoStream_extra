@@ -537,7 +537,7 @@ if ($isSRT){
 	print STDERR "running " . 'ffmpeg ' . $arglist . "\n";
     print LOG "running " . 'ffmpeg ' . $arglist . "\n\n";
 
-	`$FFMPEG_OEM $arglist`;
+	`$FFMPEG_OEM $arglist -v error`;
 
 
 }
