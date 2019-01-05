@@ -545,7 +545,7 @@ if ($isSRT){
 	while(($line) = $output =~ m%^(.*?)\n%){
 		$output =~ s%^.*?\n%%;
 		print STDOUT $line . "\n";
-		print LOG "SKIP -> " . $line  . "\n";
+		print LOG  $line  . "\n";
 	}
 
 
