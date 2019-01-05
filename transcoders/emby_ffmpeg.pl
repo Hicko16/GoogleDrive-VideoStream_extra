@@ -534,10 +534,19 @@ if ($isSRT){
 
 # all else, direct directly to ffmpeg.oem
 }else{
-	print STDERR "running " . 'ffmpeg ' . $arglist . "\n";
     print LOG "running " . 'ffmpeg ' . $arglist . "\n\n";
 
-	`$FFMPEG_OEM $arglist -v error`;
+	#`$FFMPEG_OEM $arglist -v error`;
+	$pid = open ( LS, '-|', $FFMPEG_OEM . ' ' . $arglist . ' 2>&1');
+	my $output = do{ local $/; <LS> };
+	close LS;
+
+	my $line= '';
+	while(($line) = $output =~ m%^(.*?)\n%){
+		$output =~ s%^.*?\n%%;
+		print STDOUT $line . "\n";
+		print LOG "SKIP -> " . $line  . "\n";
+	}
 
 
 }
