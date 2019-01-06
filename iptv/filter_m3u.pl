@@ -21,13 +21,14 @@ use IO::Handle;
 
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:w:vc',\%opt));
+die (USAGE) unless (getopts ('s:t:w:b:vc',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
 my @filters = split(',,', $opt{'w'});
-my @blacklist;
+my @blacklist = split(',,', $opt{'b'});
+
 my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
