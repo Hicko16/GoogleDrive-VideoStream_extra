@@ -215,6 +215,12 @@ if ($isSRT){
 
 
 
+#### TVHEADEND
+}elsif ($arglist =~ m%LiveTV/LiveStreamFiles/%){
+		$arglist =~ s%\-c\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+		print LOG "$FFMPEG_OEM $arglist\n\n";
+		`$FFMPEG_OEM $arglist`;
+
 #### LIVE TV REQUEST
 # request with no duration, so not a DVR request, cycle over network errors
 # in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
