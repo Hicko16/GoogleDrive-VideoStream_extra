@@ -9,4 +9,5 @@ tar -zcf Plug-ins.$1.tgz Plug-ins
 service plexmediaserver stop
 sleep 5
 tar -zcf "Plug-in Support.$1.tgz" "Plug-in Support"
+cp Preferences.xml Preferences.$1.xml
 service plexmediaserver start
