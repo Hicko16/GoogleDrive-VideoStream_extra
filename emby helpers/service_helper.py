@@ -49,7 +49,7 @@ except:
 
 
 try:
-    label = int(sys.argv[5])
+    label = str(sys.argv[5])
 except:
     label = ''
 
