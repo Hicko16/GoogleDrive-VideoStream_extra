@@ -47,9 +47,15 @@ try:
 except:
     port = 9993
 
+
+try:
+    label = int(sys.argv[5])
+except:
+    label = ''
+
 if serverURL != '':
     server = webproxy.WebProxyServer(('',  port), webproxy.webProxy)
-    server.setServer(serverURL, key, manual)
+    server.setServer(serverURL, key, manual, label)
     print "Emby Service Helper ready....\n"
 
     while server.ready:

@@ -46,10 +46,11 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock = Lock()
         self.value = 0
 
-    def setServer(self, serverURL, key, manual):
+    def setServer(self, serverURL, key, manual, label):
         self.serverURL = serverURL
         self.key = key
         self.manual = manual
+        self.label = label
 
 
     def checkRunnings(self):
@@ -144,7 +145,7 @@ class webProxy(BaseHTTPRequestHandler):
                 response = urllib2.urlopen('https://www.dinopass.com/password/simple')
                 password = response.read()
 
-                request = urllib2.Request(self.server.serverURL + '/emby/Users/New?api_key=' + self.server.key, "{\"Name\":\""+str(username)+"\"}",{'Content-Type': 'application/json'})
+                request = urllib2.Request(self.server.serverURL + '/emby/Users/New?api_key=' + self.server.key, "{\"Name\":\""+str(label) +str(username)+"\"}",{'Content-Type': 'application/json'})
                 response = urllib2.urlopen(request)
                 data = response.read()
                 results = re.search(r'\"Id\":\"([^\"]+)\"', data)
@@ -152,13 +153,13 @@ class webProxy(BaseHTTPRequestHandler):
                     ID = str(results.group(1))
                     request = urllib2.Request(self.server.serverURL + '/emby/Users/'+str(ID)+'/Policy?api_key=' + self.server.key, "{\"IsAdministrator\":false,\"IsHidden\":true,\"IsDisabled\":false,\"EnableLiveTvManagement\":false,\"EnableLiveTvAccess\":true,\"EnableMediaPlayback\":true,\"EnableAudioPlaybackTranscoding\":true,\"EnableVideoPlaybackTranscoding\":true,\"EnablePlaybackRemuxing\":true,\"EnableContentDeletion\":false,\"EnableContentDownloading\":false,\"EnableSyncTranscoding\":false,\"EnableMediaConversion\":false,\"RemoteClientBitrateLimit\":0}",{'Content-Type': 'application/json'})
                     response = urllib2.urlopen(request)
-                    request = urllib2.Request(self.server.serverURL + '/emby/Users/'+str(ID)+'/Password?api_key=' + self.server.key, "{\"Id\":\""+str(username)+"\",\"CurrentPassword\":\"\",\"CurrentPw\":\"\",\"NewPw\":\""+str(password)+"\"}",{'Content-Type': 'application/json'})
+                    request = urllib2.Request(self.server.serverURL + '/emby/Users/'+str(ID)+'/Password?api_key=' + self.server.key, "{\"Id\":\""+str(label)+str(username)+"\",\"CurrentPassword\":\"\",\"CurrentPw\":\"\",\"NewPw\":\""+str(password)+"\"}",{'Content-Type': 'application/json'})
                     response = urllib2.urlopen(request)
                     try:
                         response = urllib2.urlopen(self.server.serverURL + '/emby/Users/'+str(ID)+'/Connect/Link?ConnectUsername='+str(username)+'&api_key=' + self.server.key, data='')
-                        self.wfile.write('ID created and linked to connect ID.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(username) + ', password = ' + str(password))
+                        self.wfile.write('ID created and linked to connect ID.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(label)+str(username) + ', password = ' + str(password))
                     except:
-                        self.wfile.write('Local (manual) ID created but linking to connect ID failed.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(username) + ', password = ' + str(password))
+                        self.wfile.write('Local (manual) ID created but linking to connect ID failed.  Manual login details are: ' + str(self.server.manual) + ', username = ' + str(label)+str(username) + ', password = ' + str(password))
 
                 else:
                     self.wfile.write('ID could not be created.')
