@@ -79,8 +79,8 @@ foreach my $current (0 .. $#ARGV) {
 		$ARGV[$current++] = '-i';
 		$originalvideo = $ARGV[$current];
 		($video) = $originalvideo =~ m%\/([^\/]+)$%;
-		if ($video =~ m%\.strm%){
-			open(STRM,$video);
+		if ($originalvideo =~ m%\.strm%){
+			open(STRM,$originalvideo);
 			$video = <STRM>;
 			$video =~ s%/url\=%%;
 			close(STRM);
