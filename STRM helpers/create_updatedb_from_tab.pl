@@ -73,6 +73,12 @@ while(my $line =<INPUT>){
 		my ($filename) = $filenameWithPath =~ m%.*?/([^\/]+)$%;
 		if ($videoHash{$filename} ne ''){
 			print "match = $filename\n";
+			my $printFilename = $filename;
+			my $printFilenameWithPath = $filenameWithPath;
+			my $printSTRM = $videoHash{$filename};
+			$printFilename =~ s%'%''%g;
+			$printFilenameWithPath =~ s%'%''%g;
+			$printSTRM =~ s%'%''%g;
 			print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$videoHash{$filename}') where file like '%$filename%';\n";
 		}else{
 			print "NO match = $filename\n";
