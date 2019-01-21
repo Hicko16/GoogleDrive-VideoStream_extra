@@ -69,6 +69,11 @@ while(my $line =<INPUT>){
 	if ($line =~ m%INSERT INTO "media_parts"%){
 		my ($filename) = $line =~ m%INSERT INTO "media_parts" VALUES\([^\,]+,[^\,]+,[^\,]+,[^\,]+,[^\,]+,'([^\,]+)',%;
 		print "filename = $filename\n" if $isVerbose;
+		if ($videoHash{$filename} ne ''){
+			print "match = $filename\n";
+		}else{
+			print "NO match = $filename\n";
+		}
 	}
 }
 
