@@ -64,6 +64,7 @@ close(INPUT);
 open(INPUT,$input) or die ("Cannot open $input ".$!);
 open(OUTPUT,'>' . $output) or die ("Cannot open $output ".$!);
 
+print OUTPUT "begin transaction;";
 #INSERT INTO "media_parts" VALUES(44,44,1,'52a37ff9c24586292d2598497445f8dafd205364','fc349023336c7d19','/var/lib/plexmediaserver/media/tv/''Til Death/Season 01/''Til Death - S01E01 - Pilot WEBDL-1080p.mkv',
 while(my $line =<INPUT>){
 	if ($line =~ m%INSERT INTO "media_parts"%){
@@ -79,11 +80,18 @@ while(my $line =<INPUT>){
 			$printSTRM =~ s%'%''%g;
 			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+			$count++;
+			if ($count == 100){
+				$count = 0;
+				print OUTPUT "commit; begin transaction;";
+
+			}
 		}else{
 			print "NO match = $filename\n";
 		}
 	}
 }
+print OUTPUT "commit;";
 
 close(INPUT);
 close(OUTPUT);
