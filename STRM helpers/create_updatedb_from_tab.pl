@@ -77,7 +77,8 @@ while(my $line =<INPUT>){
 			my $printSTRM = $videoHash{$filename};
 			$printFilenameWithPath =~ s%'%''%g;
 			$printSTRM =~ s%'%''%g;
-			print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 		}else{
 			print "NO match = $filename\n";
 		}
