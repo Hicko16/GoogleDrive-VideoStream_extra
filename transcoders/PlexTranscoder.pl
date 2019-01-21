@@ -82,6 +82,7 @@ foreach my $current (0 .. $#ARGV) {
 		if ($video =~ m%\.strm%){
 			open(STRM,$video);
 			$video = <STRM>;
+			$video =~ s%/url\=%%;
 			close(STRM);
 		}else{
 			$video =~ s/ /\%20/g;
