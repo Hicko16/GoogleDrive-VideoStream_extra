@@ -69,11 +69,11 @@ while(my $line =<INPUT>){
 	if ($line =~ m%INSERT INTO "media_parts"%){
 		my ($filenameWithPath) = $line =~ m%INSERT INTO "media_parts" VALUES\([^\,]+,[^\,]+,[^\,]+,[^\,]+,[^\,]+,'([^\,]+)',%;
 		next if $filenameWithPath eq '';
-		print "filename = $filename\n" if $isVerbose;
+		print "filename = $filenameWithPath\n" if $isVerbose;
 		my ($filename) = $filenameWithPath =~ m%.*?/([^\/]+)$%;
 		if ($videoHash{$filename} ne ''){
 			print "match = $filename\n";
-			print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$videoHash{$filename}') where file like '%$filename%'";
+			print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$videoHash{$filename}') where file like '%$filename%';\n";
 		}else{
 			print "NO match = $filename\n";
 		}
