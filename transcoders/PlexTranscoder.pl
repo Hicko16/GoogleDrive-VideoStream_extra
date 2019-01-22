@@ -173,7 +173,8 @@ if ($arglist =~ m% dash %){
 
 		}
 	}else{
-		$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-segment_format mpegts \-f ssegment %;
+		#$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-segment_format mpegts \-f ssegment %;
+		$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-segment_format mpegts \-f ssegment %;
 	}
 #	$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-segment_format mpegts \-f ssegment %;
 }elsif ($arglist =~ m%\-segment_format matroska %){
