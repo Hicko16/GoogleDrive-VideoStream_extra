@@ -20,7 +20,7 @@ use constant PREFER_GOOGLE_TRANSCODE => 1;
 use constant PATH_TO_TRANSCODER => '"/usr/lib/plexmediaserver/Plex Transcoder.oem"';
 use constant PATH_TO_VIDEOSTREAM => 'http://127.0.0.1:9988/';
 
-use constant LOGFILE => '/tmp/transcode.log';
+use constant LOGFILE => '/tmp/transcode_plex.log';
 
 my $pidi=0;
 
