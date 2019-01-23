@@ -161,7 +161,7 @@ while(my $line =<INPUT>){
 			}
 			if (($generateTranscode or $onlyTC720p) and $resolution > 420){
 				if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 720p.strm' )){
-					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 720.strm' ) or die ("Cannot create STRM file ".$!);
+					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 720p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=1&override=true';
 					close OUTPUT;
 				}
