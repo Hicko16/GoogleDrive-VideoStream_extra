@@ -175,7 +175,7 @@ if ($arglist =~ m% dash %){
 	}else{
 		#$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-segment_format mpegts \-f ssegment %;
 		$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-segment_format mpegts \-f ssegment %;
-		#$arglist =~ s%\-i 0 %%;
+		$arglist =~ s%\-i 0 %%;
 		#$arglist =~ s%\-i "[^\"]+"%\-i "/u01/big_buck_bunny_720p_10mb.mp4"%;
 
 	}
