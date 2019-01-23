@@ -43,10 +43,10 @@ sub createArglist(){
 		#}else{
 	   	#	$arglist .= ' "' .$ARGV[$current] . '"';
 		#}
-		if ($ARGV[$current] =~ m%\s% or $ARGV[$current] =~ m%\(% or $ARGV[$current] =~ m%\)% or $ARGV[$current] =~ m%\&% or $ARGV[$current] =~ m%\[% or $ARGV[$current] =~ m/%/ or $ARGV[$current] =~ m/=/){
-	   		$arglist .= ' "' .$ARGV[$current] . '"';
-		}else{$arglist .= ' ' .$ARGV[$current];}
-
+		#if ($ARGV[$current] =~ m%\s% or $ARGV[$current] =~ m%\(% or $ARGV[$current] =~ m%\)% or $ARGV[$current] =~ m%\&% or $ARGV[$current] =~ m%\[% or $ARGV[$current] =~ m/%/ or $ARGV[$current] =~ m/=/){
+	   	#	$arglist .= ' "' .$ARGV[$current] . '"';
+		#}else{$arglist .= ' ' .$ARGV[$current];}
+		$arglist .= ' "' .$ARGV[$current] . '"';
 	}
 	return $arglist;
 
