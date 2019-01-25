@@ -86,6 +86,9 @@ foreach my $current (0 .. $#ARGV) {
 			$video =~ s%\n%%;
 
 			close(STRM);
+		#IPTV
+		}elsif ($originalvideo =~ m%:34400%){
+
 		}else{
 			$video =~ s/ /\%20/g;
 			$video = PATH_TO_VIDEOSTREAM . '/TEST?file=' . $video;
