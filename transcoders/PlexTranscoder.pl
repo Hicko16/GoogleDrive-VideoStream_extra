@@ -145,18 +145,20 @@ if ($audio ne '' and $seek ne ''){
 
 if (PREFER_GOOGLE_TRANSCODE){
 
-	if ($arglist =~ m%scale\=w\=1280\:h\=720%){
-		$video .= '&preferred_quality=1&override=true';
-	}elsif ($arglist =~ m%scale\=w\=720\:h\=406%){
-		$video .= '&preferred_quality=2&override=true';
-	}elsif ($arglist =~ m%scale\=w\=1920\:h\=1080%){
-		$video .= '&preferred_quality=0&override=true';
-	}elsif ($arglist =~ m%scale\=w\=3840\:h\=2160% or $arglist =~ m%scale\=w\=3840\:h\=2026%){
-		$video .= '&preferred_quality=2&override=true';
-	}else{
-#		$video .= '&preferred_quality=3&override=true';
+	if ($video ne ''){
+		if ($arglist =~ m%scale\=w\=1280\:h\=720%){
+			$video .= '&preferred_quality=1&override=true';
+		}elsif ($arglist =~ m%scale\=w\=720\:h\=406%){
+			$video .= '&preferred_quality=2&override=true';
+		}elsif ($arglist =~ m%scale\=w\=1920\:h\=1080%){
+			$video .= '&preferred_quality=0&override=true';
+		}elsif ($arglist =~ m%scale\=w\=3840\:h\=2160% or $arglist =~ m%scale\=w\=3840\:h\=2026%){
+			$video .= '&preferred_quality=2&override=true';
+		}else{
+	#		$video .= '&preferred_quality=3&override=true';
 
-		$video .= '&preferred_quality=0&override=true';
+			$video .= '&preferred_quality=0&override=true';
+		}
 	}
 }
 if ($arglist =~ m% dash %){
@@ -179,6 +181,8 @@ if ($arglist =~ m% dash %){
 		#$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-segment_format mpegts \-f ssegment %;
 		$arglist =~ s%\-i .* \-segment_format mpegts \-f ssegment %\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-segment_format mpegts \-f ssegment %;
 		$arglist =~ s%\-i 0 %%;
+		$arglist =~ s%\-i "" %%;
+
 		#$arglist =~ s%\-i "[^\"]+"%\-i "/u01/big_buck_bunny_720p_10mb.mp4"%;
 
 	}
