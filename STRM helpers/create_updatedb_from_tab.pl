@@ -11,7 +11,7 @@ use constant USAGE => $0 . " -d strm_directory -i inputfile -o outputfile -s spr
 
 
 my %opt;
-die (USAGE) unless (getopts ('d:s:i:o:v',\%opt));
+die (USAGE) unless (getopts ('d:s:i:o:vl:',\%opt));
 
 # directory to scan
 my $directory = $opt{'d'};
@@ -24,6 +24,8 @@ my $isVerbose = 0;
 if (defined($opt{'v'})){
 	$isVerbose = 1;
 }
+
+my $logfile = $opt{'l'};
 
 if ($output eq ''){
 	die (USAGE);
@@ -63,7 +65,7 @@ close(INPUT);
 
 open(INPUT,$input) or die ("Cannot open $input ".$!);
 open(OUTPUT,'>' . $output) or die ("Cannot open $output ".$!);
-
+open(LOGFILE, '>'. $logfile) or die ("Cannot create $logfile" . $!) if $logfile ne '';
 print OUTPUT "begin transaction;";
 #INSERT INTO "media_parts" VALUES(44,44,1,'52a37ff9c24586292d2598497445f8dafd205364','fc349023336c7d19','/var/lib/plexmediaserver/media/tv/''Til Death/Season 01/''Til Death - S01E01 - Pilot WEBDL-1080p.mkv',
 while(my $line =<INPUT>){
@@ -78,6 +80,7 @@ while(my $line =<INPUT>){
 			my $printSTRM = $videoHash{$filename};
 			$printFilenameWithPath =~ s%'%''%g;
 			$printSTRM =~ s%'%''%g;
+			print LOGFILE "match\t$filename\t-\t$printSTRM\n" if $logfile ne '';
 			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 			$count++;
@@ -88,6 +91,8 @@ while(my $line =<INPUT>){
 			}
 		}else{
 			print "NO match = $filename\n";
+			print LOGFILE "no match\t$filename \n" if $logfile ne '';
+
 		}
 	}
 }
@@ -95,6 +100,7 @@ print OUTPUT "commit;";
 
 close(INPUT);
 close(OUTPUT);
+close(LOGFILE)  if $logfile ne '';
 
 
 
