@@ -72,10 +72,11 @@ while(my $line =<INPUT>){
 	if ($line =~ m%INSERT INTO "media_parts"%){
 		my ($filenameWithPath) = $line =~ m%INSERT INTO "media_parts" VALUES\([^\,]+,[^\,]+,[^\,]+,[^\,]+,[^\,]+,'([^\,]+)',%;
 		next if $filenameWithPath eq '';
-		print "filename = $filenameWithPath\n" if $isVerbose;
+		#print "filename = $filenameWithPath\n" if $isVerbose;
 		my ($filename) = $filenameWithPath =~ m%.*?/([^\/]+)$%;
+		$filename =~ s%''%'%g;
 		if ($videoHash{$filename} ne ''){
-			print "match = $filename\n";
+			print "match = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
 			my $printSTRM = $videoHash{$filename};
 			$printFilenameWithPath =~ s%'%''%g;
@@ -90,7 +91,7 @@ while(my $line =<INPUT>){
 
 			}
 		}else{
-			print "NO match = $filename\n";
+			print "NO match = $filename\n" if $isVerbose;
 			print LOGFILE "no match\t$filename \n" if $logfile ne '';
 
 		}
