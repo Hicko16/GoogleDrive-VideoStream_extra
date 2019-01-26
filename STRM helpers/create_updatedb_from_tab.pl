@@ -79,9 +79,8 @@ while(my $line =<INPUT>){
 			print "match = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
 			my $printSTRM = $videoHash{$filename};
-			$printFilenameWithPath =~ s%'%''%g;
 			$printSTRM =~ s%'%''%g;
-			print LOGFILE "match\t$filename\t-\t$printSTRM\n" if $logfile ne '';
+			print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
 			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 			$count++;
