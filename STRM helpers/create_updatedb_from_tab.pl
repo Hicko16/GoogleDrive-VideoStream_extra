@@ -53,11 +53,17 @@ while(my $line =<INPUT>){
 
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
-
+	}elsif ($resolution eq '' and $movieTitle ne '' and $movieYear ne ''){
+		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
+		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
 	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne ''){
 
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
+	}elsif ($resolution eq '' and $tvTitle ne '' and $tvSeason ne ''){
+		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
+		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
+
 	}
 }
 
@@ -81,6 +87,20 @@ while(my $line =<INPUT>){
 			my $printSTRM = $videoHash{$filename};
 			$printSTRM =~ s%'%''%g;
 			print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
+			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+			$count++;
+			if ($count == 100){
+				$count = 0;
+				print OUTPUT "commit; begin transaction;";
+
+			}
+		}elsif ($videoHash{$filename.'_'} ne ''){
+			print "match (transcode error) = $filename\n" if $isVerbose;
+			my $printFilenameWithPath = $filenameWithPath;
+			my $printSTRM = $videoHash{$filename.'_'};
+			$printSTRM =~ s%'%''%g;
+			print LOGFILE "match\t$filename\t-\t".$videoHash{$filename.'_'}."\n" if $logfile ne '';
 			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 			$count++;
