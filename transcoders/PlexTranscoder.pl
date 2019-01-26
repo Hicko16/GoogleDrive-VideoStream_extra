@@ -148,14 +148,15 @@ if ($audio ne '' and $seek ne ''){
 if (PREFER_GOOGLE_TRANSCODE){
 
 	if ($video ne '' and !($video =~ m%livetv%)){
-		if ($arglist =~ m%scale\=w\=1280\:h\=720%){
+		if ($arglist =~ m%scale\=w\=1280%){
 			$video .= '&preferred_quality=1&override=true';
-		}elsif ($arglist =~ m%scale\=w\=720\:h\=406%){
+		}elsif ($arglist =~ m%scale\=w\=720% or $arglist =~ m%scale\=w\=480% or $arglist =~ m%scale\=w\=320% or $arglist =~ m%scale\=w\=160%){#}\:h\=406%){
 			$video .= '&preferred_quality=2&override=true';
-		}elsif ($arglist =~ m%scale\=w\=1920\:h\=1080%){
+		}elsif ($arglist =~ m%scale\=w\=1920%){#}\:h\=1080%){
 			$video .= '&preferred_quality=0&override=true';
 		}elsif ($arglist =~ m%scale\=w\=3840\:h\=2160% or $arglist =~ m%scale\=w\=3840\:h\=2026%){
-			$video .= '&preferred_quality=2&override=true';
+			#$video .= '&preferred_quality=2&override=true';
+
 		}else{
 	#		$video .= '&preferred_quality=3&override=true';
 
