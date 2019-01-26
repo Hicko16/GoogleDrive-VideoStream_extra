@@ -112,7 +112,7 @@ open (LOG, '>>' . LOGFILE) or die $!;
 print LOG "passed in $arglist\n";
 
 #$arglist =~ s%\-codec\:0 \S+%\-codec\:0 h264%;
-#$arglist =~ s%\-codec\:1 \S+%\-codec\:1 aac%;
+$arglist =~ s%\-codec\:0 \S+%%;
 
 if ($srtfile ne '' and $seek ne ''){
 	$srtfile = '-ss ' . $seek . ' ' . $srtfile;
