@@ -87,7 +87,7 @@ foreach my $current (0 .. $#ARGV) {
 
 			close(STRM);
 		#IPTV
-		}elsif ($originalvideo eq ''){#$originalvideo =~ m%:34400%){
+		}elsif ($video eq ''){#$originalvideo =~ m%:34400%){
 		}elsif ($originalvideo =~ m%livetv%){#$originalvideo =~ m%:34400%){
 			$video = $originalvideo;
 		}else{
