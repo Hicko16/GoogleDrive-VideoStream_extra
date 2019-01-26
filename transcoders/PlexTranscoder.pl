@@ -87,8 +87,9 @@ foreach my $current (0 .. $#ARGV) {
 
 			close(STRM);
 		#IPTV
-		}elsif ($$originalvideo eq ''){#$originalvideo =~ m%:34400%){
-
+		}elsif ($originalvideo eq ''){#$originalvideo =~ m%:34400%){
+		}elsif ($originalvideo =~ m%livetv%){#$originalvideo =~ m%:34400%){
+			$video = $originalvideo;
 		}else{
 			$video =~ s/ /\%20/g;
 			$video = PATH_TO_VIDEOSTREAM . '/TEST?file=' . $video;
@@ -145,7 +146,7 @@ if ($audio ne '' and $seek ne ''){
 
 if (PREFER_GOOGLE_TRANSCODE){
 
-	if ($video ne ''){
+	if ($video ne '' and !($video =~ m%livetv%)){
 		if ($arglist =~ m%scale\=w\=1280\:h\=720%){
 			$video .= '&preferred_quality=1&override=true';
 		}elsif ($arglist =~ m%scale\=w\=720\:h\=406%){
