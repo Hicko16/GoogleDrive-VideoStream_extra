@@ -172,6 +172,7 @@ if ($arglist =~ m% dash %){
 		$arglist =~ s%\-i .* -f dash%\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f dash%;
 	}
 }elsif ($arglist =~ m% mp4 %){
+	$arglist =~ s%\-movflags \+faststart%%;
 	if ($audio ne ''){
 		$arglist =~ s%\-i .* -f mp4%\-i "$video" $audio $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a aac \-map 0\:v \-map 1\:a \-f dash%;
 		$arglist =~ s%map 1:s:0 %map 2:s:0 %;
