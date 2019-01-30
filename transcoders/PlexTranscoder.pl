@@ -84,7 +84,7 @@ foreach my $current (0 .. $#ARGV) {
 			$video = <STRM>;
 			$video =~ s%/url\=%%;
 			$video =~ s%\n%%;
-
+			$video =~ s% %+%g;
 			close(STRM);
 		#IPTV
 		}elsif ($video eq ''){#$originalvideo =~ m%:34400%){
