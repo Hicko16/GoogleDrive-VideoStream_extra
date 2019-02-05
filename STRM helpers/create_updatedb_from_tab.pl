@@ -84,30 +84,53 @@ while(my $line =<INPUT>){
 		if ($videoHash{$filename} ne ''){
 			print "match = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
-			my $printSTRM = $videoHash{$filename};
-			$printSTRM =~ s%'%''%g;
-			print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
-			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
-			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
-			$count++;
-			if ($count == 100){
-				$count = 0;
-				print OUTPUT "commit; begin transaction;";
 
+
+			my $attempt=1;
+			my $STRMFile = $videoHash{$filename};
+
+			#check if STRM file exists, if not iterate through original_#
+			while (!(-e $STRMFile) and $attempt<10){
+				$STRMFile =~ s%- original_?\d? % original_$attempt %;
+			}
+
+			if ($attempt < 10){
+				$printSTRM = $STRMFile;
+				$printSTRM =~ s%'%''%g;
+				print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
+				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+				$count++;
+				if ($count == 100){
+					$count = 0;
+					print OUTPUT "commit; begin transaction;";
+
+				}
 			}
 		}elsif ($videoHash{$filename.'_'} ne ''){
 			print "match (transcode error) = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
-			my $printSTRM = $videoHash{$filename.'_'};
-			$printSTRM =~ s%'%''%g;
-			print LOGFILE "match (transcode error)\t$filename\t-\t".$videoHash{$filename.'_'}."\n" if $logfile ne '';
-			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
-			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
-			$count++;
-			if ($count == 100){
-				$count = 0;
-				print OUTPUT "commit; begin transaction;";
+			my $attempt=1;
+			my $STRMFile = $videoHash{$filename.'_'};
 
+			#check if STRM file exists, if not iterate through original_#
+			while (!(-e $STRMFile) and $attempt<10){
+				$STRMFile =~ s%- original_?\d? % original_$attempt %;
+			}
+
+			if ($attempt < 10){
+				$printSTRM = $STRMFile;
+				$printSTRM =~ s%'%''%g;
+
+				print LOGFILE "match (transcode error)\t$filename\t-\t".$videoHash{$filename.'_'}."\n" if $logfile ne '';
+				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+				$count++;
+				if ($count == 100){
+					$count = 0;
+					print OUTPUT "commit; begin transaction;";
+
+				}
 			}
 		}else{
 			print "NO match = $filename\n" if $isVerbose;
