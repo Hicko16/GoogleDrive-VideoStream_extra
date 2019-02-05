@@ -101,7 +101,7 @@ while(my $line =<INPUT>){
 			if ($attempt < 10){
 				$printSTRM = $STRMFile;
 				$printSTRM =~ s%'%''%g;
-				print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
+				print LOGFILE "match\t$filename\t-\t$STRMFile\n" if $logfile ne '';
 				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 				$count++;
@@ -129,7 +129,7 @@ while(my $line =<INPUT>){
 				$printSTRM = $STRMFile;
 				$printSTRM =~ s%'%''%g;
 
-				print LOGFILE "match (transcode error)\t$filename\t-\t".$videoHash{$filename.'_'}."\n" if $logfile ne '';
+				print LOGFILE "match (transcode error)\t$filename\t-\t$STRMFile\n" if $logfile ne '';
 				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
 				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
 				$count++;
