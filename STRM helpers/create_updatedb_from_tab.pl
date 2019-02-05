@@ -88,6 +88,8 @@ while(my $line =<INPUT>){
 
 			my $attempt=1;
 			my $STRMFile = $videoHash{$filename};
+			my ($STRMpath) = $videoHash{$filename} =~ m%(.*?)/[^\/]+$%;
+
 
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
@@ -100,8 +102,16 @@ while(my $line =<INPUT>){
 				print "trying $STRMFile\n" if $isVerbose;
 
 			}
+			if ($attempt == 10){
+				opendir(DIR, $STRMpath);
+				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+)\ \- %;
+				my @files = grep { /$STRMfilename*.strm/ } readdir(DIR);
+				closedir(DIR);
+				$STRMFile = $files[0];
 
-			if ($attempt < 10){
+			}
+
+			if ($STRMFile ne ''){
 				$printSTRM = $STRMFile;
 				$printSTRM =~ s%'%''%g;
 				print LOGFILE "match\t$filename\t-\t$STRMFile\n" if $logfile ne '';
@@ -119,6 +129,8 @@ while(my $line =<INPUT>){
 			my $printFilenameWithPath = $filenameWithPath;
 			my $attempt=1;
 			my $STRMFile = $videoHash{$filename.'_'};
+			my ($STRMpath) = $videoHash{$filename} =~ m%(.*?)/[^\/]+$%;
+
 
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
@@ -126,12 +138,21 @@ while(my $line =<INPUT>){
 				$STRMFile =~ s%- original\.%- original_$attempt\.%;
 				$STRMFile =~ s%- original_\d+ %- original_$attempt %;
 				$STRMFile =~ s%- original_\d+\.%- original_$attempt\.%;
+
 				$attempt++;
 				print "trying $STRMFile\n" if $isVerbose;
+
+			}
+			if ($attempt == 10){
+				opendir(DIR, $STRMpath);
+				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+)\ \- %;
+				my @files = grep { /$STRMfilename*.strm/ } readdir(DIR);
+				closedir(DIR);
+				$STRMFile = $files[0];
+
 			}
 
-			if ($attempt < 10){
-				$printSTRM = $STRMFile;
+			if ($STRMFile ne ''){
 				$printSTRM =~ s%'%''%g;
 
 				print LOGFILE "match (transcode error)\t$filename\t-\t$STRMFile\n" if $logfile ne '';
