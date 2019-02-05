@@ -92,6 +92,7 @@ while(my $line =<INPUT>){
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
 				$STRMFile =~ s%- original_?\d? % original_$attempt %;
+				$attempt++;
 			}
 
 			if ($attempt < 10){
@@ -116,6 +117,7 @@ while(my $line =<INPUT>){
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
 				$STRMFile =~ s%- original_?\d? % original_$attempt %;
+				$attempt++;
 			}
 
 			if ($attempt < 10){
