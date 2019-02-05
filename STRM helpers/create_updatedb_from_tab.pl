@@ -55,14 +55,14 @@ while(my $line =<INPUT>){
 		$videoHash{$fileName} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $movieTitle ne '' and $movieYear ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
-		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
+		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm';
 	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne ''){
 
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $tvTitle ne '' and $tvSeason ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
-		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
+		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm';
 
 	}
 }
@@ -92,7 +92,10 @@ while(my $line =<INPUT>){
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
 				$STRMFile =~ s%- original %- original_$attempt %;
+				$STRMFile =~ s%- original\.%- original_$attempt\.%;
 				$STRMFile =~ s%- original_\d+ %- original_$attempt %;
+				$STRMFile =~ s%- original_\d+\.%- original_$attempt\.%;
+
 				$attempt++;
 				print "trying $STRMFile\n" if $isVerbose;
 
@@ -120,7 +123,9 @@ while(my $line =<INPUT>){
 			#check if STRM file exists, if not iterate through original_#
 			while (!(-e $STRMFile) and $attempt<10){
 				$STRMFile =~ s%- original %- original_$attempt %;
+				$STRMFile =~ s%- original\.%- original_$attempt\.%;
 				$STRMFile =~ s%- original_\d+ %- original_$attempt %;
+				$STRMFile =~ s%- original_\d+\.%- original_$attempt\.%;
 				$attempt++;
 				print "trying $STRMFile\n" if $isVerbose;
 			}
