@@ -28,7 +28,7 @@ my @files = glob "'$backupDirectory/*$datestamp*.tgz'";
 
 for (my $i=0; $i < $#files; $i++){
 	print STDERR "extract " . $files[$i] . "\n";
-	`cd '$outputDirectory'; tar -zxf '$backupDirectory/$files[$i]'`;
+	`cd '$outputDirectory'; tar -zxf '$files[$i]'`;
 
 }
 
