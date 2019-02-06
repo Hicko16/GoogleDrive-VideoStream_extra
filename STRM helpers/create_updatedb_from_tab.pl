@@ -103,11 +103,9 @@ while(my $line =<INPUT>){
 
 			}
 			if ($attempt == 10){
-				opendir(DIR, $STRMpath);
 				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+) \- %;
-				my @files = grep { /$STRMfilename*\.strm/ } readdir(DIR);
+				my @files = glob "'$STRMpath/$STRMfilename*.strm'";
 				print "ATTEMPT $STRMfilename $STRMpath $files[0]\n" if $isVerbose;
-				closedir(DIR);
 				$STRMFile = $files[0];
 
 			}
@@ -145,10 +143,8 @@ while(my $line =<INPUT>){
 
 			}
 			if ($attempt == 10){
-				opendir(DIR, $STRMpath);
 				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+) \- %;
-				my @files = grep { /$STRMfilename*.strm/ } readdir(DIR);
-				closedir(DIR);
+				my @files = glob "'$STRMpath/$STRMfilename*.strm'";
 				$STRMFile = $files[0];
 
 			}
