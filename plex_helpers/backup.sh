@@ -3,7 +3,7 @@
 #
 date=`date --reference=last.backup.done`
 touch last.backup.start
-tar -N "$date" -zcf Cache.$1.tgz Cache
+#tar -N "$date" -zcf Cache.$1.tgz Cache
 tar -N "$date" -zcf Codecs.$1.tgz Codecs
 tar -N "$date" -zcf "Crash Reports.$1.tgz" "Crash Reports"
 tar -N "$date" -zcf Diagnostics.$1.tgz Diagnostics
