@@ -55,14 +55,14 @@ while(my $line =<INPUT>){
 		$videoHash{$fileName} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $movieTitle ne '' and $movieYear ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
-		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
+		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm';
 	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne ''){
 
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $tvTitle ne '' and $tvSeason ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
-		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
+		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm';
 
 	}
 }
@@ -84,30 +84,83 @@ while(my $line =<INPUT>){
 		if ($videoHash{$filename} ne ''){
 			print "match = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
-			my $printSTRM = $videoHash{$filename};
-			$printSTRM =~ s%'%''%g;
-			print LOGFILE "match\t$filename\t-\t$videoHash{$filename}\n" if $logfile ne '';
-			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
-			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
-			$count++;
-			if ($count == 100){
-				$count = 0;
-				print OUTPUT "commit; begin transaction;";
 
+
+			my $attempt=1;
+			my $STRMFile = $videoHash{$filename};
+			my ($STRMpath) = $videoHash{$filename} =~ m%(.*?)/[^\/]+$%;
+
+
+			#check if STRM file exists, if not iterate through original_#
+			while (!(-e $STRMFile) and $attempt<10){
+				$STRMFile =~ s%- original %- original_$attempt %;
+				$STRMFile =~ s%- original\.%- original_$attempt\.%;
+				$STRMFile =~ s%- original_\d+ %- original_$attempt %;
+				$STRMFile =~ s%- original_\d+\.%- original_$attempt\.%;
+
+				$attempt++;
+				print "trying $STRMFile\n" if $isVerbose;
+
+			}
+			if ($attempt == 10){
+				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+) \- %;
+				my @files = glob "'$STRMpath/$STRMfilename*.strm'";
+				print "ATTEMPT $STRMfilename $STRMpath $files[0]\n" if $isVerbose;
+				$STRMFile = $files[0];
+
+			}
+
+			if ($STRMFile ne ''){
+				$printSTRM = $STRMFile;
+				$printSTRM =~ s%'%''%g;
+				print LOGFILE "match\t$filename\t-\t$STRMFile\n" if $logfile ne '';
+				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+				$count++;
+				if ($count == 100){
+					$count = 0;
+					print OUTPUT "commit; begin transaction;";
+
+				}
 			}
 		}elsif ($videoHash{$filename.'_'} ne ''){
 			print "match (transcode error) = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
-			my $printSTRM = $videoHash{$filename.'_'};
-			$printSTRM =~ s%'%''%g;
-			print LOGFILE "match (transcode error)\t$filename\t-\t".$videoHash{$filename.'_'}."\n" if $logfile ne '';
-			#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
-			print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
-			$count++;
-			if ($count == 100){
-				$count = 0;
-				print OUTPUT "commit; begin transaction;";
+			my $attempt=1;
+			my $STRMFile = $videoHash{$filename.'_'};
+			my ($STRMpath) = $videoHash{$filename} =~ m%(.*?)/[^\/]+$%;
 
+
+			#check if STRM file exists, if not iterate through original_#
+			while (!(-e $STRMFile) and $attempt<10){
+				$STRMFile =~ s%- original %- original_$attempt %;
+				$STRMFile =~ s%- original\.%- original_$attempt\.%;
+				$STRMFile =~ s%- original_\d+ %- original_$attempt %;
+				$STRMFile =~ s%- original_\d+\.%- original_$attempt\.%;
+
+				$attempt++;
+				print "trying $STRMFile\n" if $isVerbose;
+
+			}
+			if ($attempt == 10){
+				my ($STRMfilename) = $STRMFile =~ m%.*?/([^\/]+) \- %;
+				my @files = glob "'$STRMpath/$STRMfilename*.strm'";
+				$STRMFile = $files[0];
+
+			}
+
+			if ($STRMFile ne ''){
+				$printSTRM =~ s%'%''%g;
+
+				print LOGFILE "match (transcode error)\t$filename\t-\t$STRMFile\n" if $logfile ne '';
+				#print OUTPUT "UPDATE media_parts SET file= replace(file, '$filenameWithPath', '$printSTRM') where file='$printFilenameWithPath';\n";
+				print OUTPUT "UPDATE media_parts SET file='$printSTRM' where file='$printFilenameWithPath';\n";
+				$count++;
+				if ($count == 100){
+					$count = 0;
+					print OUTPUT "commit; begin transaction;";
+
+				}
 			}
 		}else{
 			print "NO match = $filename\n" if $isVerbose;
