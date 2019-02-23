@@ -261,6 +261,11 @@ if ($isSRT){
 
 		if ($arglist =~ m%\-pix_fmt yuv420p%){
 			$arglist =~ s%\-codec\:v\:0 .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+
+		#emby4.0
+		}else{
+			$arglist =~ s%\-map_metadata .* -f segment%\-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f segment%;
+
 		}
 
 		#$pid = open ( LS, '-|', $FFMPEG . ' ' . $arglist . ' 2>&1');
