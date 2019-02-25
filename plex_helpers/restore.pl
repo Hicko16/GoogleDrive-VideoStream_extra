@@ -27,8 +27,12 @@ if ($outputDirectory eq ''){
 my @files = glob "'$backupDirectory/*$datestamp*.tgz'";
 
 for (my $i=0; $i <= $#files; $i++){
-	print STDERR "extract " . $files[$i] . "\n";
-	`cd '$outputDirectory'; tar -zxf '$files[$i]'`;
+	if ($files[$i] =~ m%Plug-in Support%){
+		`cd '$outputDirectory';mkdir new; cd new; tar -zxf '$files[$i]'`;
+	}else{
+		print STDERR "extract " . $files[$i] . "\n";
+		`cd '$outputDirectory'; tar -zxf '$files[$i]'`;
+	}
 
 }
 
