@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-use File::Copy qw(move);
-
 # number of times to retry when ffmpeg encounters network errors
 use constant RETRY => 50;
 
