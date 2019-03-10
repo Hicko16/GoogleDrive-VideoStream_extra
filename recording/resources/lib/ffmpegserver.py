@@ -51,7 +51,6 @@ class ffmpegServer(BaseHTTPRequestHandler):
         headers = str(self.headers)
         print(headers)
 
-        # passed a kill signal?
         if self.path == '/process':
 
             content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
@@ -76,6 +75,16 @@ class ffmpegServer(BaseHTTPRequestHandler):
                                 if exc.errno != errno.EEXIST:
                                     raise
                         os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
+            return
+        elif self.path == '/stream':
+
+            content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+            post_data = self.rfile.read(content_length) # <--- Gets the data itself
+            self.send_response(200)
+            self.end_headers()
+            print "DUMP " + str(post_data) + "\n"
+
+            os.system(str(self.server.ffmpegCmd) + ' ' + str(post_data))
             return
 
 
