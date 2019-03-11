@@ -2,13 +2,19 @@
 
 for var in "$@"
 do
-	if [[ $string != *"ffmpeg"* ]]; then
-    	string="${string} \"$var\""
-    fi
+	case "$string" in
+	*ffmpeg*)
+		;;
+	*)
+	  	string="${string} \"$var\""
+	  	;;
+    esac
 done
-if [[ $string == *"9988"* ]]; then
-wget 172.17.0.1:9998/stream --post-data='$string'
-else
-/bin/ffmpeg.oem $string
-fi
+case "$string" in
+	*9988*)
+		wget 172.17.0.1:9998/stream --post-data='$string'
+		;;
+	*)
+	/bin/ffmpeg.oem $string
+esac
 
