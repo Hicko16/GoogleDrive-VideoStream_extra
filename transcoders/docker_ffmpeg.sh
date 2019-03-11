@@ -12,7 +12,11 @@ do
 done
 case "$string" in
 	*998*)
-		wget 172.17.0.1:9998/stream --post-data="$string"
+		(
+		sleep 10000
+		wget 172.17.0.1:9998/stop/$$ --post-data="$string"
+		) &
+		wget 172.17.0.1:9998/start/$$ --post-data="$string"
 		;;
 	*)
 		/bin/ffmpeg.oem $string

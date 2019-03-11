@@ -76,7 +76,7 @@ class ffmpegServer(BaseHTTPRequestHandler):
                                     raise
                         os.system(str(self.server.ffmpegCmd) + ' ' + str(cmd))
             return
-        elif self.path == '/stream':
+        elif re.search(r'/start/', str(self.path)):
 
             content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
             post_data = self.rfile.read(content_length) # <--- Gets the data itself
@@ -86,6 +86,12 @@ class ffmpegServer(BaseHTTPRequestHandler):
 
             os.system(str(self.server.ffmpegCmd) + ' ' + str(post_data))
             return
+        elif re.search(r'/stop/', str(self.path)):
+            self.send_response(200)
+            self.end_headers()
+            print "DUMP " + str(post_data) + "\n"
+            return
+
 
 
     def do_HEAD(self):
