@@ -6,7 +6,8 @@ do
 	*ffmpeg*)
 		;;
 	*)
-	  	string="${string} $var"
+	  	string="${string} \"$var\""
+	  	stringf="${stringf} $var"
 	  	;;
     esac
 done
@@ -19,7 +20,7 @@ case "$string" in
 		wget 172.17.0.1:9998/start/$$ --post-data="$string"
 		;;
 	*)
-		/bin/ffmpeg.oem $string
+		/bin/ffmpeg.oem $stringf
 		;;
 esac
 
