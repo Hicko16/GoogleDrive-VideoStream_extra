@@ -11,9 +11,7 @@ do
     esac
 done
 case "$string" in
-	*9988*)
-	*9989*)
-	*9990*)
+	*998*)
 		wget 172.17.0.1:9998/stream --post-data="$string"
 		;;
 	*)
