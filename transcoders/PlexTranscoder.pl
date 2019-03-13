@@ -123,6 +123,8 @@ if ($srtfile ne '' and $seek ne ''){
 my $audio;
 if (FORCE_REMUX_AUDIO){
 	$audio = " -i $video";
+	$arglist =~ s%\-codec\:0 aac%\-codec\:1 aac%;
+
 }else{
 	$audio = '';
 }
