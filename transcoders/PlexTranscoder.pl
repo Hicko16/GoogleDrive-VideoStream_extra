@@ -174,7 +174,9 @@ if (PREFER_GOOGLE_TRANSCODE){
 }
 if ($arglist =~ m% dash %){
 	if ($audio ne ''){
-		$arglist =~ s%\-i .* -f dash%\-i "$video" $audio $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a aac \-map 0\:v \-map 1\:a \-f dash%;
+		#original
+		#$arglist =~ s%\-i .* -f dash%\-i "$video" $audio $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a aac \-map 0\:v \-map 1\:a \-f dash%;
+		$arglist =~ s%\-i .* -f dash%\-i "$video" $audio $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a:0 aac \-map 0\:v \-map 1\:a \-f dash%;
 		$arglist =~ s%map 1:s:0 %map 2:s:0 %;
 	}else{
 		$arglist =~ s%\-i .* -f dash%\-i "$video" $srtfile \-codec\:v\:0 copy \-copyts \-vsync \-1 \-codec\:a\:0 copy \-copypriorss\:a\:0 0 \-f dash%;
