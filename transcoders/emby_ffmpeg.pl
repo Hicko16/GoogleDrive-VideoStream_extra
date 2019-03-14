@@ -116,6 +116,8 @@ if ($isSRT){
 		#force to localhost for transcoding
 		#$arglist =~ s%\://([^\/]+)\:%://127.0.0.1\:%;
 
+		#for emby 4.0 -- remove webvtt
+		$arglist =~ s%\-map 0:2 \-codec:0 webvtt .*\.vtt%%;
 
 
 		# request to transcode?
@@ -166,8 +168,6 @@ if ($isSRT){
 		#for emby 3.6
 		$arglist =~ s%\-f matroska %\-f mp4 %;
 
-		#for emby 4.0 -- remove webvtt
-		$arglist =~ s%\-map 0:2 \-codec:0 webvtt .*\.vtt%%;
 
 		print STDERR "URL = $url, $arglist\n";
 	    print LOG "URL = $url\n running:\n $FFMPEG_OEM $arglist\n\n";
