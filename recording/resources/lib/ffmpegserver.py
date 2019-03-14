@@ -90,7 +90,6 @@ class ffmpegServer(BaseHTTPRequestHandler):
             pid = re.search(r'/stop/(\d+)', str(self.path)).group(1)
             self.send_response(200)
             self.end_headers()
-            print "DUMP " + str(post_data) + "\n"
             os.system("echo 'q' ></tmp/" + str(pid))
 
             return
