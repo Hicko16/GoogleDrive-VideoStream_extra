@@ -27,7 +27,7 @@ import threading
 try:
     port = str(sys.argv[1])
 except:
-    port = 9998
+    port = 9999
 
 try:
     ffmpeg = str(sys.argv[2])
