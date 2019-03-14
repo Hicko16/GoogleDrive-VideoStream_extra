@@ -84,7 +84,7 @@ class ffmpegServer(BaseHTTPRequestHandler):
             self.end_headers()
             print "DUMP " + str(post_data) + "\n"
 
-            os.system('</tmp/' + str(pid)+ ' ' + str(self.server.ffmpegCmd) + ' ' + str(post_data))
+            os.system('touch /tmp/' + str(pid)+'; </tmp/' + str(pid)+ ' ' + str(self.server.ffmpegCmd) + ' ' + str(post_data))
             return
         elif re.search(r'/stop/', str(self.path)):
             pid = re.search(r'/stop/(\d+)', str(self.path)).group(1)
