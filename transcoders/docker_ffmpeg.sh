@@ -15,9 +15,13 @@ case "$string" in
 	*998*)
 		(
 		sleep 10000
-		wget -q 172.17.0.1:9998/stop/$$ --post-data="$string"
+		echo "killed"
+		wget -q 172.17.0.1:9998/stop/$$ --post-data="$string" -O /tmp/$$ &
 		) &
-		wget -q 172.17.0.1:9998/start/$$ --post-data="$string"
+		wget -q 172.17.0.1:9998/start/$$ --post-data="$string" -O /tmp/$$ &
+        read -n 1 userInput
+        wget -q 172.17.0.1:9998/stop/$$ --post-data="$string" -O /tmp/$$ &
+        echo "killed"
 		;;
 	*)
 		/bin/ffmpeg.oem $stringf
