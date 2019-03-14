@@ -32,7 +32,7 @@ except:
 try:
     ffmpeg = str(sys.argv[2])
 except:
-    ffmpeg = '/usr/bin/ffmpeg'
+    ffmpeg = '/opt/emby-server/bin/ffmpeg'
 
 
 #try:
