@@ -167,7 +167,7 @@ if ($isSRT){
 		$arglist =~ s%\-f matroska %\-f mp4 %;
 
 		print STDERR "URL = $url, $arglist\n";
-	    print LOG "URL = $url, $arglist\n\n";
+	    print LOG "URL = $url\n running:\n $FFMPEG_OEM $arglist\n\n";
 
 		#`$FFMPEG_OEM $arglist`;
 		$pid = open ( LS, '-|', $FFMPEG_OEM . ' ' . $arglist . ' 2>&1');
