@@ -17,7 +17,7 @@ my $KILLSIGNAL=0;
 my $FFMPEG = CONFIG->PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 #these options are not compatible with Emby 3.5.2 or higher
   #my $FFMPEG_TEST = PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 2000 -timeout 5000000 ';
-my $FFMPEG_TEST = 'ffmpeg '; #CONFIG->PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
+my $FFMPEG_TEST = CONFIG->FFMPEG_OEM_332; #CONFIG->PATH_TO_EMBY_FFMPEG.'/ffmpeg.oem ';
 my $FFMPEG_DVR = 'ffmpeg ';
 
 my $FFPROBE = CONFIG->PATH_TO_EMBY_FFMPEG .'/ffprobe ';
