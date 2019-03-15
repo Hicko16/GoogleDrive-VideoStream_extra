@@ -15,7 +15,7 @@ use constant GOOGLE_TRANSCODE => 1;
 # prefer to direct stream requests with Google Transcode feeds (will reduce CPU load)
 use constant PREFER_GOOGLE_TRANSCODE => 1;
 
-use constant FORCE_REMUX_AUDIO => 1;
+use constant FORCE_REMUX_AUDIO => 0;
 
 use constant PATH_TO_TRANSCODER => '"/usr/lib/plexmediaserver/Plex Transcoder.oem"';
 use constant PATH_TO_VIDEOSTREAM => 'http://127.0.0.1:9988/';
