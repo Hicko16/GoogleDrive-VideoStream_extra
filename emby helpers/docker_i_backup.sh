@@ -13,14 +13,13 @@ else
 CACHE=cache.snar
 METADATA=metadata.snar
 fi
-
 tar -g $CACHE -zcf cache.$1.tgz cache
 tar -g $METADATA -zcf metadata.$1.tgz metadata
 tar -zcf config.$1.tgz config
 tar -zcf localization.$1.tgz localization
 tar -zcf plugins.$1.tgz plugins
 tar -zcf root.$1.tgz root
-perl $2/stop_emby.pl -p $3 -a $4
+perl "$2/stop_emby.pl" -p $3 -a $4
 sleep 5
 sudo docker stop $5
 sleep 5
