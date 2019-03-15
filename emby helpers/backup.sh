@@ -1,5 +1,5 @@
 #
-# backup.sh current_date_YYYYMMDD
+# backup.sh current_date_YYYYMMDD access_token
 #
 date=`date --reference=last.backup.done`
 touch last.backup.start
