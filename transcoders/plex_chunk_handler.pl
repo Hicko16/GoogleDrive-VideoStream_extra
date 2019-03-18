@@ -17,9 +17,10 @@ die (USAGE) unless (getopts ('d:',\%opt));
 my $directory = $opt{'d'};
 
 
-
+while(1){
 readDIR($directory);
-
+sleep 1;
+}
 
 
 sub readDIR($$){
@@ -44,7 +45,7 @@ while (my $file = readdir($dir)) {
 		#next unless $file =~ m%\.ts%;
 		my $withoutTS = $file;
 		$withoutTS =~ s%\.ts%%;
-		symlink($directory. '/'. $file,$directory. '/'. $withoutTS);
+		symlink($file,$directory. '/'. $withoutTS);
 
 	}
 
