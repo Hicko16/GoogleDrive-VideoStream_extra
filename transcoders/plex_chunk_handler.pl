@@ -39,6 +39,7 @@ while (my $file = readdir($dir)) {
 		readDIR($directory. '/'. $file);
 		next;
 
+
 	# is file that needs to be fixed
 	}else{
 		next unless $file =~ m%chunk.*\.ts%;
