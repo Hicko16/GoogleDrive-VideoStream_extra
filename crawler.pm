@@ -307,6 +307,25 @@ sub complexPOST($$@@@$){
 
 
 
+sub complexJSONPOST($$@@@$){
+  my $site = $_[0];
+  my $file = $_[1];
+  my @successStrings = @{$_[2]};
+  my @failureStrings = @{$_[3]};
+  my @fetch = @{$_[4]};
+  my $param = $_[5];
+
+  my @successResponses;
+  my @failureResponses;
+  my @fetchResults;
+  my @returnResults;
+
+  my $req = new HTTP::Request POST => "$site";
+  $req->content_type("application/json");
+  $cookie_jar->add_cookie_header($req) unless ($ignoreCookies);
+  $req->content($param);
+  return complexWEB($site,$file,\@successStrings,\@failureStrings,\@fetch, $req);
+}
 ######
 #
 
