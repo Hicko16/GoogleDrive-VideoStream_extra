@@ -30,6 +30,10 @@ sub createArglist(){
 
 $arglist = createArglist();
 
+
+#reduce to 1 second analysis
+$arglist =~ s%3000000%1000000%;
+
 if ($arglist =~ m%file:/%){
 	exit(0);
 }
