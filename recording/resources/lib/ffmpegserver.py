@@ -90,13 +90,19 @@ class ffmpegServer(BaseHTTPRequestHandler):
             os.system('touch /tmp/' + str(pid)+'; </tmp/' + str(pid)+ ' ' + str(self.server.ffmpegCmd) + ' ' + str(post_data))
             return
         elif re.search(r'/ffprobe', str(self.path)):
+            pid = re.search(r'/ffprobe/(\d+)', str(self.path)).group(1)
             content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
             post_data = self.rfile.read(content_length) # <--- Gets the data itself
             self.send_response(200)
             self.end_headers()
             print "DUMP " + str(post_data) + "\n"
 
-            os.system(str(self.server.ffmpegCmd) + ' ' + str(post_data))
+            os.system(str(self.server.ffmpegCmd) + ' ' + str(post_data) + "> /tmp/"+ str(pid))
+            if os.path.exists("/tmp/"+ str(pid)):
+                fp = open("/tmp/"+ str(pid), "r")
+                output = fp.read()
+                fp.close()
+                self.wfile.write(output)
             return
         elif re.search(r'/stop/', str(self.path)):
             pid = re.search(r'/stop/(\d+)', str(self.path)).group(1)
