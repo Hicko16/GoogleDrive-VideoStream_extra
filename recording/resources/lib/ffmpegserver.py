@@ -97,7 +97,7 @@ class ffmpegServer(BaseHTTPRequestHandler):
             self.end_headers()
             print "DUMP " + str(post_data) + "\n"
 
-            os.system(str(self.server.ffprobeCmd) + ' ' + str(post_data) + " 2>&1 > /tmp/"+ str(pid))
+            os.system(str(self.server.ffprobeCmd) + ' ' + str(post_data) + " >/tmp/"+ str(pid) + ' 2>&1')
             if os.path.exists("/tmp/"+ str(pid)):
                 fp = open("/tmp/"+ str(pid), "r")
                 output = fp.read()
