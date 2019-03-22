@@ -34,10 +34,16 @@ try:
 except:
     ffmpeg = '/opt/emby-server/bin/ffmpeg'
 
+try:
+    ffprobe = str(sys.argv[3])
+except:
+    ffprobe = '/opt/emby-server/bin/ffprobe'
+
 
 #try:
 server = ffmpegserver.FFMPEGServer(('',  port), ffmpegserver.ffmpegServer)
 server.setFFMPEG(ffmpeg)
+server.setFFPROBE(ffprobe)
 print "FFMPEG Server ready....\n"
 
 while server.ready:

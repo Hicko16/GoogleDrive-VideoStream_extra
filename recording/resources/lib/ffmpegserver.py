@@ -40,6 +40,9 @@ class FFMPEGServer(ThreadingMixIn,HTTPServer):
     def setFFMPEG(self, ffmpegCmd):
         self.ffmpegCmd = ffmpegCmd
 
+    def setFFPROBE(self, ffmpegCmd):
+        self.ffprobeCmd = ffmpegCmd
+
 
 class ffmpegServer(BaseHTTPRequestHandler):
 
@@ -85,6 +88,15 @@ class ffmpegServer(BaseHTTPRequestHandler):
             print "DUMP " + str(post_data) + "\n"
 
             os.system('touch /tmp/' + str(pid)+'; </tmp/' + str(pid)+ ' ' + str(self.server.ffmpegCmd) + ' ' + str(post_data))
+            return
+        elif re.search(r'/ffprobe', str(self.path)):
+            content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+            post_data = self.rfile.read(content_length) # <--- Gets the data itself
+            self.send_response(200)
+            self.end_headers()
+            print "DUMP " + str(post_data) + "\n"
+
+            os.system(str(self.server.ffmpegCmd) + ' ' + str(post_data))
             return
         elif re.search(r'/stop/', str(self.path)):
             pid = re.search(r'/stop/(\d+)', str(self.path)).group(1)
