@@ -42,7 +42,8 @@ open(OUTPUT,'>' . $output) or die ("Cannot open $output ".$!);
 print OUTPUT "begin transaction;";
 
 #my @listOfTables = ('metadata_item_views','view_settings','library_section_permissions','plugin_permissions','metadata_item_settings','media_item_settings','media_part_settings','play_queues','metadata_item_accounts','statistics_bandwidth','statistics_media');
-my @listOfTables = ('view_settings','library_section_permissions','plugin_permissions','play_queues');
+#my @listOfTables = ('view_settings','library_section_permissions','plugin_permissions','play_queues');
+my @listOfTables = ('view_settings','library_section_permissions','plugin_permissions','metadata_item_settings','media_item_settings','media_part_settings','play_queues','metadata_item_accounts');
 
 $count=0;
 
