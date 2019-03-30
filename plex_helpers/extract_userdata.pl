@@ -32,6 +32,7 @@ if ($output eq ''){
 
 
 
+
 # some checks
 if (!(-e $input)){
 	die ("input file does not exist " . $input);
