@@ -117,7 +117,8 @@ if ($isSRT){
 		#$arglist =~ s%\://([^\/]+)\:%://127.0.0.1\:%;
 
 		#for emby 4.0 -- remove webvtt
-		$arglist =~ s%\-map 0:2 \-codec:0 webvtt .*\.vtt%%;
+		$arglist =~ s%\-map 0:\d \-codec:0 webvtt .*\.vtt%%;
+
 
 
 		# request to transcode?
