@@ -65,10 +65,10 @@ while(my $line =<INPUT>){
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm';
 	}elsif ($resolution > 0 and $movieTitle ne ''){
 		next if ($videoHash{$fileName} ne '');
-		$videoHash{$fileName} = $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm';
+		$videoHash{$fileName} = $otherDirectory . $movieTitle.' - original'.$version.' '.$resolution . 'p.strm';
 	}elsif ($movieTitle ne ''){
 		next if ($videoHash{$fileName} ne '');
-		$videoHash{$fileName} = $otherDirectory .'/'. $movieTitle.' - original'.$version.'.strm';
+		$videoHash{$fileName} = $otherDirectory . $movieTitle.' - original'.$version.'.strm';
 
 	}
 }
