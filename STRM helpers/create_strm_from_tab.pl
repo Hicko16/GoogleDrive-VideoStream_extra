@@ -138,7 +138,7 @@ while(my $line =<INPUT>){
 		$movieCount{$movieTitle}++;
 	}elsif ($includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
 
-		if ($tvTitle =~ m%\s[a-z]\s[a-z]\W%){
+		if ($tvTitle =~ m%\s[a-z]\s[a-z]\s% or $tvTitle =~ m%\s[a-z]\s[a-z]% ){
 			#$tvTitle =~ s%s h i e l d%s.h.i.e.l.d.%;
 			#$tvTitle =~ s%s m a s h%s\.m\.a\.s\.h\.%;
 			$tvTitle =~ s%s w a t%S.W.A.T.%;
