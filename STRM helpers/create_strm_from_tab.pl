@@ -208,10 +208,10 @@ while(my $line =<INPUT>){
 		}
 		$tvHash{$hash} = 1;
 		$tvCount{$tvTitle.$tvSeason.$tvEpisode}++;
+	}elsif (! $includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
+		#don't create
+
 	}elsif ($resolution > 0 and $movieTitle ne '' and $movieHash{$hash} != 1){
-		if (!(-e $otherDirectory . $movieTitle) ){
-			mkdir $otherDirectory . $movieTitle unless $testMode;
-		}
 
 		my $version = '';
 		if ($movieCount{$movieTitle} >= 1){
@@ -221,34 +221,34 @@ while(my $line =<INPUT>){
 
 		print "$movieTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
-			if (! (-e $otherDirectory . $movieTitle.'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm')){
+			if (! (-e $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm')){
 				if (! $testMode){
-					open(OUTPUT,'>' . $otherDirectory . $movieTitle.'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
+					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
 					close OUTPUT;
 				}else{
-					print STDOUT 'create '.$otherDirectory . $movieTitle.'/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm'."\n";
+					print STDOUT 'create '.$otherDirectory .'/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm'."\n";
 				}
 			}
 		}
 		if (!$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
 			if ($generateTranscode){
-				if (! (-e $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' )){
-					open(OUTPUT,'>' . $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
+				if (! (-e $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' )){
+					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=2&override=true';
 					close OUTPUT;
 				}
 			}
 			if (($generateTranscode or $onlyTC720p) and $resolution > 420){
-				if (! (-e $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 720p.strm' )){
-					open(OUTPUT,'>' . $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 720p.strm' ) or die ("Cannot create STRM file ".$!);
+				if (! (-e $otherDirectory . '/'. $movieTitle.' - '.$transcodeLabel.$version.' 720p.strm' )){
+					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 720p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=1&override=true';
 					close OUTPUT;
 				}
 			}
 			if (($generateTranscode or $onlyTC1080p) and $resolution > 720){
-				if (! (-e $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 1080p.strm' )){
-					open(OUTPUT,'>' . $otherDirectory . $movieTitle.'/'. $movieTitle.' - '.$transcodeLabel.$version.' 1080p.strm' ) or die ("Cannot create STRM file ".$!);
+				if (! (-e $otherDirectory . '/'. $movieTitle.' - '.$transcodeLabel.$version.' 1080p.strm' )){
+					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 1080p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName.'&preferred_quality=0&override=true';
 					close OUTPUT;
 				}
