@@ -137,6 +137,11 @@ while(my $line =<INPUT>){
 		$movieHash{$hash} = 1;
 		$movieCount{$movieTitle}++;
 	}elsif ($includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
+
+		if ($tvTitle =~ m%\w\s\w\s\w%){
+			print "bad entry detected " . $tvTitle . "\n";
+		}
+
 		if (!(-e $tvDirectory . $tvTitle) ){
 			mkdir $tvDirectory . $tvTitle unless $testMode;
 		}
