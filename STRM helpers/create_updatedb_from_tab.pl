@@ -32,6 +32,8 @@ if ($output eq ''){
 }
 
 my $movieDirectory = $directory . '/movies/' ;
+my $otherDirectory = $directory . '/other/' ;
+
 my $tvDirectory = $directory . '/tv/' ;
 
 
@@ -50,19 +52,23 @@ my %videoHash;
 while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
 	if ($resolution > 0 and $movieTitle ne '' and $movieYear ne ''){
-
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $movieTitle ne '' and $movieYear ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
 		$videoHash{$fileName.'_'} = $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm';
 	}elsif ($resolution > 0 and $tvTitle ne '' and $tvSeason ne ''){
-
 		next if ($videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm';
 	}elsif ($resolution eq '' and $tvTitle ne '' and $tvSeason ne ''){
 		next if ($videoHash{$fileName.'_'} ne '' or $videoHash{$fileName} ne '');
 		$videoHash{$fileName} = $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm';
+	}elsif ($resolution > 0 and $movieTitle ne ''){
+		next if ($videoHash{$fileName} ne '');
+		$videoHash{$fileName} = $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm';
+	}elsif ($movieTitle ne ''){
+		next if ($videoHash{$fileName} ne '');
+		$videoHash{$fileName} = $otherDirectory .'/'. $movieTitle.' - original'.$version.'.strm';
 
 	}
 }
