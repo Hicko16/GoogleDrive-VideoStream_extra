@@ -208,7 +208,9 @@ while(my $line =<INPUT>){
 		}
 		$tvHash{$hash} = 1;
 		$tvCount{$tvTitle.$tvSeason.$tvEpisode}++;
-	}elsif (! $includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
+	}elsif (! $includeTV and ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1)){
+		#don't create
+	}elsif ( $includeTV and ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} == 1)){
 		#don't create
 
 	}elsif ($resolution > 0 and $movieTitle ne '' and $movieHash{$hash} != 1){
