@@ -138,7 +138,7 @@ while(my $line =<INPUT>){
 		$movieCount{$movieTitle}++;
 	}elsif ($includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
 
-		if ($tvTitle =~ m%[a-z]\s[a-z]\s[a-z]%){
+		if ($tvTitle =~ m%\s[a-z]\s[a-z]\s%){
 			print "bad entry detected " . $tvTitle . "\n";
 		}
 
