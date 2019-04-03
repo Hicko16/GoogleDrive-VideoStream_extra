@@ -142,6 +142,11 @@ while(my $line =<INPUT>){
 			#$tvTitle =~ s%s h i e l d%s.h.i.e.l.d.%;
 			#$tvTitle =~ s%s m a s h%s\.m\.a\.s\.h\.%;
 			$tvTitle =~ s%s w a t%S.W.A.T.%;
+			$tvTitle =~ s%the o c%the o.c.%;
+			$tvTitle =~ s% p i%p.i.%;
+			$tvTitle =~ s% p d%p.d.%;
+			$tvTitle =~ s%a p bio%a.p. bio%;
+
 			print "bad entry detected " . $tvTitle . "\n";
 		}
 
