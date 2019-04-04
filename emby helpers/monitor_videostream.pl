@@ -18,13 +18,15 @@ use lib dirname (__FILE__) ;
 #require 'crawler.pm';
 
 require '../crawler.pm';
-use constant USAGE => $0 . " -d directory to videostream -p 9988 -l label [-w webhook] [-t]\n\t -t sends test message\n";
+use constant USAGE => $0 . " -d directory to videostream [-D databasefile] -p 9988 -l label [-w webhook] [-t]\n\t -t sends test message\n";
 
 
 my %opt;
-die (USAGE) unless (getopts ('w:p:d:l:t',\%opt));
+die (USAGE) unless (getopts ('w:p:d:l:tD:',\%opt));
 
 my $port  = $opt{'p'};
+my $database  = $opt{'D'};
+
 my $directory  = $opt{'d'};
 my $label  = $opt{'l'};
 my $url = 'http://localhost:'.$port;
@@ -32,6 +34,10 @@ my $webhook = $opt{'w'};
 my $isTest=0;
 $isTest = 1 if ($opt{'t'});
 my $processName = 'python default.py';
+
+if ($database ne ''){
+	 $processName .= ' ' . $database . ' ' . $port;
+}
 
 
 die(USAGE) if ($port eq '' or $directory eq '');
