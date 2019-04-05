@@ -33,7 +33,7 @@ my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
 if ($isRemoveVOD){
-	@blacklist = ('24/7','²⁴/⁷', 'WEBCAMS', 'mp4', 'XXX', 'null', 'avi', 'mkv', 'radio', 'iheart');
+	@blacklist = ('24/7','²⁴/⁷', 'WEBCAMS', 'mp4', 'XXX', 'null', 'avi', 'mkv', 'RADIO', 'IHEART');
 }
 
 
@@ -69,7 +69,7 @@ while (my $line = <INPUT>){
 		if ($#blacklist != -1){
 			my $include = 1;
 	  		foreach my $filter(@blacklist) {
-	  			if ($line =~ m%$filter%){
+	  			if ($line =~ m%$filter%i){
 	  				print "blacklist $filter $line\n";
 	  				$include = 0; next;
 	  			}
@@ -86,7 +86,7 @@ while (my $line = <INPUT>){
 		my $include = 0;
   		foreach my $filter(@filters) {
 
-  			if ($line =~ m%$filter%){
+  			if ($line =~ m%$filter%i){
   				print "filter $filter $line\n";
   				$include = 1; next;
   			}
@@ -110,7 +110,7 @@ while (my $line = <INPUT>){
 
 		if ($#blacklist != -1){
 	  		foreach my $filter(@blacklist) {
-	  			if ($line =~ m%$filter%){
+	  			if ($line =~ m%$filter%i){
 	  				print "blacklist $filter $line\n";
 	  				$include = 0; last;
 	  			}
