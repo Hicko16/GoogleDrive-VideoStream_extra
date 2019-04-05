@@ -109,7 +109,6 @@ while (my $line = <INPUT>){
 	for (my $i=0; $i <= RETRY; $i++){
 
 		if ($#blacklist != -1){
-			my $include = 1;
 	  		foreach my $filter(@blacklist) {
 	  			if ($line =~ m%$filter%){
 	  				print "blacklist $filter $line\n";
@@ -120,7 +119,7 @@ while (my $line = <INPUT>){
 		}
 
 
-		if ($include == 0 and $isWebCheck){
+		if ($include == 1 and $isWebCheck){
 			my $res = $ua->request($req);#, , ('Range' => 'bytes=0-80'));
 
 			if($res->is_success){
@@ -133,7 +132,7 @@ while (my $line = <INPUT>){
 			}elsif ($i == RETRY){
 				print STDOUT "failed --> $URL\n";
 			}
-		}elsif ($include == 0){
+		}elsif ($include == 1){
 					print OUTPUT $buffer;
 					last;
 
