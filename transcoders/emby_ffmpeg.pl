@@ -119,6 +119,8 @@ if ($isSRT){
 		#for emby 4.0 -- remove webvtt
 		$arglist =~ s%\-map 0:\d \-codec:0 webvtt .*\.vtt%%;
 
+		#for emby 4.1 -- remove -segment_write_temp 1
+		$arglist =~ s%\-segment_write_temp 1%%;
 
 
 		# request to transcode?
