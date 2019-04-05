@@ -33,7 +33,7 @@ my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
 if ($isRemoveVOD){
-	@blacklist = ('MatchCenter','24/7','²⁴/⁷', 'WEBCAMS');
+	@blacklist = ('MatchCenter','24/7','²⁴/⁷', 'WEBCAMS', 'mp4');
 }
 
 
@@ -105,8 +105,21 @@ while (my $line = <INPUT>){
 
 	my $req = new HTTP::Request GET => $URL;
 	$req->protocol('HTTP/1.1');
-
+	my $include=1;
 	for (my $i=0; $i <= RETRY; $i++){
+
+		if ($#blacklist != -1){
+			my $include = 1;
+	  		foreach my $filter(@blacklist) {
+	  			if ($line =~ m%$filter%){
+	  				print "blacklist $filter $line\n";
+	  				$include = 0; last;
+	  			}
+	  		}
+
+		}
+		last if $include == 0;
+
 		if ($isWebCheck){
 			my $res = $ua->request($req);#, , ('Range' => 'bytes=0-80'));
 
