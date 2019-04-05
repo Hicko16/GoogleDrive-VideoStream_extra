@@ -118,9 +118,9 @@ while (my $line = <INPUT>){
 	  		}
 
 		}
-		last if $include == 0;
 
-		if ($isWebCheck){
+
+		if ($include == 0 and $isWebCheck){
 			my $res = $ua->request($req);#, , ('Range' => 'bytes=0-80'));
 
 			if($res->is_success){
@@ -133,7 +133,7 @@ while (my $line = <INPUT>){
 			}elsif ($i == RETRY){
 				print STDOUT "failed --> $URL\n";
 			}
-		}else{
+		}elsif ($include == 0){
 					print OUTPUT $buffer;
 					last;
 
