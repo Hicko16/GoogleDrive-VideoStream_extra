@@ -33,7 +33,7 @@ my $isWebCheck = 1 if defined($opt{'c'});
 my $isRemoveVOD = 1 if defined($opt{'v'});
 
 if ($isRemoveVOD){
-	@blacklist = ('MatchCenter','24/7','²⁴/⁷', 'WEBCAMS', 'mp4');
+	@blacklist = ('MatchCenter','24/7','²⁴/⁷', 'WEBCAMS', 'mp4', 'XXX');
 }
 
 
