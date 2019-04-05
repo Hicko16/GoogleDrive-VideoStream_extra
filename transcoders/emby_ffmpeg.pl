@@ -247,7 +247,17 @@ if ($isSRT){
 
 		my $username;
 		my $password;
-		if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+		if (CONFIG->IPTV_MANAGE_SERVER ne '' and $arglist =~ m%$PROXY_DETERMINATOR%){
+			require CONFIG->PATH . 'crawler.pm';
+			TOOLS_CRAWLER::ignoreCookies();
+			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER2 . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+
+			$username = $results[3];
+			$password = $results[5];
+			print "username = $username, password = $password\n";
+
+			$arglist =~ s%TOKEN%$username%;
+		}elsif (CONFIG->IPTV_MANAGE_SERVER ne '' and $arglist =~ m%$PROXY_DETERMINATOR%){
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
 			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
@@ -278,7 +288,14 @@ if ($isSRT){
 		if ($arglist =~ m%$PROXY_DETERMINATOR%){
 			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
 	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
-			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
+#			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
+	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
+	        	my $url = CONFIG->IPTV_MANAGE_SERVER2.'/free/'. $username . '/'.$m3u8;
+				`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
+
+			}else{
+				`$FFMPEG_TEST -http_proxy $PROXY  $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+			}
 		}else{
 			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
 	        print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
