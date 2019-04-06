@@ -107,7 +107,7 @@ while(my $line =<INPUT>){
 
 		print "$movieTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
-			if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm')){
+			if ($resolution > 0  and ! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm')){
 				if (! $testMode){
 					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
@@ -115,9 +115,17 @@ while(my $line =<INPUT>){
 				}else{
 					print STDOUT 'create '.$movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm'."\n";
 				}
+			}elsif ($resolution == 0  and ! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm')){
+				if (! $testMode){
+					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm' ) or die ("Cannot create STRM file ".$!);
+					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
+					close OUTPUT;
+				}else{
+					print STDOUT 'create '.$movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm'."\n";
+				}
 			}
 		}
-		if (!$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
+		if ($resolution > 0 and !$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
 			if ($generateTranscode){
 				if (! (-e $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' )){
 					open(OUTPUT,'>' . $movieDirectory . $movieTitle.'('.$movieYear.')/'. $movieTitle.'('.$movieYear.') - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
@@ -142,7 +150,7 @@ while(my $line =<INPUT>){
 		}
 		$movieHash{$hash} = 1;
 		$movieCount{$movieTitle}++;
-	}elsif ($includeTV and $resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
+	}elsif ($includeTV  and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1){
 
 		if ($tvTitle =~ m%\s[a-z]\s[a-z]\s% or $tvTitle =~ m%\s[a-z]\s[a-z]% ){
 			#$tvTitle =~ s%s h i e l d%s.h.i.e.l.d.%;
@@ -171,7 +179,7 @@ while(my $line =<INPUT>){
 
 		print "$tvTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
-			if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm')){
+			if ($resolution > 0 and ! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm')){
 				if (! $testMode){
 					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
@@ -180,9 +188,18 @@ while(my $line =<INPUT>){
 					print STDOUT 'create '.$tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . ' '.$resolution . 'p.strm'."\n";
 
 				}
+			}elsif ($resolution == 0 and ! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm')){
+				if (! $testMode){
+					open(OUTPUT,'>' . $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm' ) or die ("Cannot create STRM file ".$!);
+					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
+					close OUTPUT;
+				}else{
+					print STDOUT 'create '.$tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - original'. $version . '.strm'."\n";
+
+				}
 			}
 		}
-		if (!$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
+		if ($resolution > 0 and !$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
 
 			if ($generateTranscode){
 				if (! (-e $tvDirectory . $tvTitle.'/season '.$tvSeason . '/'.$tvTitle. ' S'. $tvSeason.'E'.$tvEpisode.' - '.$transcodeLabel.$version.' 480p.strm' )){
@@ -208,12 +225,12 @@ while(my $line =<INPUT>){
 		}
 		$tvHash{$hash} = 1;
 		$tvCount{$tvTitle.$tvSeason.$tvEpisode}++;
-	}elsif (! $includeTV and ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1)){
+	}elsif (! $includeTV and ($tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} != 1)){
 		#don't create
-	}elsif ( $includeTV and ($resolution > 0 and $tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} == 1)){
+	}elsif ( $includeTV and ($tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} == 1)){
 		#don't create
 
-	}elsif ($resolution > 0 and $movieTitle ne '' and $movieHash{$hash} != 1){
+	}elsif ($movieTitle ne '' and $movieHash{$hash} != 1){
 
 		my $version = '';
 		if ($movieCount{$movieTitle} >= 1){
@@ -223,7 +240,7 @@ while(my $line =<INPUT>){
 
 		print "$movieTitle $resolution $hash\n" if $isVerbose;
 		if ($generateOriginal or ( ($only4k and $resolution > 1080) or ($onlynon4k and $resolution <= 1080) ) ){
-			if (! (-e $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm')){
+			if ($resolution > 0 and ! (-e $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm')){
 				if (! $testMode){
 					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - original'.$version.' '.$resolution . 'p.strm' ) or die ("Cannot create STRM file ".$!);
 					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
@@ -231,9 +248,17 @@ while(my $line =<INPUT>){
 				}else{
 					print STDOUT 'create '.$otherDirectory .'/'. $movieTitle.'('.$movieYear.') - original'.$version.' '.$resolution . 'p.strm'."\n";
 				}
+			}elsif ($resolution == 0 and ! (-e $otherDirectory .'/'. $movieTitle.' - original'.$version.'.strm')){
+				if (! $testMode){
+					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - original'.$version.'.strm' ) or die ("Cannot create STRM file ".$!);
+					print OUTPUT $hostname . '/default.py?mode=video&instance=gdrive1&folder='.$folderID.'&filename='.$fileID.'&title='.$fileName;
+					close OUTPUT;
+				}else{
+					print STDOUT 'create '.$otherDirectory .'/'. $movieTitle.'('.$movieYear.') - original'.$version.'.strm'."\n";
+				}
 			}
 		}
-		if (!$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
+		if ($resolution > 0 and !$testMode and ($generateTranscode or $onlyTC1080p or $onlyTC720p)){
 			if ($generateTranscode){
 				if (! (-e $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' )){
 					open(OUTPUT,'>' . $otherDirectory .'/'. $movieTitle.' - '.$transcodeLabel.$version.' 420p.strm' ) or die ("Cannot create STRM file ".$!);
