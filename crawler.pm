@@ -493,7 +493,7 @@ sub complexWEB($$@@@$){
     for (my $i=0; $i< ($#fetchResults + 1);$i++){
       for (my $j=0; $j< ($#{$fetchResults[$i]} + 1);$j++){
         $returnResults[$k++] = $i;
-	$returnResults[$k++] = $fetchResults[$i][$j];
+		$returnResults[$k++] = $fetchResults[$i][$j];
         print STDERR "... $i = $fetchResults[$i][$j]\n" if (CONFIG->DEBUG);
       }
       print STDERR "\t\tfound (fetch criteria \#$i) --> ". ($#{$fetchResults[$i]}+1) . "\n"  if (CONFIG->DEBUG);
@@ -512,6 +512,12 @@ sub complexWEB($$@@@$){
         if ($failure ne ""){$failure .= ",";}
         $failure .= "$failureResponses[$i][0]";
       }
+    }
+
+    if ($file ne ''){
+		open(OUTPUT,">" . $file) or die ("Cannot save to $file ".$!);
+		print OUTPUT $res->decoded_content;
+		close(OUTPUT);
     }
 
     if ($success eq "" and $failure eq ""){
