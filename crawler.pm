@@ -714,6 +714,34 @@ sub simpleWEB($$){
 }
 
 
+
+sub returnWEB($$){
+  my $site = shift;
+  my $req = shift;
+
+  $cookie_jar->add_cookie_header($req) unless ($ignoreCookies);
+  my $res = $ua->request($req); # make the request
+  for (my $j=0; $j<CONFIG->HTTP_RETRYCOUNT && !($res->is_success or ($res->code >= 300 and $res->code < 400));$j++){
+    $res = $ua->request($req); # make the request
+  }
+  $cookie_jar->extract_cookies($res) unless ($ignoreCookies);
+
+  if (CONFIG->DEBUG){
+    print STDERR $req->as_string;
+    print STDERR $res->as_string;
+  }
+
+  if($res->is_success or ($res->code >= 300 and $res->code < 400)){
+    print STDERR "\tPASS [$site]\n" if (CONFIG->DEBUG);
+    print STDERR "\n" if (CONFIG->DEBUG);
+    return $res->as_string;
+  }else{
+    print STDERR "\tFAIL (returned code \#".$res->code.") [$site]\n" if (CONFIG->DEBUG);
+    print STDERR "\n" if (CONFIG->DEBUG);
+    return $res->as_string;
+  }
+
+}
 ######
 #
 
