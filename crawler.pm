@@ -603,6 +603,13 @@ sub simplePOST($){
 
 }
 
+sub returnGET($){
+  my $site = shift;
+
+  my $req = new HTTP::Request GET => "$site";
+  return returnWEB($site, $req);
+
+}
 
 ######
 #

@@ -35,11 +35,26 @@ my $url = 'http://'.$IP.':'.$port.'/emby/LiveTv/Channels?Fields=ProviderIds&api_
 my @array;
 TOOLS_CRAWLER::ignoreCookies();
 #my @results = TOOLS_CRAWLER::complexGET($url,'',[''],[''],['"Id":"', '"', '","Number":"\d+","ChannelNumber":"\d+","ProviderIds":\{"ExternalServiceId":"Emby"\}']);
-my @results = TOOLS_CRAWLER::complexGET($url,$file,[''],[''],['\{"Name":"', '"\}', '"\}']);
+#my @results = TOOLS_CRAWLER::returnWEB($url,$file,[''],[''],['\{"Name":"', '"\}', '"\}']);
+my $results = TOOLS_CRAWLER::returnGET($url);
+#print $results;
+$results =~ s%"MediaType":"Video"\}%\n%g;
+#print $results;
+while (<$results>){
+	print $_;
+	#my ($entry) = <$results>;
+	#last if $entry eq '';
+	#$results =~ s%$entry%%;
+	#print "\n\nENTRY ".$entry . "\n";
+
+}
+
+
+
 
 for (my $i=3; $i <$#results; $i=$i+2){
 	#if ($results[$i] > 290018){
-		print "results=". $results[$i] . "\n";
+#		print "results=". $results[$i] . "\n";
 		my $url = 'http://'.$IP.':'.$port.'/emby/Items/'.$results[$i].'?api_key='.$apiKey;
 		#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"Genres":["premium"],"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
 		#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
