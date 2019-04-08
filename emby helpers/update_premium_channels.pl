@@ -28,7 +28,7 @@ my $file = $opt{'f'};
 
 
 
-die(USAGE) if ($port eq '' or $apiKey eq ''or $file eq '');
+die(USAGE) if ($port eq '' or $apiKey eq '');
 
 
 my $url = 'http://'.$IP.':'.$port.'/emby/LiveTv/Channels?Fields=ProviderIds&api_key='.$apiKey;
@@ -58,15 +58,12 @@ for (my $i=3; $i <$#results; $i=$i+2){
 		my $url = 'http://'.$IP.':'.$port.'/emby/Items/'.$results[$i].'?api_key='.$apiKey;
 		#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"Genres":["premium"],"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
 		my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
-
+		print "processing ...".$url ."\n";
 #	}
 
 
 }
 
-		my $url = 'http://'.$IP.':'.$port.'/emby/Items/610879?api_key='.$apiKey;
-
-#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"Name":"Sony Max UK HD","ServerId":"7f422d149e1444a7b2d034b0e0ae65e0","Id":"610879","Number":"79638","ChannelNumber":"79638","ProviderIds":{"ExternalServiceId":"Emby"},"IsFolder":false,"Type":"TvChannel","ImageTags":{},"BackdropImageTags":[],"Tags":["premium"],"MediaType":"Video"}');
 
 
 
