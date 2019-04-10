@@ -247,7 +247,7 @@ if ($isSRT){
 
 		my $username;
 		my $password;
-		if (CONFIG->IPTV_MANAGE_SERVER2 ne '' and $arglist =~ m%$PROXY_DETERMINATOR%){
+		if (CONFIG->IPTV_MANAGE_SERVER2 ne '' and $arglist =~ m%TOKEN%){
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
 			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER2 . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
