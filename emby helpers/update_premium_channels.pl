@@ -36,9 +36,9 @@ my @array;
 TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::complexGET($url,'',[''],[''],['"Id":"', '"', '","Number":"\d+","ChannelNumber":"\d+","ProviderIds":\{"ExternalServiceId":"Emby"\}']);
 #my @results = TOOLS_CRAWLER::returnWEB($url,$file,[''],[''],['\{"Name":"', '"\}', '"\}']);
-#my $results = TOOLS_CRAWLER::returnGET($url);
+my $results = TOOLS_CRAWLER::returnGET($url);
 #print $results;
-$results =~ s%"MediaType":"Video"\}%\n%g;
+#print $results;
 #print $results;
 while (<$results>){
 	print $_;
@@ -50,6 +50,18 @@ while (<$results>){
 }
 
 
+#{"Name":"Syria TV","ServerId":"32654fdf89a942218c9313154551738c","Id":"595696","Number":"73750","ChannelNumber":"73750","ProviderIds":{"ExternalServiceId":"Emby"},"IsFolder":false,"Type":"TvChannel","ImageTags":{},"BackdropImageTags":[],"MediaType":"Video"}
+while ($results =~ m%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"([^\"]+)","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%){
+	my ($id) = $results =~ m%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"([^\"]+)","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%;
+	my ($record) = $results =~ m%(\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"[^\"]+","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\})%;
+	print STDERR "ID = $id\n";
+	$record =~ s%"ProviderIds":\{"ExternalServiceId":"Emby"\},%"ProviderIds":\{"ExternalServiceId":"Emby"\},"Tags":\["premium"\],%;
+	my $url = 'http://'.$IP.':'.$port.'/emby/Items/'.$id.'?api_key='.$apiKey;
+	TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),$record);
+	$results =~ s%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"[^\"]+","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%%;
+
+
+}
 
 
 for (my $i=3; $i <$#results; $i=$i+2){
@@ -57,8 +69,8 @@ for (my $i=3; $i <$#results; $i=$i+2){
 #		print "results=". $results[$i] . "\n";
 		my $url = 'http://'.$IP.':'.$port.'/emby/Items/'.$results[$i].'?api_key='.$apiKey;
 		#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"Genres":["premium"],"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
-		my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
-		print STDOUT "processing ...".$url ."\n";
+		#my @results = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),'{"ProviderIds":{"ExternalServiceId":"Emby"},"Tags":["premium"]}');
+		#print STDOUT "processing ...".$url ."\n";
 #	}
 
 
