@@ -13,11 +13,13 @@ use constant USAGE => $0 . ' -s  target.m3u8 -t target.m3u8';
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:',\%opt));
+die (USAGE) unless (getopts ('s:t:i:',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
+my $incrementor = $opt{'i'};
+
 
 die(USAGE) if ($source eq '' or $target eq '');
 
@@ -33,6 +35,7 @@ while (my $line = <INPUT>){
 	if ($line =~ m%^#EXTINF%){
 		my $nextLine = <INPUT>;
 		my ($channel) = $nextLine =~ m%\/(\d+)\.m3u8%;
+		$channel = $channel + $incrementor;
 		$line =~ s%\-1%\-1 tvg-id="$channel"%;
 		print OUTPUT $line;
 		print OUTPUT $nextLine;
