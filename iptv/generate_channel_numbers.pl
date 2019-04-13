@@ -32,8 +32,8 @@ while (my $line = <INPUT>){
 	 $line =~ s%\r%%;
 	if ($line =~ m%^#EXTINF%){
 		my $nextLine = <INPUT>;
-		my ($channel) = $line =~ m%\/(\d+)\.m3u8%;
-		$line =~ s%\-1%\-1 tvg-id="$channel",%;
+		my ($channel) = $nextLine =~ m%\/(\d+)\.m3u8%;
+		$line =~ s%\-1%\-1 tvg-id="$channel"%;
 		print OUTPUT $line;
 		print OUTPUT $nextLine;
 		print "$line\n";
