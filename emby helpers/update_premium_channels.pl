@@ -51,13 +51,29 @@ while (<$results>){
 
 
 #{"Name":"Syria TV","ServerId":"32654fdf89a942218c9313154551738c","Id":"595696","Number":"73750","ChannelNumber":"73750","ProviderIds":{"ExternalServiceId":"Emby"},"IsFolder":false,"Type":"TvChannel","ImageTags":{},"BackdropImageTags":[],"MediaType":"Video"}
+
+
 while ($results =~ m%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"([^\"]+)","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%){
-	my ($id) = $results =~ m%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"([^\"]+)","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%;
-	my ($record) = $results =~ m%(\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"[^\"]+","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\})%;
-	print STDERR "ID = $id\n";
-	$record =~ s%"ProviderIds":\{"ExternalServiceId":"Emby"\},%"ProviderIds":\{"ExternalServiceId":"Emby"\},"Tags":\["premium"\],%;
+	my ($name,$id) = $results =~ m%\{"Name":"([^\"]+)","ServerId":"[^\"]+","Id":"([^\"]+)","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%;
+	#my ($record) = $results =~ m%(\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"[^\"]+","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\})%;
+
+	my $genre='[]';
+	if ($name =~ m%SPORT%){
+		$genre = '["Sports"]';
+	}
+	my $record = '{"AirDays":[],"AirTime":"","AirsAfterSeasonNumber":"","AirsBeforeEpisodeNumber":"","AirsBeforeSeasonNumber":"","Album":"","AlbumArtists":[],"ArtistItems":[],"AspectRatio":"","CommunityRating":"","CriticRating":"","CustomRating":"","DateCreated":"2019-04-08T04:00:00.000Z","DisplayOrder":"","EndDate":null,"ForcedSortName":"","Genres":'.$genre.',"Id":"'.$id.'","IndexNumber":null,"LockData":false,"LockedFields":[],"Name":"'.$name.'","OfficialRating":"","OriginalTitle":"","Overview":"","ParentIndexNumber":null,"PreferredMetadataCountryCode":"","PreferredMetadataLanguage":"","PremiereDate":null,"ProductionYear":"","ProviderIds":{"ExternalServiceId":"Emby"},"Status":"","Studios":[],"Taglines":[],"Tags":["premium"],"Video3DFormat":""}';
+
+	#$record =~ s%"ProviderIds":\{"ExternalServiceId":"Emby"\},%"ProviderIds":\{"ExternalServiceId":"Emby"\},"Tags":\["premium"\],%;
 	my $url = 'http://'.$IP.':'.$port.'/emby/Items/'.$id.'?api_key='.$apiKey;
-	TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),$record);
+
+	my @response;
+	#if ($name =~ m%UTV%){
+			print STDERR "ID = $id\n";
+
+		@response = TOOLS_CRAWLER::complexJSONPOST($url,'',[''],[''],(['<ddd','<','<']),$record);
+		print "record = $record\n";
+		print @response;
+	#}
 	$results =~ s%\{"Name":"[^\"]+","ServerId":"[^\"]+","Id":"[^\"]+","Number":"[^\"]+","ChannelNumber":"[^\"]+","ProviderIds":\{"ExternalServiceId":"Emby"\},"IsFolder":false,"Type":"TvChannel","ImageTags":\{\},"BackdropImageTags":\[\],"MediaType":"Video"\}%%;
 
 
