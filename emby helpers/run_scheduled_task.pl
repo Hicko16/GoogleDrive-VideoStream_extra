@@ -28,7 +28,7 @@ my $apiKey = $opt{'a'};
 die(USAGE) if ($port eq '' or $id eq '');
 
 
-my $url = 'http://127.0.0.1:'.$port.'/emby/ScheduledTasks/Running/6330ee8fb4a957f33981f89aa78b030f?api_key='.$apiKey;
+my $url = 'http://127.0.0.1:'.$port.'/emby/ScheduledTasks/Running/'.$id.'?api_key='.$apiKey;
 
 TOOLS_CRAWLER::ignoreCookies();
 my @results = TOOLS_CRAWLER::simplePOST($url);
