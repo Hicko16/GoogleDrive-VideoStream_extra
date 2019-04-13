@@ -2,15 +2,12 @@
 
 ###
 ##
-## The purpose of this script is to generate the m3u file given a spreadsheet as input
-## The script takes a provided spreadsheet file (-s) and outputs a copy of the claned-up m3u file
+## The purpose of this script is to generate channel numbers
 ###
 # number of times to retry when ffmpeg encounters network errors
-use constant RETRY => 2;
-
 use Getopt::Std;		# and the getopt module
 
-use constant USAGE => $0 . ' -s  source.tab -t target.m3u8';
+use constant USAGE => $0 . ' -s  target.m3u8 -t target.m3u8';
 
 
 use IO::Handle;
@@ -36,11 +33,15 @@ my $type = '';
 while (my $line = <INPUT>){
 
 	 $line =~ s%\r%%;
-	if ($line =~ m%^[^\t]+\t1%){
-		($channelNumber,$country,$channelName,$channelURL) = $line =~  m%^([^\t]+)\t1\t([^\t]+)\t([^\t]+)\t[^\t]*\t([^\t]+)%;
-		print OUTPUT "#EXTINF:-1 tvg-id=\"$channelNumber\" tvg-name=\"$channelName\"\n";
-		print OUTPUT $channelURL . "\n";
-		print "$channelNumber $country $channelName\n";
+	if ($line =~ m%^#EXTINF%){
+		my $nextLine = <INPUT>;
+		my ($channel) = $line =~ m%\/(\d+).m3u8%;
+		$line =~ s%\-1%\-1 tvg-id="$channel",%;
+		print OUTPUT $line;
+		print OUTPUT $nextLine;
+		print "$line\n";
+	}else{
+		print OUTPUT $line;
 	}
 
 
