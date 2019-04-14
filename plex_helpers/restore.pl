@@ -31,7 +31,7 @@ for (my $i=0; $i <= $#files; $i++){
 	if ($files[$i] =~ m%Plug-in Support%){
 		`docker stop $instance`;
 		sleep(4);
-		`cd '$outputDirectory';mkdir new; cd new; tar -zxf '$files[$i]'`;
+		`cd '$outputDirectory';mkdir new; cd new; cp -R "../Plug-in Support" .;tar -zxf '$files[$i]'`;
 		`docker start $instance`;
 	}else{
 		print STDERR "extract " . $files[$i] . "\n";
