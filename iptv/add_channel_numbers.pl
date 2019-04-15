@@ -12,12 +12,13 @@ use constant USAGE => $0 . ' -s target.m3u8 -t target.m3u8 -c mapping.tab';
 use IO::Handle;
 
 my %opt;
-die (USAGE) unless (getopts ('s:t:c:',\%opt));
+die (USAGE) unless (getopts ('s:t:c:i:',\%opt));
 
 # directory to scan
 my $source = $opt{'s'};
 my $target = $opt{'t'};
 my $tab = $opt{'c'};
+my $incrementor =  $opt{'i'};
 
 
 die(USAGE) if ($source eq '' or $target eq '' or $tab eq '');
@@ -51,6 +52,7 @@ while (my $line = <INPUT>){
 		if ($channelMapping{$channel} ne ''){
 			$toChannel = $channelMapping{$channel};
 		}else{
+			$channel = $channel + $incrementor;
 			$toChannel = $channel;
 		}
 		$line =~ s% tvg-id="[^\"]+"%%;
