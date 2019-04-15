@@ -26,7 +26,9 @@ my %channelMapping;
 open (TAB, $TAB) or die ("cannot open $TAB: " + $!);
 while (my $line = <TAB>){
 	my ($from,$to) = $line =~ m%^(\S+)\s(\S+)%;
-	$channelMapping{$from} = $to;
+	if ($to ne '-'){
+		$channelMapping{$from} = $to;
+	}
 
 }
 
