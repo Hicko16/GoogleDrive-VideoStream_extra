@@ -46,6 +46,7 @@ while (my $line = <INPUT>){
 		my $nextLine = <INPUT>;
 		my ($channel) = $nextLine =~ m%\/(\d+)\.m3u8%;
 		$toChannel = $channelMapping{$channel};
+		$line =~ s% tvg-id="[^\"]+"%%;
 		$line =~ s%\-1%\-1 tvg-id="$toChannel"%;
 		print OUTPUT $line;
 		print OUTPUT $nextLine;
