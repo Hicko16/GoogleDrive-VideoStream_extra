@@ -28,6 +28,9 @@ while (my $line = <TAB>){
 	my ($from,$to) = $line =~ m%^(\S+)\s(\S+)%;
 	if ($to ne '-'){
 		$channelMapping{$from} = $to;
+	}else{
+		$channelMapping{$from} = $from;
+
 	}
 
 }
