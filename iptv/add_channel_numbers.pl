@@ -53,7 +53,6 @@ while (my $line = <INPUT>){
 		}else{
 			$toChannel = $channel;
 		}
-		$toChannel = $channelMapping{$channel};
 		$line =~ s% tvg-id="[^\"]+"%%;
 		$line =~ s%\-1%\-1 tvg-id="$toChannel"%;
 		print OUTPUT $line;
