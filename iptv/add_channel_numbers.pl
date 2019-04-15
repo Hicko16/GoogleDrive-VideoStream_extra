@@ -48,6 +48,11 @@ while (my $line = <INPUT>){
 	if ($line =~ m%^#EXTINF%){
 		my $nextLine = <INPUT>;
 		my ($channel) = $nextLine =~ m%\/(\d+)\.m3u8%;
+		if ($channelMapping{$channel} ne ''){
+			$toChannel = $channelMapping{$channel};
+		}else{
+			$toChannel = $channel;
+		}
 		$toChannel = $channelMapping{$channel};
 		$line =~ s% tvg-id="[^\"]+"%%;
 		$line =~ s%\-1%\-1 tvg-id="$toChannel"%;
