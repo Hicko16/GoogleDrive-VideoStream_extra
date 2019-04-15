@@ -23,7 +23,7 @@ my $tab = $opt{'c'};
 die(USAGE) if ($source eq '' or $target eq '' or $tab eq '');
 
 my %channelMapping;
-open (TAB, $TAB) or die ("cannot open $TAB: " + $!);
+open (TAB, $tab) or die ("cannot open $tab: " + $!);
 while (my $line = <TAB>){
 	my ($from,$to) = $line =~ m%^(\S+)\s(\S+)%;
 	if ($to ne '-'){
