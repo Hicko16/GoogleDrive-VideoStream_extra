@@ -51,7 +51,10 @@ open(INPUT,$inputSpreadsheet) or die ("Cannot open $inputSpreadsheet ".$!);
 my %videoHash;
 while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
-		print STDERR "gully boy " . $line . "\n" if $line =~ m%gully%i;
+		if ($line =~ m%gully%i){
+		print STDERR "gully boy $filename x" . $line . "\n" ;
+
+		}
 
 	if ($resolution > 0 and $movieTitle ne '' and $movieYear ne ''){
 		next if ($videoHash{$fileName} ne '');
