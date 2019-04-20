@@ -71,6 +71,7 @@ while(my $line =<INPUT>){
 		$videoHash{$fileName} = $otherDirectory . $movieTitle.' - original'.$version.'.strm';
 
 	}
+	print STDERR "gully boy " . $line . "\n" if $filename =~ m%gully%i;
 }
 
 close(INPUT);
