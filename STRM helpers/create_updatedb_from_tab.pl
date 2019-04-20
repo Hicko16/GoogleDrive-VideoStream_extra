@@ -84,7 +84,7 @@ print OUTPUT "begin transaction;";
 #INSERT INTO "media_parts" VALUES(44,44,1,'52a37ff9c24586292d2598497445f8dafd205364','fc349023336c7d19','/var/lib/plexmediaserver/media/tv/''Til Death/Season 01/''Til Death - S01E01 - Pilot WEBDL-1080p.mkv',
 while(my $line =<INPUT>){
 	if ($line =~ m%INSERT INTO "media_parts"%){
-		my ($filenameWithPath) = $line =~ m%INSERT INTO "media_parts" VALUES\([^\,]+,[^\,]+,[^\,]+,[^\,]+,[^\,]+,'([^\,]+)',%;
+		my ($filenameWithPath) = $line =~ m%INSERT INTO "media_parts" VALUES\([^\,]+,[^\,]+,[^\,]+,[^\,]+,[^\,]+,'([^\']+)',%;
 		next if $filenameWithPath eq '';
 		#print "filename = $filenameWithPath\n" if $isVerbose;
 		my ($filename) = $filenameWithPath =~ m%.*?/([^\/]+)$%;
