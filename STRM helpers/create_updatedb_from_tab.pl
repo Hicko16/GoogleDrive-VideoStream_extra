@@ -52,7 +52,7 @@ my %videoHash;
 while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
 		if ($line =~ m%gully%i){
-		print STDERR "gully boy $filename x" . $line . "\n" ;
+		print STDERR "gully boy $fileID x" . $line . "\n" ;
 
 		}
 
