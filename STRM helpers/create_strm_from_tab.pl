@@ -161,7 +161,7 @@ while(my $line =<INPUT>){
 			$tvTitle =~ s% p d% p.d.%;
 			$tvTitle =~ s%a p bio%a.p. bio%;
 
-			print "bad entry detected " . $tvTitle . "\n";
+			#print "bad entry detected " . $tvTitle . "\n";
 		}
 
 		if (!(-e $tvDirectory . $tvTitle) ){
@@ -230,7 +230,7 @@ while(my $line =<INPUT>){
 	}elsif ( $includeTV and ($tvTitle ne '' and $tvSeason ne '' and $tvHash{$hash} == 1)){
 		#don't create
 
-	}elsif ($movieTitle ne '' and $movieHash{$hash} != 1){
+	}elsif (0 and $movieTitle ne '' and $movieHash{$hash} != 1){
 
 		my $version = '';
 		if ($movieCount{$movieTitle} >= 1){
