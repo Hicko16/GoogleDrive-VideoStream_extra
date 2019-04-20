@@ -93,6 +93,8 @@ while(my $line =<INPUT>){
 		#print "filename = $filenameWithPath\n" if $isVerbose;
 		my ($filename) = $filenameWithPath =~ m%.*?/([^\/]+)$%;
 		$filename =~ s%''%'%g;
+
+		print "GULLY " . $filename . "\n" if $line =~ m%gully%i;
 		if ($videoHash{$filename} ne ''){
 			print "match = $filename\n" if $isVerbose;
 			my $printFilenameWithPath = $filenameWithPath;
