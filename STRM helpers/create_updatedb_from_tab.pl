@@ -10,6 +10,7 @@ use Getopt::Std;		# and the getopt module
 use constant USAGE => $0 . " -d strm_directory -i inputfile -o outputfile -s spreadsheet.tab\n\t -v is verbose\n";
 
 
+
 my %opt;
 die (USAGE) unless (getopts ('d:s:i:o:vl:',\%opt));
 
