@@ -503,25 +503,6 @@ if ($isSRT){
 			`$FFMPEG_TEST -i "$concat" -codec copy "$finalFilename"`;
 
 
-			my $finalFilenameUpload = $finalFilename;
-			$finalFilenameUpload =~ s%$RECORDING_DIR%$RECORDING_DIR_UPLOAD%;
-
-			my ($finalDIR) = $finalFilenameUpload =~ m%(.*?)/[^\/]+$%;
-			make_path($finalDIR);
-
-
-			for (my $i=0; $i <= $#moveList; $i++){
-
-				if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
-
-					print LOG "move $moveList[$i][0],$moveList[$i][2]\n";
-					move $moveList[$i][0], $moveList[$i][2];
-					move $moveList[$i][1], $moveList[$i][3];
-
-				}
-			}
-			print LOG "move $finalFilename,$finalFilenameUpload\n";
-			move $finalFilename, $finalFilenameUpload;
 
 
 		}
