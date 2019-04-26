@@ -426,8 +426,6 @@ if ($isSRT){
 
 		for (my $i=0; $i <= $#moveList; $i++){
 			if ($i==0 or $moveList[$i][0] ne $moveList[$i-1][0]){
-use File::Copy qw(move);
-use File::Path qw/make_path/;
 
 				move $moveList[$i][0], $moveList[$i][2];
 				move $moveList[$i][1], $moveList[$i][3];
