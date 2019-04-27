@@ -309,6 +309,7 @@ if ($isSRT){
 		}
 
 	}else{
+
 		`$FFMPEG_TEST $arglist -v error`;
 
 	}
@@ -329,6 +330,9 @@ if ($isSRT){
 # provided for backward compatibility with emby < 3.5
 # * in Emby 3.5.2 +, DVR requests mimic Live TV requests (they no longer use the -d for length of time to record)
 }elsif ($arglist =~ m%recording% or $duration != 0){
+
+    print LOG "entering DVR\n\n";
+
 
 	if (CONFIG->RECORDING_SERVER ne ''){
 		#$arglist = createArglist();
