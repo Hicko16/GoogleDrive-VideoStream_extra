@@ -461,6 +461,8 @@ use File::Path qw/make_path/;
 
 	}else{
 
+    print LOG "entering DVR -- else\n\n";
+
 		my @moveList;
 		my $current=0;
 		my $finalFilename = $ARGV[$filename_ptr];
@@ -473,11 +475,13 @@ use File::Path qw/make_path/;
 		$renameFileName = $ARGV[$filename_ptr];
 		$renameFileName =~ s%\.ts%\.mp4%;
 
+    	print LOG "entering DVR -- testing\n\n";
+
 
 		my $failures=0;
 		while ($KILLSIGNAL == 0 and $failures < 100){
 		  	$arglist = createArglist();
-
+			print LOG "entering DVR -- looping\n\n";
 			if ($arglist =~ m%$PROXY_DETERMINATOR%){
 				print STDERR 'run ffmpeg $PROXY -v error ' . $arglist . "\n";
 				`$FFMPEG_TEST $PROXY $arglist -v error`;
