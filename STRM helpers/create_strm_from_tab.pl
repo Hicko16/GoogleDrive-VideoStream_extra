@@ -95,13 +95,16 @@ my %tvCount;
 while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
 
-	#fix for american pickers
+	#fix for american pickers / and other tv series with S\d\d\d\d
 	print STDOUT "$tvTitle $tvSeason $fileName $movieTitle\n" if $fileName =~ m%American Pick%;
 	if ($tvTitle eq 'None' and $tvSeason eq '' and $fileName =~ m%S\d\d\d+E\d+%i){
 		$tvTitle = $movieTitle;
 		($tvSeason, $tvEpisode) = $fileName =~  m%S(\d+)E(\d+)%i;
 		$movieTitle = '';
 		$tvTitle =~ s% \- s%%i;
+	#fix for aaf-simpsons (ignore)
+	}elsif ($movieTitle eq 'aaf-simpsons'){
+		next;
 	}
 
 	if ($resolution > 0 and $movieTitle ne '' and $movieYear ne '' and $movieHash{$hash} != 1){
