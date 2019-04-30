@@ -354,6 +354,8 @@ if ($isSRT){
 
 	}elsif ($duration !=0){
 
+    	print LOG "entering DVR -- else\n\n";
+
 		my @moveList;
 		my $current=0;
 		my $finalFilename = $ARGV[$filename_ptr];

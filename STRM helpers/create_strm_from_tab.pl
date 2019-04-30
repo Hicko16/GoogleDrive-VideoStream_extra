@@ -94,6 +94,15 @@ my %tvHash;
 my %tvCount;
 while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
+
+	#fix for american pickers
+	if ($tvTitle ne '' and $tvSeason ne '' and $fileName =~ m%S\d+E\d+%i){
+		$tvTitle = $movieTitle;
+		($tvSeason, $tvEpisode) = $fileName =~  m%S(\d+)E(\d+)%i;
+		$movieTitle = '';
+		$tvTitle =~ s% \- s%%i;
+	}
+
 	if ($resolution > 0 and $movieTitle ne '' and $movieYear ne '' and $movieHash{$hash} != 1){
 		if (!(-e $movieDirectory . $movieTitle.'('.$movieYear.')') ){
 			mkdir $movieDirectory . $movieTitle.'('.$movieYear.')' unless $testMode;
