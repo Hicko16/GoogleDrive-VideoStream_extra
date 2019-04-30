@@ -97,7 +97,7 @@ while(my $line =<INPUT>){
 
 	#fix for american pickers
 	print STDOUT "$tvTitle $tvSeason $fileName $movieTitle\n" if $fileName =~ m%American Pick%;
-	if ($tvTitle eq '' and $tvSeason eq '' and $fileName =~ m%S\d\d\d+E\d+%i){
+	if ($tvTitle eq 'None' and $tvSeason eq '' and $fileName =~ m%S\d\d\d+E\d+%i){
 		$tvTitle = $movieTitle;
 		($tvSeason, $tvEpisode) = $fileName =~  m%S(\d+)E(\d+)%i;
 		$movieTitle = '';
