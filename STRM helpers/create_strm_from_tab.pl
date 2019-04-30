@@ -96,6 +96,7 @@ while(my $line =<INPUT>){
 	my ($folderID,$fileID,$fileName, $tvTitle, $tvSeason, $tvEpisode, $movieTitle, $movieYear, $resolution, $hash) = $line =~ m%^([^\t]*)\t[^\t]*\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t[^\t]*%;
 
 	#fix for american pickers
+	print STDOUT "$tvTitle $tvSeason $fileName $movieTitle\n" if $fileName =~ m%American Pick%;
 	if ($tvTitle eq '' and $tvSeason eq '' and $fileName =~ m%S\d\d\d+E\d+%i){
 		$tvTitle = $movieTitle;
 		($tvSeason, $tvEpisode) = $fileName =~  m%S(\d+)E(\d+)%i;
