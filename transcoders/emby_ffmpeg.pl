@@ -235,6 +235,10 @@ if ($isSRT){
 
 	#capture m3u8 filename
 
+	#for emby 4.1 -- remove -segment_write_temp 1
+	$arglist =~ s%\-segment_write_temp 1%%;
+
+
 
 	if ($arglist =~ m%$IPTV_DETERMINATOR%){
 		my ($m3u8) = $arglist =~ m%segment_list [^\ ]+/([^\/]+\.m3u8)%;
