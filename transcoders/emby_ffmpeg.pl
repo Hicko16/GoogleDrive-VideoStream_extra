@@ -261,6 +261,7 @@ if ($isSRT){
 			print "username = $username, password = $password\n";
 
 			$arglist =~ s%TOKEN%$username%;
+			$arglist =~ s%PASSWORD%$password%;
 		}elsif (CONFIG->IPTV_MANAGE_SERVER ne ''){
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
