@@ -65,7 +65,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock.acquire()
 
         for entry in self.iptvMatrix:
-            print "testing" + str(entry[0]) + "x"
+            print "testing" + str(entry[0]) + "-"+str(entry[1]) + "-"+str(entry[2]) +"\n"
             if entry[2] == 0:
                 entry[2] =session
                 self.lock.release()
@@ -187,6 +187,10 @@ class webProxy(BaseHTTPRequestHandler):
             results = re.search(r'/get/([^\/]+)$', str(self.path))
             if results:
                 session = str(results.group(1))
+            results = re.search(r'/get/([^\/]+)/([^\/]+)$', str(self.path))
+            if results:
+                session = str(results.group(2))
+                channel = str(results.group(1))
             userInfo = self.server.getCredential(session)
             self.send_response(200)
             self.end_headers()

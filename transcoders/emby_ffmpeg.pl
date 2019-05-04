@@ -242,8 +242,9 @@ if ($isSRT){
 
 	if ($arglist =~ m%$IPTV_DETERMINATOR%){
 		my ($m3u8) = $arglist =~ m%segment_list [^\ ]+/([^\/]+\.m3u8)%;
-		my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
-		$channel = 'x';
+		#my ($channel) = $arglist =~ m%\-i [^\ ]+\/([^\/]+\.[^\ ]+)%;
+		my ($channel) = $arglist =~ m%\-i [^\ ]+\/(\d+\.m3u8)%i;
+		#$channel = 'x';
 		print LOG "m3u8 output file " . $m3u8 . ", channel ".$channel."\n";
 
 	    print LOG "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n\n";
@@ -252,6 +253,7 @@ if ($isSRT){
 		my $username;
 		my $password;
 		if (CONFIG->IPTV_MANAGE_SERVER2 ne '' and $arglist =~ m%TOKEN%){
+
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
 			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER2 . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
