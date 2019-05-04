@@ -65,7 +65,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock.acquire()
 
         for entry in self.iptvMatrix:
-            print "testing" + str(entry[2]) + "x"
+            print "testing" + str(entry[0]) + "x"
             if entry[2] == 0:
                 entry[2] =session
                 self.lock.release()
