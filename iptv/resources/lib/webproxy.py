@@ -41,7 +41,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         HTTPServer.__init__(self, *args, **kw)
         self.ready = True
         self.iptvMatrix = []
-        self.servers = []
+        self.servers = {}
         self.sessions = {}
         self.lock = Lock()
         self.value = 0
@@ -67,12 +67,12 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         serverFH = open(serverFile,"r")
         for line in serverFH:
             entry = [line,0]
-            self.servers.append(entry)
+            self.servers[line] = 0
 
         serverFH.close()
 
-        for entry in self.servers:
-            print "entry " + str(entry[1])
+        for entry in self.servers.keys():
+            print "entry " + str(entry)
 
     def getCredential(self, session):
         self.lock.acquire()
