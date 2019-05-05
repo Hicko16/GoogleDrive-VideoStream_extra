@@ -195,6 +195,8 @@ class webProxy(BaseHTTPRequestHandler):
             print self.server.value
 
         elif re.search(r'/get/', str(self.path)):
+            reqIPaddress = self.client_address[0]
+
             results = re.search(r'/get/([^\/]+)$', str(self.path))
             if results:
                 session = str(results.group(1))
@@ -205,6 +207,8 @@ class webProxy(BaseHTTPRequestHandler):
             userInfo = self.server.getCredential(session)
             self.send_response(200)
             self.end_headers()
+            print "username = " + str(userInfo[0])  + " password = " + str(userInfo[1])  + " IP = " + reqIPaddress +"\n"
+
             self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
 
 
