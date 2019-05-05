@@ -33,13 +33,21 @@ except:
 
 
 try:
-    port = int(sys.argv[2])
+    serverFile = str(sys.argv[2])
+except:
+    serverFile = 'servers.txt'
+
+
+try:
+    port = int(sys.argv[3])
 except:
     port = 9998
 
 #try:
 server = webproxy.WebProxyServer(('',  port), webproxy.webProxy)
 server.setCredentials(iptvFile)
+server.setServers(serverFile)
+
 print "IPTV Proxy-Credentials Server ready....\n"
 
 while server.ready:

@@ -41,6 +41,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         HTTPServer.__init__(self, *args, **kw)
         self.ready = True
         self.iptvMatrix = []
+        self.servers = []
         self.sessions = {}
         self.lock = Lock()
         self.value = 0
@@ -60,6 +61,18 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
 
         for entry in self.iptvMatrix:
             print "entry " + str(entry[1]) + '  ' + str(entry[2])
+
+    def setServers(self, serverFile):
+        print "set servers "+str(serverFile)+"\n"
+        serverFH = open(serverFile,"r")
+        entry = [line,0]
+        for line in serverFH:
+            self.servers.append(entry)
+
+        serverFH.close()
+
+        for entry in self.servers:
+            print "entry " + str(entry[1])
 
     def getCredential(self, session):
         self.lock.acquire()
@@ -203,6 +216,8 @@ class webProxy(BaseHTTPRequestHandler):
         elif re.search(r'/relay/', str(self.path)):
             self.send_response(200)
             self.end_headers()
+            reqIPaddress = self.client_address[0]
+
             results = re.search(r'/relay/([^\/]+)/([^\/]+)$', str(self.path))
             if results:
                 channel = str(results.group(1))
