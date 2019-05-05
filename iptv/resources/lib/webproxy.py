@@ -74,18 +74,27 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         for entry in self.servers.keys():
             print "entry " + str(entry)
 
-    def getCredential(self, session):
+    def getCredential(self, session, IP):
         self.lock.acquire()
+
+        if self.servers[IP] == 0:
+            self.servers[IP] = session
+        else:
+            for server in self.servers:
+                if self.servers[server] == 0:
+                   self.servers[server] = session
+                   IP = server
+                   break
 
         for entry in self.iptvMatrix:
             print "testing" + str(entry[0]) + "-"+str(entry[1]) + "-"+str(entry[2]) +"\n"
             if entry[2] == 0:
                 entry[2] =session
                 self.lock.release()
-                return (entry[0],entry[1])
+                return (entry[0],entry[1],IP)
 
         self.lock.release()
-        return (-1,0)
+        return (-1,0,0)
 
 
     def getStats(self):
@@ -106,6 +115,11 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
 
     def freeCredential(self, username, session):
         self.lock.acquire()
+        for server in self.servers:
+            if self.servers[server] == session:
+               self.servers[server] = 0
+               break
+
         for entry in self.iptvMatrix:
             print "testing" + str(username) + "vs" + str(entry[1])
             if entry[0] == username and entry[2] == session:
@@ -204,10 +218,10 @@ class webProxy(BaseHTTPRequestHandler):
             if results:
                 session = str(results.group(2))
                 channel = str(results.group(1))
-            userInfo = self.server.getCredential(session)
+            userInfo = self.server.getCredential(session, reqIPaddress)
             self.send_response(200)
             self.end_headers()
-            print "username = " + str(userInfo[0])  + " password = " + str(userInfo[1])  + " IP = " + reqIPaddress +"\n"
+            print "username = " + str(userInfo[0])  + " password = " + str(userInfo[1])  + " IP = " + str(userInfo[2])  +"\n"
 
             self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
 
