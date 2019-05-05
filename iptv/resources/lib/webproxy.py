@@ -175,8 +175,6 @@ class webProxy(BaseHTTPRequestHandler):
     #Handler for the GET requests
     def do_GET(self):
 
-
-
         # debug - print headers in log
         headers = str(self.headers)
         print(headers)
@@ -230,9 +228,8 @@ class webProxy(BaseHTTPRequestHandler):
                 if results:
                     username = str(results.group(1))
                     password = str(results.group(2))
-                    print "username = " + username + "\n"
+                    print "username = " + username + " password = " + password + " IP = " + reqIPaddress +"\n"
                     self.server.sessions[session] = username
-
 
 
 
