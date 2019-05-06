@@ -66,7 +66,6 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         print "set servers "+str(serverFile)+"\n"
         serverFH = open(serverFile,"r")
         for line in serverFH:
-            entry = [line,0]
             self.servers[line] = 0
 
         serverFH.close()
@@ -77,14 +76,18 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
     def getCredential(self, session, IP):
         self.lock.acquire()
 
-        if self.servers.has_key(IP) and self.servers[IP] == 0:
-            self.servers[IP] = session
-        else:
-            for server in self.servers:
-                if self.servers[server] == 0:
-                   self.servers[server] = session
-                   IP = server
-                   break
+        try:
+            if self.servers[IP] == 0:
+                self.servers[IP] = session
+            else:
+                for server in self.servers:
+                    if self.servers[server] == 0:
+                       self.servers[server] = session
+                       IP = server
+                       break
+        except:
+           self.servers[IP] = session
+
 
         for entry in self.iptvMatrix:
             print "testing" + str(entry[0]) + "-"+str(entry[1]) + "-"+str(entry[2]) +"\n"
