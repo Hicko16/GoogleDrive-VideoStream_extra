@@ -77,7 +77,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
     def getCredential(self, session, IP):
         self.lock.acquire()
 
-        if self.servers[IP] == 0:
+        if self.servers.has_key(IP) and self.servers[IP] == 0:
             self.servers[IP] = session
         else:
             for server in self.servers:
