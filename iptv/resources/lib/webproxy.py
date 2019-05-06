@@ -67,7 +67,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         serverFH = open(serverFile,"r")
 
         for line in serverFH:
-            results = re.search(r'([^\n]+)\n', str(self.path))
+            results = re.search(r'([^\n]+)\n', str(line))
             if results:
                 self.servers[str(results.group(1))] = 0
 
