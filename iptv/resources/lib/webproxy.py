@@ -65,8 +65,11 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
     def setServers(self, serverFile):
         print "set servers "+str(serverFile)+"\n"
         serverFH = open(serverFile,"r")
+
         for line in serverFH:
-            self.servers[line.splitlines()[0]] = 0
+            results = re.search(r'([^\n]+)\n', str(self.path))
+            if results:
+                self.servers[str(results.group(1))] = 0
 
         serverFH.close()
 
