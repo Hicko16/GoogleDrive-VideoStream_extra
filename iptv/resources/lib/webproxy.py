@@ -66,7 +66,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         print "set servers "+str(serverFile)+"\n"
         serverFH = open(serverFile,"r")
         for line in serverFH:
-            self.servers[line] = 0
+            self.servers[line.splitlines()[0]] = 0
 
         serverFH.close()
 
