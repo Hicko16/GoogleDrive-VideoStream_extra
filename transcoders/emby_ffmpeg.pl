@@ -298,8 +298,8 @@ if ($isSRT){
 
 
 		if ($arglist =~ m%$PROXY_DETERMINATOR% or $ip != '127.0.0.1'){
-			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
-	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
+			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $ip . ' '. $arglist . "\n";
+	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $ip . ' '. $arglist . "\n\n";
 #			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
 	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 	        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
