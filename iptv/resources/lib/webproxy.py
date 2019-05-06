@@ -221,9 +221,12 @@ class webProxy(BaseHTTPRequestHandler):
             userInfo = self.server.getCredential(session, reqIPaddress)
             self.send_response(200)
             self.end_headers()
-            print "username = " + str(userInfo[0])  + " password = " + str(userInfo[1])  + " IP = " + str(userInfo[2])  +"\n"
+            ip = userInfo[2]
+            if ip == reqIPaddress:
+                ip = '127.0.0.1'
+            print "username = " + str(userInfo[0])  + " password = " + str(userInfo[1])  + " IP = " + str(ip)  +"\n"
 
-            self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&lease=true")
+            self.wfile.write('username=' + str(userInfo[0]) + "&password="+str(userInfo[1]) + "&ip="+str(ip)+"&lease=true")
 
 
         # relay the request the IPTV manager
@@ -242,11 +245,14 @@ class webProxy(BaseHTTPRequestHandler):
                 response = urllib2.urlopen(self.server.serverURL + '/get/' + session)
                 data = response.read()
                 self.wfile.write(data)
-                results = re.search(r'username=([^\&]*)&password=([^\&]*)', data)
+                results = re.search(r'username=([^\&]*)&password=([^\&]*)&ip=([^\&]*)', data)
                 if results:
                     username = str(results.group(1))
                     password = str(results.group(2))
-                    print "username = " + username + " password = " + password + " IP = " + reqIPaddress +"\n"
+                    ip = str(results.group(3))
+                    if ip == reqIPaddress:
+                        ip = '127.0.0.1';
+                    print "username = " + username + " password = " + password + " IP = " + ip +"\n"
                     self.server.sessions[session] = username
 
 

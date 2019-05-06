@@ -252,26 +252,31 @@ if ($isSRT){
 
 		my $username;
 		my $password;
+		my $ip;
 		if (CONFIG->IPTV_MANAGE_SERVER2 ne '' and $arglist =~ m%TOKEN%){
 
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
-			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER2 . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER2 . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&'),,('ip\=', '\&', '\&')]);
 
 			$username = $results[3];
 			$password = $results[5];
-			print "username = $username, password = $password\n";
+			$ip = $results[7];
 
+			print "username = $username, password = $password, ip = $ip\n";
 			$arglist =~ s%TOKEN%$username%;
 			$arglist =~ s%PASSWORD%$password%;
+
 		}elsif (CONFIG->IPTV_MANAGE_SERVER ne ''){
 			require CONFIG->PATH . 'crawler.pm';
 			TOOLS_CRAWLER::ignoreCookies();
-			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER . '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&')]);
+			my @results = TOOLS_CRAWLER::complexGET(CONFIG->IPTV_MANAGE_SERVER .  '/relay/' . $channel . '/'.$m3u8,undef,[],[],[('username\=', '\&', '\&'),('password\=', '\&', '\&'),,('ip\=', '\&', '\&')]);
 
 			$username = $results[3];
 			$password = $results[5];
-			print "username = $username, password = $password\n";
+			$ip = $results[7];
+
+			print "username = $username, password = $password, ip = $ip\n";
 
 			$arglist =~ s%USERNAME%$username%;
 			$arglist =~ s%PASSWORD%$password%;
@@ -292,12 +297,12 @@ if ($isSRT){
 		#my $output = `/u01/ffmpeg-git-20171123-64bit-static/ffmpeg $arglist -v error 2>&1`;
 
 
-		if ($arglist =~ m%$PROXY_DETERMINATOR%){
+		if ($arglist =~ m%$PROXY_DETERMINATOR% or $ip != '127.0.0.1'){
 			print STDERR "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n";
 	        print LOG "running PROXY LIVETV " . $FFMPEG_TEST . ' ' . $PROXY . ' '. $arglist . "\n\n";
 #			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
 	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
-	        	my $url = CONFIG->IPTV_MANAGE_SERVER2.'/free/'. $username . '/'.$m3u8;
+	        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
 				`echo "FETCHED $url" >> /tmp/transcode.log; $FFMPEG_TEST -http_proxy $PROXY $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
 
 			}else{
