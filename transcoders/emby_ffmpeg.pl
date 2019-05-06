@@ -303,10 +303,10 @@ if ($isSRT){
 #			`$FFMPEG_TEST -http_proxy $PROXY $arglist -v error`;
 	        if (CONFIG->IPTV_MANAGE_SERVER ne ''){
 	        	my $url = CONFIG->IPTV_MANAGE_SERVER.'/free/'. $username . '/'.$m3u8;
-				`echo "FETCHED $url" >> /tmp/transcode.log; $FFMPEG_TEST -http_proxy $PROXY $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
+				`echo "FETCHED $url" >> /tmp/transcode.log; $FFMPEG_TEST -http_proxy $ip:8888 $arglist -v error; wget "$url";echo "FREED $url" >> /tmp/transcode.log`;
 
 			}else{
-				`$FFMPEG_TEST -http_proxy $PROXY  $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
+				`$FFMPEG_TEST -http_proxy $ip:8888  $arglist -v error; echo "TEST" >> /tmp/transcode.log`;
 			}
 		}else{
 			print STDERR "running LIVETV " . $FFMPEG_TEST . ' ' . $arglist . "\n";
