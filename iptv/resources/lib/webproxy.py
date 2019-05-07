@@ -81,7 +81,8 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
 
 #        try:
         if self.servers[IP] == 0:
-           self.servers[IP] = session
+            print "ASSIGNED A\n"
+            self.servers[IP] = session
         else:
            for server in self.servers:
                if self.servers[server] == 0:
