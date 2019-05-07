@@ -79,17 +79,17 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
     def getCredential(self, session, IP):
         self.lock.acquire()
 
-        try:
-            if self.servers[IP] == 0:
-                self.servers[IP] = session
-            else:
-                for server in self.servers:
-                    if self.servers[server] == 0:
-                       self.servers[server] = session
-                       IP = server
-                       break
-        except:
+#        try:
+        if self.servers[IP] == 0:
            self.servers[IP] = session
+        else:
+           for server in self.servers:
+               if self.servers[server] == 0:
+                  self.servers[server] = session
+                  IP = server
+                  break
+#       except:
+ #          self.servers[IP] = session
 
 
         for entry in self.iptvMatrix:
