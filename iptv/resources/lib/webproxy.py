@@ -133,7 +133,7 @@ class WebProxyServer(ThreadingMixIn,HTTPServer):
         self.lock.acquire()
         for server in self.servers:
             if self.servers[server] == session:
-               self.servers[server] = 0
+               #self.servers[server] = 0
                break
 
         for entry in self.iptvMatrix:
